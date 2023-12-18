@@ -1,0 +1,16 @@
+const connection = require('../database');
+
+const Employee = {
+  getAllemployee: (callback) => {
+    connection.query('SELECT * FROM employee', (error, results) => {
+      if (error) {
+        callback(error, null);
+      } else {
+        callback(null, results);
+      }
+    });
+  },
+  // 다른 메소드들...
+};
+
+module.exports = Employee;
