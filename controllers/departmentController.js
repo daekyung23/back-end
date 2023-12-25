@@ -3,7 +3,7 @@ const Department = require('../models/departmentModel');
 const getAllDepartments = async (req, res) => {
   try {
     const results = await new Promise((resolve, reject) => {
-      Employee.getAllDepartments((error, data) => {
+      Department.getAllDepartments((error, data) => {
         if (error) {
           reject(error);
         } else {

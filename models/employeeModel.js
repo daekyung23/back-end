@@ -36,8 +36,7 @@ const Employee = {
     connection.query(`
       SELECT *
       FROM employee
-      WHERE Permission_ID > 0
-      AND Employee_ID = ?;
+      WHERE Employee_ID = ?;
     `, [employeeId], (error, results) => {
       if (error) {
         callback(error, null);
