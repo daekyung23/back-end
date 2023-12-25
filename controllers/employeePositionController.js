@@ -1,9 +1,9 @@
-const Department = require('../models/departmentModel');
+const EmployeePositions = require('../models/employeePositionModel');
 
-const getAllDepartments = async (req, res) => {
+const getAllEmployeePositions = async (req, res) => {
   try {
     const results = await new Promise((resolve, reject) => {
-      Department.getAllDepartments((error, data) => {
+        EmployeePositions.getAllEmployeePositions((error, data) => {
         if (error) {
           reject(error);
         } else {
@@ -17,12 +17,12 @@ const getAllDepartments = async (req, res) => {
   }
 };
 
-const searchDepartments = async (req, res) => {
+const searchEmployeePositions = async (req, res) => {
   const { searchTerms } = req.params; // Assuming employeeId is passed as a parameter in the route
   
   try {
     const results = await new Promise((resolve, reject) => {
-      Department.searchDepartments(searchTerms, (error, data) => {
+        EmployeePositions.searchEmployeePositions(searchTerms, (error, data) => {
         if (error) {
           reject(error);
         } else {
@@ -37,6 +37,6 @@ const searchDepartments = async (req, res) => {
 };
 
 module.exports = {
-  getAllDepartments,
-  searchDepartments
+getAllEmployeePositions,
+searchEmployeePositions
 };

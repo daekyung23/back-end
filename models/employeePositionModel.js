@@ -1,11 +1,11 @@
 const connection = require('../database');
 
-const Department = {
-  getAllDepartments: (callback) => {
+const EmployeePositions = {
+  getAllEmployeePositions: (callback) => {
     connection.query(`
   
     SELECT * 
-    FROM department
+    FROM employee_position
     
     `, (error, results) => {
       if (error) {
@@ -16,13 +16,12 @@ const Department = {
     });
   },
   
-  searchDepartments: (searchTerms, callback) => {
+  searchEmployeePositions: (searchTerms, callback) => {
     connection.query(
       `
-      SELECT child.Department_ID as Department_ID, child.Department_Name as Department_Name, parent.Department_Name as Parent_Department_Name, parent.Department_ID as Parent_Department_ID
-      FROM department child
-      LEFT JOIN department parent ON child.Parent_Department_ID = parent.Department_ID
-      WHERE child.Department_Name LIKE ?;
+      SELECT * 
+      FROM employee_position
+      WHERE Position_Name LIKE ?;
       `,
       [`%${searchTerms}%`],
       (error, results) => {
@@ -37,4 +36,4 @@ const Department = {
   // 다른 메소드들...
 };
 
-module.exports = Department;
+module.exports = EmployeePositions;

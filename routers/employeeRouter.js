@@ -10,6 +10,4 @@ router.get('/search/:searchTerms', employeeController.searchEmployee); // 부서
 router.put('/update/:employeeId', employeeController.updateEmployee); // 사용자 업데이트
 router.delete('/delete/:employeeId/:userPermission', employeeController.deleteEmployee); // 사용자 삭제
 
-router.get('/all', departmentController.getAllDepartments);
-
 module.exports = router;
