@@ -19,10 +19,10 @@ const registerNewEmployee = async (req, res) => {
   }
 };
 
-const getAllemployee = async (req, res) => {
+const getAllEmployee = async (req, res) => {
   try {
     const results = await new Promise((resolve, reject) => {
-      Employee.getAllemployee((error, data) => {
+      Employee.getAllEmployee((error, data) => {
         if (error) {
           reject(error);
         } else {
@@ -119,7 +119,7 @@ const deleteEmployee = async (req, res) => {
 
 module.exports = {
   registerNewEmployee,
-  getAllemployee,
+  getAllEmployee,
   getEmployeeById,
   searchEmployee,
   updateEmployee,

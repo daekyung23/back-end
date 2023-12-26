@@ -32,6 +32,21 @@ const Employee = {
     );
   },
 
+  getAllEmployee: (callback) => {
+    connection.query(`
+  
+    SELECT * 
+    FROM employee
+    
+    `, (error, results) => {
+      if (error) {
+        callback(error, null);
+      } else {
+        callback(null, results);
+      }
+    });
+  },
+
   getEmployeeById: (employeeId, callback) => {
     connection.query(`
       SELECT *
