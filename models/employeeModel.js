@@ -62,16 +62,19 @@ const Employee = {
     });
   },
 
-  searchEmployee: (searchTerms, callback) => {
+  searchEmployee: (searchTerms, page = 1, callback) => {
+    const pageSize = 10;
+    const offset = (page - 1) * pageSize;
     connection.query(
       `
       SELECT *
       FROM employee e
       LEFT JOIN department d ON e.Department_ID = d.Department_ID
       WHERE e.Permission_ID > 0
-      AND (Department_Name LIKE ? OR Employee_Name LIKE ? OR Email LIKE ?);
+      AND (Department_Name LIKE ? OR Employee_Name LIKE ? OR Email LIKE ?)
+      LIMIT ?, ?;
       `,
-      [`%${searchTerms}%`, `%${searchTerms}%`, `%${searchTerms}%`],
+      [`%${searchTerms}%`, `%${searchTerms}%`, `%${searchTerms}%`, offset, pageSize],
       (error, results) => {
         if (error) {
           callback(error, null);

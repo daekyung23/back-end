@@ -56,11 +56,11 @@ const getEmployeeById = async (req, res) => {
 };
 
 const searchEmployee = async (req, res) => {
-  const { searchTerms } = req.params; // Assuming employeeId is passed as a parameter in the route
+  const { searchTerms, page = 1 } = req.query;
   
   try {
     const results = await new Promise((resolve, reject) => {
-      Employee.searchEmployee(searchTerms, (error, data) => {
+      Employee.searchEmployee(searchTerms, page, (error, data) => {
         if (error) {
           reject(error);
         } else {
