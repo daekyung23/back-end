@@ -24,6 +24,7 @@ const Employee = {
       ],
       (error, results) => {
         if (error) {
+          console.log(error);
           callback(error, null);
         } else {
           callback(null, results);

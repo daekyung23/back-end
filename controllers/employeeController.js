@@ -1,8 +1,8 @@
 const Employee = require('../models/employeeModel');
 
 const registerNewEmployee = async (req, res) => {
-
   const employeeData = req.body; // Assuming the updated employee data is sent in the request body
+  console.log(req.body);
   try {
     const results = await new Promise((resolve, reject) => {
       Employee.registerNewEmployee(employeeData, (error, data) => {
