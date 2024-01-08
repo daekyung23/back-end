@@ -124,6 +124,7 @@ const Employee = {
       [employeeId],
       (error, results) => {
         if (error) {
+          console.log(employeeId);
           callback(error, null);
         } else {
           callback(null, results);

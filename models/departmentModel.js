@@ -34,6 +34,22 @@ const Department = {
       }
     );
   },
+  getDepartmentById: (departmentId, callback) => {
+    connection.query(
+      `
+      SELECT *
+      FROM department
+      WHERE Department_ID = ?;
+      `,
+      [departmentId], (error, results) => {
+        if (error) {
+          callback(error, null);
+        } else {
+          callback(null, results[0]); // 결과는 배열로 반환되므로 첫 번째 요소만 반환합니다.
+        }
+      }
+    );
+  },
   // 다른 메소드들...
 };
 
