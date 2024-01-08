@@ -36,7 +36,27 @@ const searchEmployeePositions = async (req, res) => {
   }
 };
 
+const getEmployeePositionById = async (req, res) => {
+  const { positionId } = req.params; // Assuming positionId is passed as a parameter in the route
+  try {
+    const results = await new Promise((resolve, reject) => {
+      EmployeePositions.getEmployeePositionById(positionId, (error, data) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+    res.status(200).json(results);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 module.exports = {
 getAllEmployeePositions,
-searchEmployeePositions
+searchEmployeePositions,
+getEmployeePositionById,
 };
