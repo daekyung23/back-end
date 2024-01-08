@@ -77,7 +77,6 @@ const searchEmployee = async (req, res) => {
 const updateEmployee = async (req, res) => {
   const { employeeId } = req.params;
   const employeeData = req.body; // Assuming the updated employee data is sent in the request body
-  
   try {
     const results = await new Promise((resolve, reject) => {
       Employee.updateEmployee(employeeId, employeeData, (error, data) => {
