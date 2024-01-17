@@ -51,12 +51,15 @@ const Customer = {
       );
     },
     //고객사 이름으로 검색
-    searchCustomer: (searchTerms, callback) => {
+    searchCustomer: (searchTerms, page = 1, callback) => {
+      const pageSize = 10;
+      const offset = (page - 1) * pageSize;
       connection.query(
         `SELECT * 
         FROM Customer WHERE Customer_Name LIKE ?
+        LIMIT ?, ?;
         `, 
-        [`%${searchTerms}%`], 
+        [`%${searchTerms}%`, offset, pageSize], 
         (error, results) => {
           if (error) {
             callback(error, null);
