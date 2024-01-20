@@ -74,11 +74,11 @@ const registerNewCustomer = async (req, res) => {
   };
   
   const searchCustomer = async (req, res) => {
-    const { name } = req.query;
+    const { name, page = 1 } = req.query;
     
     try {
       const results = await new Promise((resolve, reject) => {
-        Customer.searchCustomer(name, (error, data) => {
+        Customer.searchCustomer(name, page, (error, data) => {
           if (error) {
             reject(error);
           } else {

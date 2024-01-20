@@ -70,18 +70,19 @@ const Customer = {
       );
     },
     //고객사 신규 등록
-    registerNewCustomer: (customer, callback) => {
+    registerNewCustomer: (customerData, callback) => {
       connection.query(
         `
-        INSERT INTO Customer (Parent_Customer_ID, Customer_Name, Customer_Rate_ID, RemoteSupport, Push_Alert)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO Customer (Customer_ID, Parent_Customer_ID, Customer_Name, Customer_Rate_ID, RemoteSupport, Push_Alert)
+        VALUES (?, ?, ?, ?, ?, ?)
         `,
         [
-          customer.Parent_Customer_ID,
-          customer.Customer_Name,
-          customer.Customer_Rate_ID,
-          customer.RemoteSupport,
-          customer.Push_Alert
+          customerData.Customer_ID,
+          customerData.Parent_Customer_ID,
+          customerData.Customer_Name,
+          customerData.Customer_Rate_ID,
+          customerData.RemoteSupport,
+          customerData.Push_Alert
         ],
         (error, results) => {
           if (error) {
