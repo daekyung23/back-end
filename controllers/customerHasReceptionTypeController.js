@@ -1,4 +1,4 @@
-const CustomerHasReceptionTypeModel = require('./customerHasReceptionTypeModel');
+const CustomerHasReceptionTypeModel = require('../models/customerHasReceptionTypeModel');
 
 const customerHasReceptionTypeController = {
   getReceptionTypeByCustomerId: async (req, res) => {
