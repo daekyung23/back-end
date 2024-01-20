@@ -1,52 +1,46 @@
 const CustomerHasReceptionTypeModel = require('./customerHasReceptionTypeModel');
 
 const customerHasReceptionTypeController = {
-  getAllParentReceptionTypes: (req, res) => {
-    CustomerHasReceptionTypeModel.getAllParentReceptionTypes((error, result) => {
-      if (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
-      } else {
-        res.status(200).json(result);
-      }
-    });
-  },
-
-  getReceptionTypeByCustomerId: (req, res) => {
+  getReceptionTypeByCustomerId: async (req, res) => {
     const customerId = req.params.customerId;
 
-    CustomerHasReceptionTypeModel.getReceptionTypeByCustomerId(customerId, (error, result) => {
-      if (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
-      } else {
-        res.status(200).json(result);
-      }
-    });
+    try {
+      const result = await CustomerHasReceptionTypeModel.getReceptionTypeByCustomerId(customerId);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error('Error getting customer by ID: ', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   },
 
-  searchCustomerHasReceptionType: (req, res) => {
+  updateCustomerHasReceptionType: async (req, res) => {
+    const customerId = req.params.customerId;
+    const { receptionTypeNameArray, receptionTypeActivateArray } = req.body;
+
+    try {
+      const result = await CustomerHasReceptionTypeModel.updateCustomerHasReceptionType(
+        customerId,
+        receptionTypeNameArray,
+        receptionTypeActivateArray
+      );
+      res.status(200).json(result);
+    } catch (error) {
+      console.error('Error updating customer: ', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+
+  searchCustomerHasReceptionType: async (req, res) => {
     const searchTerms = req.query.searchTerms || '';
     const page = req.query.page || 1;
 
-    CustomerHasReceptionTypeModel.searchCustomerHasReceptionType(searchTerms, page, (error, result) => {
-      if (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
-      } else {
-        res.status(200).json(result);
-      }
-    });
-  },
-
-  updateCustomerHasReceptionType: (req, res) => {
-    const customerId = req.params.customerId;
-    const customer = req.body;
-
-    CustomerHasReceptionTypeModel.updateCustomerHasReceptionType(customerId, customer, (error, result) => {
-      if (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
-      } else {
-        res.status(200).json(result);
-      }
-    });
+    try {
+      const result = await CustomerHasReceptionTypeModel.searchCustomerHasReceptionType(searchTerms, page);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error('Error searching employee: ', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
   },
 };
 
