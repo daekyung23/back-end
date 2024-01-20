@@ -13,21 +13,17 @@ const customerHasReceptionTypeController = {
     }
   },
 
-  updateCustomerHasReceptionType: async (req, res) => {
+  updateCustomerHasReceptionType: (req, res) => {
     const customerId = req.params.customerId;
-    const { receptionTypeNameArray, receptionTypeActivateArray } = req.body;
+    const receptionType = req.body.receptionType;
 
-    try {
-      const result = await CustomerHasReceptionTypeModel.updateCustomerHasReceptionType(
-        customerId,
-        receptionTypeNameArray,
-        receptionTypeActivateArray
-      );
-      res.status(200).json(result);
-    } catch (error) {
-      console.error('Error updating customer: ', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
+    CustomerHasReceptionTypeModel.updateCustomerHasReceptionType(customerId, receptionType, (error, result) => {
+      if (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+      } else {
+        res.status(200).json(result);
+      }
+    });
   },
 
   searchCustomerHasReceptionType: async (req, res) => {

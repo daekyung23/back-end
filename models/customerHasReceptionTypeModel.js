@@ -99,65 +99,65 @@ const CustomerHasReceptionType = {
     },
 
     // 각 고객사들에 대한 접수유형들 수정
-    updateCustomerHasReceptionType: (customerId, customer, callback) => {
-        const receptionTypes = customer.receptionTypes || [];
+    updateCustomerHasReceptionType: (customerId, receptionType, callback) => {
+        const receptionTypes = Object.keys(receptionType).filter(key => key !== 'customerId' && receptionType[key]);
 
         connection.beginTransaction((transactionError) => {
-        if (transactionError) {
-            return callback(transactionError, null);
-        }
-
-        connection.query(
-            `
-            DELETE FROM customer_has_reception_type
-            WHERE Customer_ID = ?
-            `,
-            [customerId],
-            (deleteError) => {
-            if (deleteError) {
-                return connection.rollback(() => {
-                callback(deleteError, null);
-                });
+            if (transactionError) {
+                return callback(transactionError, null);
             }
 
-            const insertQueries = receptionTypes.map((receptionType) => {
-                return new Promise((resolve, reject) => {
-                connection.query(
-                    `
-                    INSERT INTO customer_has_reception_type (Customer_ID, Reception_ID)
-                    VALUES (?, (SELECT Reception_ID FROM reception_type WHERE Reception_Name = ?))
-                    `,
-                    [customerId, receptionType],
-                    (insertError) => {
-                    if (insertError) {
-                        reject(insertError);
-                    } else {
-                        resolve();
+            connection.query(
+                `
+                DELETE FROM customer_has_reception_type
+                WHERE Customer_ID = ?
+                `,
+                [customerId],
+                (deleteError) => {
+                    if (deleteError) {
+                        return connection.rollback(() => {
+                            callback(deleteError, null);
+                        });
                     }
-                    }
-                );
-                });
-            });
 
-            Promise.all(insertQueries)
-                .then(() => {
-                connection.commit((commitError) => {
-                    if (commitError) {
-                    return connection.rollback(() => {
-                        callback(commitError, null);
+                    const insertQueries = receptionTypes.map((typeName) => {
+                        return new Promise((resolve, reject) => {
+                            connection.query(
+                                `
+                                INSERT INTO customer_has_reception_type (Customer_ID, Reception_ID)
+                                VALUES (?, (SELECT Reception_ID FROM reception_type WHERE Reception_Name = ?))
+                                `,
+                                [customerId, typeName],
+                                (insertError) => {
+                                    if (insertError) {
+                                        reject(insertError);
+                                    } else {
+                                        resolve();
+                                    }
+                                }
+                            );
+                        });
                     });
-                    }
 
-                    callback(null, { message: 'Customer reception types updated successfully' });
-                });
-                })
-                .catch((insertError) => {
-                connection.rollback(() => {
-                    callback(insertError, null);
-                });
-                });
-            }
-        );
+                    Promise.all(insertQueries)
+                        .then(() => {
+                            connection.commit((commitError) => {
+                                if (commitError) {
+                                    return connection.rollback(() => {
+                                        callback(commitError, null);
+                                    });
+                                }
+
+                                callback(null, { message: 'Customer reception types updated successfully' });
+                            });
+                        })
+                        .catch((insertError) => {
+                            connection.rollback(() => {
+                                callback(insertError, null);
+                            });
+                        });
+                }
+            );
         });
     },
 };
