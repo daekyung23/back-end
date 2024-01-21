@@ -1,9 +1,10 @@
 const CustomerHasReceptionTypeModel = require('../models/customerHasReceptionTypeModel');
 
 const customerHasReceptionTypeController = {
+  
   getReceptionTypeByCustomerId: async (req, res) => {
     const customerId = req.params.customerId;
-
+    console.log(customerId);
     try {
       const result = await CustomerHasReceptionTypeModel.getReceptionTypeByCustomerId(customerId);
       res.status(200).json(result);

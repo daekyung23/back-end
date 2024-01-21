@@ -7,6 +7,7 @@ const departmentRouters = require('./routers/departmentRouters');
 const employeePositionRouters = require('./routers/employeePositionRouters');
 const customerRouters = require('./routers/customerRouters');
 const customerHasReceptionTypeRouters = require('./routers/customerHasReceptionTypeRouters');
+const customerLocationRouters = require('./routers/customerLocationRouters');
 
 const port = 3001;
 
@@ -24,6 +25,7 @@ app.use('/department', departmentRouters);
 app.use('/employeePosition', employeePositionRouters);
 app.use('/customer', customerRouters);
 app.use('/customerHasReceptionType', customerHasReceptionTypeRouters);
+app.use('/customerLocation', customerLocationRouters);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
