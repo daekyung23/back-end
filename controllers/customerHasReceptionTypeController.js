@@ -1,5 +1,6 @@
     const CustomerHasReceptionType = require('../models/customerHasReceptionTypeModel');
 
+<<<<<<< HEAD
     const customerHasReceptionTypeController = {
         getAllParentReceptionTypes: async (req, res) => {
             try {
@@ -35,6 +36,21 @@
                 res.status(500).json({ error: error.message });
             }
         },
+=======
+const customerHasReceptionTypeController = {
+  
+  getReceptionTypeByCustomerId: async (req, res) => {
+    const customerId = req.params.customerId;
+    console.log(customerId);
+    try {
+      const result = await CustomerHasReceptionTypeModel.getReceptionTypeByCustomerId(customerId);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error('Error getting customer by ID: ', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+>>>>>>> 6bcc65aad448bc8dea086ad316a702f25c330905
 
         searchCustomerHasReceptionType: async (req, res) => {
             const searchTerms = req.query.searchTerms || '';
