@@ -56,17 +56,26 @@
             }
         },
 
-        updateCustomerHasReceptionType: (req, res) => {
-            const customerId = req.params.customerId;
+        updateCustomerHasReceptionType: async (req, res) => {
+            const {customerId} = req.params;
             const receptionType = req.body.receptionType;
-
-            CustomerHasReceptionType.updateCustomerHasReceptionType(customerId, receptionType, (error, result) => {
-            if (error) {
-                res.status(500).json({ error: 'Internal Server Error' });
-            } else {
-                res.status(200).json(result);
-            }
-            });
+            console.log(customerId);
+            console.log(receptionType);
+            try {
+                const results = await new Promise((resolve, reject) => {
+                    CustomerHasReceptionType.updateCustomerHasReceptionType(customerId, receptionType, (error, result) => {
+                        if (error) {
+                            console.log("여기에서 에러가 발생함");
+                            res.status(500).json({ error: 'Internal Server Error' });
+                        } else {
+                            res.status(200).json(result);
+                        }
+                    });
+                });
+                res.status(200).json({ message: 'CustomerHasReceptionType updated successfully.' });
+            } catch (error) {
+                res.status(500).json({ error: error.message });
+            }     
         },
     };
 
