@@ -114,32 +114,54 @@ const CustomerHasReceptionType = {
                 [customerId],
                 (deleteError) => {
                     if (deleteError) {
+                        console.log("deleteError");
                         return connection.rollback(() => {
                             callback(deleteError, null);
                         });
                     }
-    
+                    // const insertQueries = Object.entries(receptionType)
+                    //     .filter(([typeName, shouldInsert]) => shouldInsert)  // Filter only true values
+                    //     .map(([typeName]) => {
+                    //         return new Promise((resolve, reject) => {
+                    //             connection.query(
+                    //                 `
+                    //                 INSERT INTO customer_has_reception_type (Customer_ID, Reception_ID)
+                    //                 VALUES (?, (SELECT Reception_ID FROM reception_type WHERE Reception_Name = ?))
+                    //                 `,
+                    //                 [customerId, typeName],
+                    //                 (insertError) => {
+                    //                     if (insertError) {
+                    //                         console.log("insertError");
+                    //                         reject(insertError);
+                    //                     } else {
+                    //                         resolve();
+                    //                     }
+                    //                 }
+                    //             );
+                    //         });
+                    //     });
                     const insertQueries = Object.entries(receptionType)
-                        .filter(([typeName, shouldInsert]) => shouldInsert)  // Filter only true values
-                        .map(([typeName]) => {
-                            return new Promise((resolve, reject) => {
-                                connection.query(
-                                    `
-                                    INSERT INTO customer_has_reception_type (Customer_ID, Reception_ID)
-                                    VALUES (?, (SELECT Reception_ID FROM reception_type WHERE Reception_Name = ?))
-                                    `,
-                                    [customerId, typeName],
-                                    (insertError) => {
-                                        if (insertError) {
-                                            reject(insertError);
-                                        } else {
-                                            resolve();
-                                        }
+                    .filter(([typeName, shouldInsert]) => shouldInsert)
+                    .map(([typeName]) => {
+                        return new Promise((resolve, reject) => {
+                            connection.query(
+                                `
+                                INSERT INTO customer_has_reception_type (Customer_ID, Reception_ID)
+                                VALUES (?, (SELECT Reception_ID FROM reception_type WHERE (Reception_Name = ? AND Parent_Reception_ID IS NULL)))
+                                `,
+                                [customerId, typeName],
+                                (insertError, results) => {
+                                    console.log(`Inserted ${typeName}:`, results); // 디버깅을 위해 결과를 로깅
+                                    if (insertError) {
+                                        console.log(`Insert error ${typeName}:`, insertError);
+                                        reject(insertError);
+                                    } else {
+                                        resolve();
                                     }
-                                );
-                            });
+                                }
+                            );
                         });
-    
+                    });
                     Promise.all(insertQueries)
                         .then(() => {
                             connection.commit((commitError) => {
