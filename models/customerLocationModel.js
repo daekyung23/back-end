@@ -19,7 +19,7 @@ const CustomerLocation = {
   registerNewCustomerLocation: (customerLocationData, callback) => {
     connection.query(
       `
-        INSERT INTO Customer_Location (Customer_ID, Customer_Location_Rate_ID, Customer_Location_Name, Area_ID, Use_Status, Details)
+        INSERT INTO Customer_Location (Customer_ID, Customer_Location_Rate_ID, Customer_Location_Name, Area_ID, Use_Status, Details, Managed_Department_ID)
         VALUES (?, ?, ?, ?, ?, ?);
       `,
       [
@@ -28,7 +28,8 @@ const CustomerLocation = {
         customerLocationData.Customer_Location_Name,
         customerLocationData.Area_ID,
         customerLocationData.Use_Status,
-        customerLocationData.Details
+        customerLocationData.Details,
+        customerLocationData.Managed_Department_ID
       ],
       (error, results) => {
         if(error) {
@@ -50,6 +51,7 @@ const CustomerLocation = {
         Area_ID = ?,
         Use_Status = ?,
         Details = ?,
+        Managed_Department_ID = ?,
         WHERE Customer_Location_ID = ? AND Customer_ID = ?;
       `,
       [
@@ -58,6 +60,7 @@ const CustomerLocation = {
         customerLocationData.Area_ID,
         customerLocationData.Use_Status,
         customerLocationData.Details,
+        customerLocationData.Managed_Department_ID,
         customerLocationData.Customer_Location_ID,
         customerLocationData.Customer_ID,
       ],
