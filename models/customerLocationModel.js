@@ -77,7 +77,7 @@ const CustomerLocation = {
   deleteCustomerLocation: (customerId, customerLocationId, callback) => {
     connection.query(
       `
-        DELTE From Customer_Location
+        DELETE From Customer_Location
         WHERE Customer_ID = ? AND Customer_Location_ID = ?;
       `,
       [customerId, customerLocationId],
