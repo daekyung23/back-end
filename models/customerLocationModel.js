@@ -20,7 +20,7 @@ const CustomerLocation = {
     connection.query(
       `
         INSERT INTO Customer_Location (Customer_ID, Customer_Location_Rate_ID, Customer_Location_Name, Area_ID, Use_Status, Details, Managed_Department_ID)
-        VALUES (?, ?, ?, ?, ?, ?);
+        VALUES (?, ?, ?, ?, ?, ?, ?);
       `,
       [
         customerLocationData.Customer_ID,
