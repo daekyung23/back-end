@@ -135,6 +135,4 @@ const Customer = {
       );
     },
 }
-
-
 module.exports = Customer;
