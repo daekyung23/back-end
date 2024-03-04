@@ -63,10 +63,10 @@ const Device = {
         let query = getAllDeviceQuery();
         query += `
             WHERE 
-            dm.Model_Name LIKE '%${modelNameKeyword}%' OR 
-            d.Serial_Num LIKE '%${serialNumKeyword}%' OR 
-            dm.Manufacturer LIKE '%${manufacturerKeyword}%' OR
-            d.Condition LIKE '%${conditionKeyword}%' OR
+            dm.Model_Name LIKE '%${modelNameKeyword}%' AND 
+            d.Serial_Num LIKE '%${serialNumKeyword}%' AND 
+            dm.Manufacturer LIKE '%${manufacturerKeyword}%' AND
+            d.Condition LIKE '%${conditionKeyword}%' AND
             s.Storage_Location LIKE '%${storageLocationKeyword}%'
 
             ORDER BY
