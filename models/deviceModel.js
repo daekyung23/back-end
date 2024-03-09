@@ -54,7 +54,7 @@ function getAllDeviceQuery() {
 
 const Device = {
     // 기기 세부 정보 검색
-    searchDevices: (modelNameKeyword, serialNumKeyword, manufacturerKeyword, conditionKeyword, storageLocationKeyword, page, deviceId, callback) => {
+    searchDevices: (modelNameKeyword, serialNumKeyword, manufacturerKeyword, conditionKeyword, storageLocationKeyword, page, callback) => {
         // 한 페이지당 결과 수
         const resultsPerPage = 20;
         // 페이지 번호에 따른 OFFSET 계산
