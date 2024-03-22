@@ -108,7 +108,37 @@ const Device = {
                 callback(null, results);
             }
         });
-    }
+    },
+
+    getAllDeviceConditions: (callback) => {
+        connection.query(
+            `
+            SELECT 
+                TRIM(BOTH "'" FROM SUBSTRING_INDEX(SUBSTRING_INDEX((REPLACE(REPLACE(COLUMN_TYPE, 'enum(', ''), ')', '')), ',', n.n), ',', -1)) AS 'Condition'
+            FROM 
+                INFORMATION_SCHEMA.COLUMNS
+            JOIN (
+                SELECT 
+                    a.N + b.N * 10 + 1 AS n
+                FROM 
+                    (SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS a
+                CROSS JOIN 
+                    (SELECT 0 AS N UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS b
+                ORDER BY 
+                    n
+            ) AS n ON CHAR_LENGTH(COLUMN_TYPE) - CHAR_LENGTH(REPLACE(COLUMN_TYPE, ',', '')) >= n.n - 1
+            WHERE 
+                TABLE_NAME = 'device' AND COLUMN_NAME = 'Condition';
+            `
+        , (error, results) => {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(null, results);
+            }
+            }
+        );
+    },
 };
 
 module.exports = Device;
