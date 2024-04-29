@@ -134,5 +134,22 @@ const Customer = {
         }
       );
     },
+
+    getCustomerChildren:  (callback) => {
+      connection.query(`
+        
+      SELECT Customer_Name 
+      FROM Customer
+      WHERE Parent_Customer_ID IS NOT NULL
+        
+      `, (error, results) => {
+          if (error) {
+            callback(error, null);
+          } else {
+            callback(null, results);
+          }
+        }
+      );
+    },
 }
 module.exports = Customer;

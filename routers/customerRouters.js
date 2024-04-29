@@ -9,5 +9,7 @@ router.get('/byParentId/:parentCustomerId', customerController.getCustomerByPare
 router.get('/search', customerController.searchCustomer);       //고객사 이름으로 검색
 router.put('/update/:customerId', customerController.updateCustomer);   //고객사 기존 정보 수정
 router.delete('/delete/:customerId', customerController.deleteCustomer);    //고객사 기존 정보 삭제
+router.get('/children', customerController.getCustomerChildren);         //모든 계열사 조회
+
 
 module.exports = router;

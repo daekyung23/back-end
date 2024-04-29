@@ -128,6 +128,24 @@ const registerNewCustomer = async (req, res) => {
       res.status(500).json({ error: error.message });
     }
   };
+
+  const getCustomerChildren = async (req, res) => {
+    try {
+      const results = await new Promise((resolve, reject) => {
+        Customer.getCustomerChildren((error, data) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(data);
+          }
+        });
+      });
+      res.status(200).json(results);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+
   
   module.exports = {
     registerNewCustomer,
@@ -137,4 +155,5 @@ const registerNewCustomer = async (req, res) => {
     searchCustomer,
     updateCustomer,
     deleteCustomer,
+    getCustomerChildren,
   };
