@@ -17,6 +17,24 @@ const DeviceModel = {
         );
     },
 
+    getManufacturers: (callback) => {
+        connection.query(
+            `
+            SELECT Manufacturer
+            FROM Device_Model
+            GROUP BY Manufacturer
+            `
+        , (error, results) => {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(null, results);
+            }
+            }
+        );
+    },
+
+
     getDeviceModelByManufacturer: (manufacturer, callback) => {
         connection.query(
             `
