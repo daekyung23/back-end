@@ -44,11 +44,11 @@ function getAllDeviceQuery() {
         LEFT JOIN customer_location cl ON l.Customer_Location_ID = cl.Customer_Location_ID
 
         LEFT JOIN Option_in_Device Fax_Option ON d.Device_ID = Fax_Option.Device_ID
-        LEFT JOIN \`Option\` Fax ON Fax_Option.Option_ID = Fax.Option_ID AND Fax.Option_Name = 'Fax'
+        LEFT JOIN \`Option\` Fax ON Fax_Option.Option_ID = Fax.Option_ID AND Fax.Option_Type = 'Fax'
         LEFT JOIN Option_in_device Desk_Option ON d.Device_ID = Desk_Option.Device_ID
-        LEFT JOIN \`Option\` Desk ON Desk_Option.Option_ID = Desk.Option_ID AND Desk.Option_Name = '데스크'
+        LEFT JOIN \`Option\` Desk ON Desk_Option.Option_ID = Desk.Option_ID AND Desk.Option_Type = '데스크'
         LEFT JOIN Option_in_device Shelf_Option ON d.Device_ID = Shelf_Option.Device_ID
-        LEFT JOIN \`Option\` Shelf ON Shelf_Option.Option_ID = Shelf.Option_ID AND Shelf.Option_Name = '3/4단'
+        LEFT JOIN \`Option\` Shelf ON Shelf_Option.Option_ID = Shelf.Option_ID AND Shelf.Option_Type = '3/4단'
     `;
 }
 
