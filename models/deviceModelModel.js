@@ -5,7 +5,7 @@ const DeviceModel = {
         connection.query(
             `
             SELECT *
-            FROM DeviceModel
+            FROM Device_Model
             `
         , (error, results) => {
             if (error) {

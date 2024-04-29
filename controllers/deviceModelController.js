@@ -1,4 +1,4 @@
-const DeviceModel = require('../models/deviceModel'); 
+const DeviceModel = require('../models/deviceModelModel'); 
 
 const getAllDeviceModels = async (req, res) => {
     try {
