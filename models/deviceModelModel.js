@@ -16,6 +16,23 @@ const DeviceModel = {
             }
         );
     },
+
+    getDeviceModelByManufacturer: (manufacturer, callback) => {
+        connection.query(
+            `
+            SELECT Model_Name
+            FROM Device_Model
+            WHERE Manufacturer = ?
+            `
+        , [manufacturer], (error, results) => {
+              if (error) {
+                callback(error, null);
+              } else {
+                callback(null, results);
+              }
+            }
+        );
+    },
 }
 
 module.exports = DeviceModel;
