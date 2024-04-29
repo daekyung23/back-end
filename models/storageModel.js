@@ -4,7 +4,7 @@ const Storage = {
     getAllStorages: (callback) => {
         connection.query(
             `
-            SELECT *
+            SELECT Storage_Location
             FROM Storage
             `
         , (error, results) => {
