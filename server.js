@@ -12,6 +12,8 @@ const areaRotuers = require('./routers/areaRouters');
 const deviceRouters = require('./routers/deviceRouters');
 const deviceModelRouters = require('./routers/deviceModelRouters');
 const storageRouters = require('./routers/storageRouters');
+const excelFileUploaderRouters = require('./routers/excelFileUploaderRouters');
+
 
 const port = 3001;
 
@@ -34,6 +36,8 @@ app.use('/area', areaRotuers);
 app.use('/device', deviceRouters);
 app.use('/deviceModel', deviceModelRouters);
 app.use('/storage', storageRouters);
+app.use('/excelFileUploader', excelFileUploaderRouters);
+
 
 
 app.listen(port, () => {
