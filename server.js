@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+
 const app = express();
 const employeeRouters = require('./routers/employeeRouter');
 const departmentRouters = require('./routers/departmentRouters');
@@ -12,8 +13,7 @@ const areaRotuers = require('./routers/areaRouters');
 const deviceRouters = require('./routers/deviceRouters');
 const deviceModelRouters = require('./routers/deviceModelRouters');
 const storageRouters = require('./routers/storageRouters');
-const excelFileUploaderRouters = require('./routers/excelFileUploaderRouters');
-
+const xlsxFileRouter = require('./routers/xlsxFileRouter');
 
 const port = 3001;
 
@@ -36,9 +36,7 @@ app.use('/area', areaRotuers);
 app.use('/device', deviceRouters);
 app.use('/deviceModel', deviceModelRouters);
 app.use('/storage', storageRouters);
-app.use('/excelFileUploader', excelFileUploaderRouters);
-
-
+app.use('/xlsxFile', xlsxFileRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
