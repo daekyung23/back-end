@@ -14,7 +14,7 @@ const strg = multer.diskStorage({
 });
 const upload = multer({ storage: strg });
 
-// 파일 업로드 라우트
 router.post('/upload', upload.single('file'), xlsxFileController.uploadExcel);
+router.get('/download', xlsxFileController.downloadExcel);
 
 module.exports = router;

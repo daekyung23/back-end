@@ -3,23 +3,34 @@ const connection = require('../database');
 const xlsx = require('xlsx');
 const async = require('async');
 
-exports.processExcel = async (file) => {
+exports.uploadExcel = async (file) => {
     console.log("Transaction start");
     await connection.beginTransaction();
 
     try {
         console.log("Reading Excel file");
         const workbook = readExcelFile(file.path);
-        // 시트 이름을 소문자로 매핑하는 객체 생성
-        const sheetNameMap = workbook.SheetNames.reduce((acc, name) => {
-            acc[name.toLowerCase()] = name;
-            return acc;
-        }, {});
-        const sheets = workbook.SheetNames.map(name => name.toLowerCase());
+        // // 시트 이름을 소문자로 매핑하는 객체 생성
+        // const sheetNameMap = workbook.SheetNames.reduce((acc, name) => {
+        //     acc[name.toLowerCase()] = name;
+        //     return acc;
+        // }, {});
+        // const sheets = workbook.SheetNames.map(name => name.toLowerCase());
+        
+        const sheetTableMap = {};
+        workbook.SheetNames.forEach((sheetName) => {
+            const sheet = workbook.Sheets[sheetName];
+            const tableName = sheet['A1'] ? sheet['A1'].v.toLowerCase() : null;
+            if (tableName) {
+                sheetTableMap[tableName] = sheetName;
+            }
+        });
+        
         console.log("Fetching table names and dependencies");
         const dbTables = await fetchTableNamesAndDependencies();
         console.log("Validating sheet names");
-        if (!validateSheetNames(sheets, Object.keys(dbTables))) {
+
+        if (!validateSheetNames(Object.keys(sheetTableMap), Object.keys(dbTables))) {
             throw new Error('Sheet name does not match table name');
         }
 
@@ -28,16 +39,39 @@ exports.processExcel = async (file) => {
         console.log("Sorted tables:", sortedTables);
 
         for (const tableName of sortedTables) {
-            if (sheets.includes(tableName)) {
-                console.log(`Processing sheet: ${tableName}`);
-                const sheetData = parseSheet(workbook.Sheets[sheetNameMap[tableName]]);
-                console.log("sheetData:", sheetData)
-                if (sheetData.length === 0) {
+            if (sheetTableMap[tableName]) {
+                // console.log(`Processing sheet: ${tableName}`);
+                // const sheetData = parseSheet(workbook.Sheets[sheetNameMap[tableName]]);
+                // console.log("sheetData:", sheetData)
+                // if (sheetData.length === 0) {
+                //     console.log(`No data to process in ${tableName}. Skipping.`);
+                //     continue;
+                // }
+                // console.log(`Inserting data into ${tableName}`);
+                // await insertDataIntoTable(tableName, sheetData);
+
+                const sheetName = sheetTableMap[tableName];
+                console.log(`Processing sheet: ${sheetName}`);
+
+                // 어트리뷰트 이름을 두 번째 행에서 추출
+                const attributes = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 })[1] || [];
+                console.log(`Attributes for ${tableName}:`, attributes);
+
+                // 세 번째 행부터 실제 데이터를 추출
+                const rows = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName], {
+                    header: attributes, // 첫 번째 줄의 필드 이름을 헤더로 사용
+                    range: 2, // 세 번째 줄부터 데이터를 추출
+                    defval: null // 비어있는 셀을 null로 대체
+                });
+                console.log(`sheetData for ${tableName}:`, rows);
+
+                if (rows.length === 0) {
                     console.log(`No data to process in ${tableName}. Skipping.`);
                     continue;
                 }
+
                 console.log(`Inserting data into ${tableName}`);
-                await insertDataIntoTable(tableName, sheetData);
+                await insertDataIntoTable(tableName, rows);
             } else {
                 console.log(`No matching sheet for table: ${tableName}. Skipping.`);
             }
@@ -45,6 +79,44 @@ exports.processExcel = async (file) => {
 
         console.log("Committing transaction");
         await connection.commit();
+    } catch (error) {
+        console.log("Error occurred, rolling back transaction", error);
+        await connection.rollback();
+        throw error;
+    }
+};
+
+exports.downloadExcel = async (dbName) => {
+    console.log("Transaction start for downloading Excel");
+    await connection.beginTransaction();
+
+    try {
+        console.log("Fetching table data for all tables");
+        const tables = await fetchAllTables();
+        const workbook = xlsx.utils.book_new();
+
+        for (const tableName of tables) {
+            const rows = await fetchTableData(tableName);
+            const schema = await fetchTableSchema(tableName);
+
+            const sheet = xlsx.utils.aoa_to_sheet([[tableName]]); // A1에 테이블 이름 삽입
+            xlsx.utils.sheet_add_aoa(sheet, [schema], {origin: 'A2'}); // A2에 열 이름(스키마) 삽입
+
+            if (rows.length > 0) {
+                // 데이터를 A3부터 삽입
+                xlsx.utils.sheet_add_json(sheet, rows, {origin: 'A3', skipHeader: true});
+            }
+
+            const safeSheetName = `Sheet_${tables.indexOf(tableName) + 1}`;
+            xlsx.utils.book_append_sheet(workbook, sheet, safeSheetName);
+        }
+
+        const filePath = `./${dbName}.xlsx`;
+        xlsx.writeFile(workbook, filePath);
+
+        console.log("Committing transaction");
+        await connection.commit();
+        return filePath;
     } catch (error) {
         console.log("Error occurred, rolling back transaction", error);
         await connection.rollback();
@@ -152,7 +224,6 @@ function insertDataIntoTable(tableName, data) {
     });
 }
 
-
 function topologicalSort(dependencies) {
     const graph = {};
     // Object.keys를 사용하여 각 키에 대해 반복
@@ -197,71 +268,43 @@ function topologicalSort(dependencies) {
     return stack.reverse(); // 위상 정렬은 스택의 역순으로 결과를 반환
 }
 
+async function fetchAllTables() {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT TABLE_NAME FROM information_schema.tables WHERE table_schema = 'mydb'`;
+        connection.query(query, (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                const tableNames = results.map(row => row.TABLE_NAME);
+                resolve(tableNames);
+            }
+        });
+    });
+}
 
-// function topologicalSort(dependencies, callback) {
-//     console.log("starttopologicalSort");
-//     let sorted = [], visited = {};
-//     async.eachOf(dependencies, (deps, node, cb) => {
-//         if (!visited[node]) {
-//             visit(node, [], visited, dependencies, sorted, (err) => {
-//                 if (err) {
-//                     console.log(err.message); // 에러 메시지 출력
-//                     callback(err); // 에러가 발생한 경우 콜백 함수로 전달
-//                 } else {
-//                     cb(); // visit 함수 완료 시 콜백 호출
-//                 }
-//             });
-//         } else {
-//             cb();
-//         }
-//     }, err => {
-//         if (err) {
-//             console.log(err.message); // 에러 메시지 출력
-//             callback(err); // 에러가 발생한 경우 콜백 함수로 전달
-//         } else {
-//             console.log("sorted:", sorted); // 정렬된 결과 출력
-//             callback(null, sorted); // 정렬된 결과를 콜백 함수로 전달
-//         }
-//     });
-// }
+function fetchTableSchema(tableName) {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT COLUMN_NAME FROM information_schema.columns WHERE table_schema = 'mydb' AND table_name = ?`;
+        connection.query(query, [tableName], (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                const columns = results.map(row => row.COLUMN_NAME);
+                resolve(columns);
+            }
+        });
+    });
+}
 
-// function visit(node, ancestors, visited, dependencies, sorted, callback) {
-//     if (visited[node]) {
-//         if (typeof callback === 'function') {
-//             return callback();
-//         } else {
-//             console.error('Callback is not a function at visited check');
-//             return; // 콜백이 함수가 아닐 경우 안전하게 반환
-//         }
-//     }
-//     ancestors.push(node);
-//     visited[node] = true;
-
-//     async.each(dependencies[node] || [], (dep, cb) => {
-//         if (ancestors.includes(dep)) {
-//             console.error('Detected cycle in dependencies');
-//             cb(new Error('Detected cycle in dependencies'));
-//         } else {
-//             if (dependencies[dep]) {
-//                 visit(dep, ancestors.slice(), visited, dependencies, sorted, cb);
-//             } else {
-//                 cb();
-//             }
-//         }
-//     }, err => {
-//         if (err) {
-//             if (typeof callback === 'function') {
-//                 callback(err);
-//             } else {
-//                 console.error('Callback is not a function at error handling');
-//             }
-//         } else {
-//             sorted.unshift(node);
-//             if (typeof callback === 'function') {
-//                 callback();
-//             } else {
-//                 console.error('Callback is not a function at success case');
-//             }
-//         }
-//     });
-// }
+function fetchTableData(tableName) {
+    return new Promise((resolve, reject) => {
+        const query = `SELECT * FROM \`${tableName}\``;
+        connection.query(query, (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results);
+            }
+        });
+    });
+}
