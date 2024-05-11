@@ -14,10 +14,11 @@ const deviceRouters = require('./routers/deviceRouters');
 const deviceModelRouters = require('./routers/deviceModelRouters');
 const storageRouters = require('./routers/storageRouters');
 const xlsxFileRouter = require('./routers/xlsxFileRouter');
+const corsOptions = {exposedHeaders: ['Content-Disposition'],};
 
 const port = 3001;
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json()); // JSON 요청 바디 파싱
 app.use(express.urlencoded({ extended: true })); // URL-encoded 요청 바디 파싱
 
