@@ -103,8 +103,13 @@ exports.downloadExcel = async (dbName) => {
             xlsx.utils.sheet_add_aoa(sheet, [schema], {origin: 'A2'}); // A2에 열 이름(스키마) 삽입
 
             if (rows.length > 0) {
+                // 데이터를 열 순서에 맞게 재정렬
+                const orderedRows = rows.map(row => 
+                    schema.map(column => row[column] !== undefined ? row[column] : null)
+                );
+
                 // 데이터를 A3부터 삽입
-                xlsx.utils.sheet_add_json(sheet, rows, {origin: 'A3', skipHeader: true});
+                xlsx.utils.sheet_add_json(sheet, orderedRows, {origin: 'A3', skipHeader: true});
             }
 
             const safeSheetName = `Sheet_${tables.indexOf(tableName) + 1}`;
@@ -284,7 +289,7 @@ async function fetchAllTables() {
 
 function fetchTableSchema(tableName) {
     return new Promise((resolve, reject) => {
-        const query = `SELECT COLUMN_NAME FROM information_schema.columns WHERE table_schema = 'mydb' AND table_name = ?`;
+        const query = `SELECT COLUMN_NAME FROM information_schema.columns WHERE table_schema = 'mydb' AND table_name = ? ORDER BY ORDINAL_POSITION`;
         connection.query(query, [tableName], (error, results) => {
             if (error) {
                 reject(error);
