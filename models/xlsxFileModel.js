@@ -69,20 +69,22 @@ exports.uploadExcel = async (file) => {
                 //      value : data type
                 const dataTypes = await fetchTableDataType(tableName);
                 console.log(dataTypes)
-                // 타입이 Date일 경우 && 입력 데이터가 숫자인 경우, Date 형식으로 변환
+                
+                // 날짜 값 변환
                 rows.forEach(row => {
                     Object.keys(row).forEach(column => {
-                        if (dataTypes[column] === 'date' && typeof row[column] === 'number') {
-                            row[column] = excelDateToMysqlDate(row[column]);
-                        }
-                    });
-                });
-
-                // 타입이 TIMESTAMP일 경우 && 입력 데이터가 숫자인 경우, TIMESTAMP 형식으로 변환
-                rows.forEach(row => {
-                    Object.keys(row).forEach(column => {
-                        if (dataTypes[column] === 'timestamp' && typeof row[column] === 'number') {
-                            row[column] = excelDateToMysqlDatetime(row[column]);
+                        if (typeof row[column] === 'number') {
+                            switch (dataTypes[column]) {
+                                case 'date':
+                                    row[column] = excelDateToMysqlDate(row[column]);
+                                    break;
+                                case 'timestamp':
+                                case 'datetime':
+                                    row[column] = excelDateToMysqlDatetime(row[column]);
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                     });
                 });
