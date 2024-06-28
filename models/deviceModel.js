@@ -1,5 +1,13 @@
 const connection = require('../database');
 
+function getDeviceCount() {
+    return `
+        SELECT COUNT(Device_ID) AS Total_Device_Count
+        FROM Device d
+        ${joinsDetail()}
+    `;
+}
+
 function getAllDevice() {
     return `
         SELECT 
@@ -26,8 +34,13 @@ function getAllDevice() {
             CASE WHEN Shelf_Option.Device_ID IS NOT NULL THEN TRUE ELSE FALSE END AS Shelf
 
         FROM Device d
+        ${joinsDetail()}
+        `;
+}
 
-        -- 최신 장치 기록 조인 (없을 수 있음)
+function joinsDetail() {
+    return `
+        -- 최신 장치 기록 조인
         LEFT JOIN (
             SELECT 
                 dh1.Device_ID,
@@ -44,18 +57,18 @@ function getAllDevice() {
             ) dh2 ON dh1.Device_ID = dh2.Device_ID AND dh1.Modified_Date = dh2.Last_Modified_Date
         ) dh ON d.Device_ID = dh.Device_ID
 
-        -- 장치 모델 정보 조인 (필수)
+        -- 장치 모델 정보 조인
         LEFT JOIN Device_Model dm ON d.Device_Model_ID = dm.Device_Model_ID
 
-        -- 저장소 정보 조인 (없을 수 있음)
+        -- 저장소 정보 조인
         LEFT JOIN Device_in_Storage dis ON d.Device_ID = dis.Device_ID
         LEFT JOIN \`Storage\` s ON dis.Storage_ID = s.Storage_ID
 
-        -- 위치 정보 조인 (필수)
+        -- 위치 정보 조인
         LEFT JOIN location l ON dh.Location_ID = l.Location_ID
         LEFT JOIN customer_location cl ON l.Customer_Location_ID = cl.Customer_Location_ID
 
-        -- 옵션 정보 조인 (없을 수 있음)
+        -- 옵션 정보 조인
         LEFT JOIN Option_in_Device Fax_Option ON d.Device_ID = Fax_Option.Device_ID
         LEFT JOIN \`Option\` Fax ON Fax_Option.Option_ID = Fax.Option_ID AND Fax.Option_Type = 'Fax'
         LEFT JOIN Option_in_device Desk_Option ON d.Device_ID = Desk_Option.Device_ID
@@ -128,6 +141,8 @@ const Device = {
         `;
         params.push(resultsPerPage, offset);
 
+
+
         connection.query(query, params, (error, results) => {
             if (error) {
                 callback(error, null);
@@ -135,40 +150,6 @@ const Device = {
                 callback(null, results);
             }
         });
-
-        // query += `
-        //     WHERE 
-        //     dm.Model_Name LIKE '%${modelNameKeyword}%' AND 
-        //     d.Serial_Num LIKE '%${serialNumKeyword}%' AND 
-        //     dm.Manufacturer LIKE '%${manufacturerKeyword}%' AND
-        //     d.Condition LIKE '%${conditionKeyword}%' AND
-        //     s.Storage_Location LIKE '%${storageLocationKeyword}%'
-
-        //     ORDER BY
-        //     d.Device_ID,
-        //     dh.Registration_Date,
-        //     dh.Modified_Date,
-        //     d.Department_ID,
-        //     dm.Manufacturer,
-        //     dm.Model_Name,
-        //     d.Serial_Num,
-        //     d.Mac,
-        //     Customer_Location_Name,
-        //     Storage_Location,
-        //     d.Condition,
-        //     Fax,
-        //     Desk,
-        //     Shelf
-        //     LIMIT ${resultsPerPage} OFFSET ${offset}
-        // `;
-
-        // connection.query(query, (error, results) => {
-        //     if (error) {
-        //         callback(error, null);
-        //     } else {
-        //         callback(null, results);
-        //     }
-        // });
     },
 
     // 기기 ID로 기기 세부 정보 가져오기
