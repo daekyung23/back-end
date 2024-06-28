@@ -1,25 +1,34 @@
 const connection = require('../database');
 
-function getAllDeviceQuery() {
+function getAllDevice() {
     return `
         SELECT 
-        d.Device_ID AS Device_ID,
-        dh.Registration_Date AS Registration_Date,
-        dh.Modified_Date AS Modified_Date,
-        d.Department_ID AS Department_ID,
-        dm.Manufacturer AS Manufacturer,
-        dm.Model_Name AS Model_Name,
-        d.Serial_Num AS Serial_Num,
-        d.Mac AS Mac,
-        IF(l.Location_Type = 'Customer_Location', cl.Customer_Location_Name, NULL) AS Customer_Location_Name,
-        IF(l.Location_Type = 'Storage', s.Storage_Location, NULL) AS Storage_Location,
-        d.Condition AS \`Condition\`,
-        CASE WHEN Fax_Option.Device_ID IS NOT NULL THEN TRUE ELSE FALSE END AS Fax,
-        CASE WHEN Desk_Option.Device_ID IS NOT NULL THEN TRUE ELSE FALSE END AS Desk,
-        CASE WHEN Shelf_Option.Device_ID IS NOT NULL THEN TRUE ELSE FALSE END AS Shelf
+            -- 기본 장치 정보
+            d.Device_ID AS Device_ID,
+            dh.Registration_Date AS Registration_Date,
+            dh.Modified_Date AS Modified_Date,
+            d.Department_ID AS Department_ID,
+            dm.Manufacturer AS Manufacturer,
+            dm.Model_Name AS Model_Name,
+            d.Serial_Num AS Serial_Num,
+            d.Mac AS Mac,
+
+            -- 위치 정보
+            IF(l.Location_Type = 'Customer_Location', cl.Customer_Location_Name, NULL) AS Customer_Location_Name,
+            IF(l.Location_Type = 'Storage', s.Storage_Location_Name, NULL) AS Storage_Location_Name,
+            
+            -- 상태 정보
+            d.Condition AS \`Condition\`,
+
+            -- 옵션 정보
+            CASE WHEN Fax_Option.Device_ID IS NOT NULL THEN TRUE ELSE FALSE END AS Fax,
+            CASE WHEN Desk_Option.Device_ID IS NOT NULL THEN TRUE ELSE FALSE END AS Desk,
+            CASE WHEN Shelf_Option.Device_ID IS NOT NULL THEN TRUE ELSE FALSE END AS Shelf
 
         FROM Device d
-        JOIN (
+
+        -- 최신 장치 기록 조인 (없을 수 있음)
+        LEFT JOIN (
             SELECT 
                 dh1.Device_ID,
                 dh1.Registration_Date,
@@ -35,14 +44,18 @@ function getAllDeviceQuery() {
             ) dh2 ON dh1.Device_ID = dh2.Device_ID AND dh1.Modified_Date = dh2.Last_Modified_Date
         ) dh ON d.Device_ID = dh.Device_ID
 
+        -- 장치 모델 정보 조인 (필수)
         LEFT JOIN Device_Model dm ON d.Device_Model_ID = dm.Device_Model_ID
 
+        -- 저장소 정보 조인 (없을 수 있음)
         LEFT JOIN Device_in_Storage dis ON d.Device_ID = dis.Device_ID
         LEFT JOIN \`Storage\` s ON dis.Storage_ID = s.Storage_ID
 
+        -- 위치 정보 조인 (필수)
         LEFT JOIN location l ON dh.Location_ID = l.Location_ID
         LEFT JOIN customer_location cl ON l.Customer_Location_ID = cl.Customer_Location_ID
 
+        -- 옵션 정보 조인 (없을 수 있음)
         LEFT JOIN Option_in_Device Fax_Option ON d.Device_ID = Fax_Option.Device_ID
         LEFT JOIN \`Option\` Fax ON Fax_Option.Option_ID = Fax.Option_ID AND Fax.Option_Type = 'Fax'
         LEFT JOIN Option_in_device Desk_Option ON d.Device_ID = Desk_Option.Device_ID
@@ -60,40 +73,102 @@ const Device = {
         // 페이지 번호에 따른 OFFSET 계산
         const offset = (page - 1) * resultsPerPage;
         
-        let query = getAllDeviceQuery();
+        let query = getAllDevice();
         query += `
-            WHERE 
-            dm.Model_Name LIKE '%${modelNameKeyword}%' AND 
-            d.Serial_Num LIKE '%${serialNumKeyword}%' AND 
-            dm.Manufacturer LIKE '%${manufacturerKeyword}%' AND
-            d.Condition LIKE '%${conditionKeyword}%' AND
-            s.Storage_Location LIKE '%${storageLocationKeyword}%'
-
-            ORDER BY
-            d.Device_ID,
-            dh.Registration_Date,
-            dh.Modified_Date,
-            d.Department_ID,
-            dm.Manufacturer,
-            dm.Model_Name,
-            d.Serial_Num,
-            d.Mac,
-            Customer_Location_Name,
-            Storage_Location,
-            d.Condition,
-            Fax,
-            Desk,
-            Shelf
-            LIMIT ${resultsPerPage} OFFSET ${offset}
+            WHERE 1=1
         `;
 
-        connection.query(query, (error, results) => {
+        const params = [];
+
+        if (modelNameKeyword) {
+            query += ` AND dm.Model_Name LIKE ?`;
+            params.push(`%${modelNameKeyword}%`);
+        }
+
+        if (serialNumKeyword) {
+            query += ` AND d.Serial_Num LIKE ?`;
+            params.push(`%${serialNumKeyword}%`);
+        }
+
+        if (manufacturerKeyword) {
+            query += ` AND dm.Manufacturer LIKE ?`;
+            params.push(`%${manufacturerKeyword}%`);
+        }
+
+        if (conditionKeyword) {
+            query += ` AND d.Condition LIKE ?`;
+            params.push(`%${conditionKeyword}%`);
+        }
+
+        if (storageLocationKeyword) {
+            query += ` AND s.Storage_Location_Name LIKE ?`;
+            params.push(`%${storageLocationKeyword}%`);
+        }
+
+        query += `
+            ORDER BY
+                d.Device_ID,
+                dh.Registration_Date,
+                dh.Modified_Date,
+                d.Department_ID,
+                dm.Manufacturer,
+                dm.Model_Name,
+                d.Serial_Num,
+                d.Mac,
+                Customer_Location_Name,
+                Storage_Location_Name,
+                d.Condition,
+                Fax,
+                Desk,
+                Shelf
+        `;
+
+        query += `
+            LIMIT ? OFFSET ?
+        `;
+        params.push(resultsPerPage, offset);
+
+        connection.query(query, params, (error, results) => {
             if (error) {
                 callback(error, null);
             } else {
                 callback(null, results);
             }
         });
+
+        // query += `
+        //     WHERE 
+        //     dm.Model_Name LIKE '%${modelNameKeyword}%' AND 
+        //     d.Serial_Num LIKE '%${serialNumKeyword}%' AND 
+        //     dm.Manufacturer LIKE '%${manufacturerKeyword}%' AND
+        //     d.Condition LIKE '%${conditionKeyword}%' AND
+        //     s.Storage_Location LIKE '%${storageLocationKeyword}%'
+
+        //     ORDER BY
+        //     d.Device_ID,
+        //     dh.Registration_Date,
+        //     dh.Modified_Date,
+        //     d.Department_ID,
+        //     dm.Manufacturer,
+        //     dm.Model_Name,
+        //     d.Serial_Num,
+        //     d.Mac,
+        //     Customer_Location_Name,
+        //     Storage_Location,
+        //     d.Condition,
+        //     Fax,
+        //     Desk,
+        //     Shelf
+        //     LIMIT ${resultsPerPage} OFFSET ${offset}
+        // `;
+
+        // connection.query(query, (error, results) => {
+        //     if (error) {
+        //         callback(error, null);
+        //     } else {
+        //         callback(null, results);
+        //     }
+        // });
     },
 
     // 기기 ID로 기기 세부 정보 가져오기
