@@ -90,7 +90,6 @@ exports.uploadExcel = async (file) => {
                 });
 
                 // 테이블에 데이터 입력
-                console.log(`Inserting data into ${tableName}`);
                 await insertDataIntoTable(tableName, rows);
             } else {
                 console.log(`No matching sheet for table: ${tableName}. Skipping.`);
@@ -225,8 +224,16 @@ function insertDataIntoTable(tableName, data) {
             return resolve("No data to insert");
         }
 
+        // Device 테이블의 경우 Last_History_ID 어트리뷰트 제외
+        const filteredData = tableName === 'Device'
+            ? data.map(row => {
+                const { Last_History_ID, ...filteredRow } = row;
+                return filteredRow;
+              })
+            : data;
+
         // 첫 번째 데이터 객체에서 열 이름 추출
-        const columns = Object.keys(data[0]).map(col => `\`${col}\``).join(", ");
+        const columns = Object.keys(filteredData[0]).map(col => `\`${col}\``).join(", ");
         // 각 데이터 객체의 값에 대한 플레이스홀더 생성
         const placeholders = data.map(() => `(${Object.keys(data[0]).map(() => '?').join(', ')})`).join(', ');
         const sql = `INSERT INTO ${tableName} (${columns}) VALUES ${placeholders}`;
@@ -240,12 +247,38 @@ function insertDataIntoTable(tableName, data) {
             return acc;
         }, []);
 
-        connection.query(sql, values, (error, results) => {
+        connection.query(sql, values, async (error, results) => {
             if (error) {
                 console.error(`Error inserting data into ${tableName}:`, error);
                 reject(error);
             } else {
-                resolve(results);
+                if (tableName === 'Device_History') {
+                    try {
+                        // Device_History 테이블에 데이터가 삽입된 후 Device 테이블의 Last_History_ID 업데이트
+                        const lastInsertId = results.insertId;
+                        const deviceUpdatePromises = data.map(row => {
+                            return new Promise((resolve, reject) => {
+                                const deviceId = row.Device_ID;
+                                const updateSql = `UPDATE Device SET Last_History_ID = ? WHERE ID = ?`;
+                                connection.query(updateSql, [lastInsertId, deviceId], (updateError, updateResults) => {
+                                    if (updateError) {
+                                        console.error(`Error updating Device table for Device_ID ${deviceId}:`, updateError);
+                                        reject(updateError);
+                                    } else {
+                                        resolve(updateResults);
+                                    }
+                                });
+                            });
+                        });
+
+                        await Promise.all(deviceUpdatePromises);
+                        resolve(results);
+                    } catch (updateError) {
+                        reject(updateError);
+                    }
+                } else {
+                    resolve(results);
+                }
             }
         });
     });
@@ -253,10 +286,9 @@ function insertDataIntoTable(tableName, data) {
 
 function topologicalSort(dependencies) {
     const graph = {};
-    // Object.keys를 사용하여 각 키에 대해 반복
     Object.keys(dependencies).forEach(tableName => {
         dependencies[tableName].forEach(referencedTableName => {
-            if (tableName !== referencedTableName) { // 자기 자신 참조를 무시
+            if (tableName !== referencedTableName) {
                 if (!graph[tableName]) {
                     graph[tableName] = new Set();
                 }
@@ -264,6 +296,11 @@ function topologicalSort(dependencies) {
             }
         });
     });
+
+    //Device 와 Device_History 순환참조 방지
+    if (graph['device']) {
+        graph['device'].delete('device_history');
+    }
 
     const visited = {};
     const stack = [];
