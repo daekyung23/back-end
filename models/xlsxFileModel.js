@@ -235,11 +235,11 @@ function insertDataIntoTable(tableName, data) {
         // 첫 번째 데이터 객체에서 열 이름 추출
         const columns = Object.keys(filteredData[0]).map(col => `\`${col}\``).join(", ");
         // 각 데이터 객체의 값에 대한 플레이스홀더 생성
-        const placeholders = data.map(() => `(${Object.keys(data[0]).map(() => '?').join(', ')})`).join(', ');
+        const placeholders = filteredData.map(() => `(${Object.keys(filteredData[0]).map(() => '?').join(', ')})`).join(', ');
         const sql = `INSERT INTO ${tableName} (${columns}) VALUES ${placeholders}`;
 
         // 모든 데이터 객체의 값 처리
-        const values = data.reduce((acc, row) => {
+        const values = filteredData.reduce((acc, row) => {
             Object.values(row).forEach(value => {
                 // 빈 문자열을 NULL로 변환
                 acc.push(value === '' ? null : value);
@@ -252,33 +252,7 @@ function insertDataIntoTable(tableName, data) {
                 console.error(`Error inserting data into ${tableName}:`, error);
                 reject(error);
             } else {
-                if (tableName === 'Device_History') {
-                    try {
-                        // Device_History 테이블에 데이터가 삽입된 후 Device 테이블의 Last_History_ID 업데이트
-                        const lastInsertId = results.insertId;
-                        const deviceUpdatePromises = data.map(row => {
-                            return new Promise((resolve, reject) => {
-                                const deviceId = row.Device_ID;
-                                const updateSql = `UPDATE Device SET Last_History_ID = ? WHERE ID = ?`;
-                                connection.query(updateSql, [lastInsertId, deviceId], (updateError, updateResults) => {
-                                    if (updateError) {
-                                        console.error(`Error updating Device table for Device_ID ${deviceId}:`, updateError);
-                                        reject(updateError);
-                                    } else {
-                                        resolve(updateResults);
-                                    }
-                                });
-                            });
-                        });
-
-                        await Promise.all(deviceUpdatePromises);
-                        resolve(results);
-                    } catch (updateError) {
-                        reject(updateError);
-                    }
-                } else {
-                    resolve(results);
-                }
+                resolve(results);
             }
         });
     });
