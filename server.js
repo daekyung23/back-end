@@ -15,6 +15,7 @@ const deviceModelRouters = require('./routers/deviceModelRouters');
 const deviceHistoryRouters = require('./routers/deviceHistoryRouters');
 const storageRouters = require('./routers/storageRouters');
 const xlsxFileRouter = require('./routers/xlsxFileRouter');
+const checkInfoRouters = require('./routers/checkInfoRouters');
 const corsOptions = {exposedHeaders: ['Content-Disposition'],};
 
 const port = 3001;
@@ -40,6 +41,7 @@ app.use('/deviceHistory', deviceHistoryRouters);
 app.use('/deviceModel', deviceModelRouters);
 app.use('/storage', storageRouters);
 app.use('/xlsxFile', xlsxFileRouter);
+app.use('/checkInfo', checkInfoRouters);
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

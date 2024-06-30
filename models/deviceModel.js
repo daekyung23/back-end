@@ -23,6 +23,7 @@ function getAllDevice() {
 
             -- 위치 정보
             IF(l.Location_Type = 'Customer_Location', cl.Customer_Location_Name, NULL) AS Customer_Location_Name,
+            IF(l.Location_Type = 'Customer_Location', c.Customer_Name, NULL) AS Customer_Name,
             IF(l.Location_Type = 'Storage', s.Storage_Location_Name, NULL) AS Storage_Location_Name,
             
             -- 상태 정보
@@ -60,13 +61,14 @@ function joinsDetail() {
         -- 장치 모델 정보 조인
         LEFT JOIN Device_Model dm ON d.Device_Model_ID = dm.Device_Model_ID
 
-        -- 저장소 정보 조인
+        -- 창고 정보 조인
         LEFT JOIN Device_in_Storage dis ON d.Device_ID = dis.Device_ID
         LEFT JOIN \`Storage\` s ON dis.Storage_ID = s.Storage_ID
 
         -- 위치 정보 조인
         LEFT JOIN location l ON dh.Location_ID = l.Location_ID
         LEFT JOIN customer_location cl ON l.Customer_Location_ID = cl.Customer_Location_ID
+        LEFT JOIN customer c ON cl.Customer_ID = c.Customer_ID
 
         -- 옵션 정보 조인
         LEFT JOIN Option_in_Device Fax_Option ON d.Device_ID = Fax_Option.Device_ID
@@ -154,14 +156,14 @@ const Device = {
 
     // 기기 ID로 기기 세부 정보 가져오기
     getDeviceById: (deviceId, callback) => {
-        let query = getAllDeviceQuery();
+        let query = getAllDevice();
         query += ` WHERE d.Device_ID = ${deviceId}`;
 
         connection.query(query, (error, results) => {
             if (error) {
                 callback(error, null);
             } else {
-                callback(null, results);
+                callback(null, results[0]);
             }
         });
     },

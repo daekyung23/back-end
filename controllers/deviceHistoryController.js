@@ -2,6 +2,7 @@ const DeviceHistory = require('../models/deviceHistoryModel');
 
 const getDeviceHistoryById = async (req, res) => {
     const { deviceId } = req.params;
+    console.log(deviceId)
     try {
       const results = await new Promise((resolve, reject) => {
         DeviceHistory.getDeviceHistoryById(deviceId, (error, data) => {
