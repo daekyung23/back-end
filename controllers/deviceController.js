@@ -1,4 +1,4 @@
-const Device = require('../models/deviceModel'); 
+const Device = require('../repositories/deviceRepository'); 
 
 const searchDevices = async (req, res) => {
     const { modelNameKeyword, serialNumKeyword, manufacturerKeyword, conditionKeyword, storageLocationKeyword, page } = req.query;
@@ -47,10 +47,30 @@ const getAllDeviceConditions = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-  
+
+
+const registerNewDevice = async (req, res) => {
+  const deviceData = req.body;
+  console.log(req.body);
+  try {
+    const results = await new Promise((resolve, reject) => {
+      DeviceModel.insertDevice(deviceData, (error, data) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+    res.status(200).json({ message: 'Device insert successfully.' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 
 module.exports = {
     searchDevices,
     getDeviceById,
     getAllDeviceConditions,
+    registerNewDevice,
 };

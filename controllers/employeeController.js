@@ -1,4 +1,4 @@
-const Employee = require('../models/employeeModel');
+const Employee = require('../repositories/employeeModel');
 
 const registerNewEmployee = async (req, res) => {
   const employeeData = req.body; // Assuming the updated employee data is sent in the request body

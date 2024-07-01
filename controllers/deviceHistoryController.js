@@ -1,4 +1,4 @@
-const DeviceHistory = require('../models/deviceHistoryModel'); 
+const DeviceHistory = require('../repositories/deviceHistoryModel'); 
 
 const getDeviceHistoryById = async (req, res) => {
     const { deviceId } = req.params;

@@ -1,20 +1,19 @@
 const connection = require('../database');
 
-function getDeviceCount() {
+function selectDeviceCount() {
     return `
         SELECT COUNT(Device_ID) AS Total_Device_Count
         FROM Device d
-        ${joinsDetail()}
+        ${joinDetails()}
     `;
 }
 
-function getAllDevice() {
+function selectAllDevice() {
     return `
         SELECT 
             -- 기본 장치 정보
             d.Device_ID AS Device_ID,
-            dh.Registration_Date AS Registration_Date,
-            dh.Modified_Date AS Modified_Date,
+            d.Registration_Date AS Registration_Date,
             d.Owner_Dept_ID AS Owner_Dept_ID,
             d.Manage_Dept_ID AS Manage_Dept_ID,
             dm.Manufacturer AS Manufacturer,
@@ -23,10 +22,16 @@ function getAllDevice() {
             d.Mac AS Mac,
 
             -- 위치 정보
-            IF(l.Location_Type = 'Customer_Location', cl.Customer_Location_Name, NULL) AS Customer_Location_Name,
-            IF(l.Location_Type = 'Customer_Location', c.Customer_Name, NULL) AS Customer_Name,
-            IF(l.Location_Type = 'Storage', s.Storage_Location_Name, NULL) AS Storage_Location_Name,
-            
+            CASE
+                WHEN l.Location_Type = 'Customer_Location' THEN CONCAT(c.Customer_Name, '/', cl.Customer_Location_Name)
+                WHEN l.Location_Type = 'Storage' THEN s.Storage_Location_Name
+                ELSE NULL
+            END AS Location_Name,
+            CASE
+                WHEN l.Location_Type = 'Customer_Location' THEN c.Customer_Name
+                ELSE NULL
+            END AS Customer_Name,
+
             -- 상태 정보
             d.Condition AS \`Condition\`,
 
@@ -36,39 +41,23 @@ function getAllDevice() {
             CASE WHEN Shelf_Option.Device_ID IS NOT NULL THEN TRUE ELSE FALSE END AS Shelf
 
         FROM Device d
-        ${joinsDetail()}
+        ${joinDetails()}
         `;
 }
 
-function joinsDetail() {
+function joinDetails() {
     return `
-        -- 최신 장치 기록 조인
-        LEFT JOIN (
-            SELECT 
-                dh1.Device_ID,
-                dh1.Registration_Date,
-                dh1.Modified_Date,
-                dh1.Location_ID
-            FROM Device_History dh1
-            JOIN (
-                SELECT 
-                    Device_ID,
-                    MAX(Modified_Date) AS Last_Modified_Date
-                FROM Device_History
-                GROUP BY Device_ID
-            ) dh2 ON dh1.Device_ID = dh2.Device_ID AND dh1.Modified_Date = dh2.Last_Modified_Date
-        ) dh ON d.Device_ID = dh.Device_ID
-
         -- 장치 모델 정보 조인
         LEFT JOIN Device_Model dm ON d.Device_Model_ID = dm.Device_Model_ID
 
-        -- 창고 정보 조인
-        LEFT JOIN Device_in_Storage dis ON d.Device_ID = dis.Device_ID
-        LEFT JOIN \`Storage\` s ON dis.Storage_ID = s.Storage_ID
+        -- 최신 장치 기록 조인
+        LEFT JOIN Device_History dh ON d.Last_History_ID = dh.History_ID
 
         -- 위치 정보 조인
-        LEFT JOIN location l ON dh.Location_ID = l.Location_ID
-        LEFT JOIN customer_location cl ON l.Customer_Location_ID = cl.Customer_Location_ID
+        LEFT JOIN Location l ON dh.Location_ID = l.Location_ID
+
+        LEFT JOIN \`Storage\` s ON dh.Location_ID = s.Storage_ID
+        LEFT JOIN customer_location cl ON dh.Location_ID = cl.Customer_Location_ID
         LEFT JOIN customer c ON cl.Customer_ID = c.Customer_ID
 
         -- 옵션 정보 조인
@@ -81,7 +70,7 @@ function joinsDetail() {
     `;
 }
 
-const Device = {
+Device = {
     // 기기 세부 정보 검색
     searchDevices: (modelNameKeyword, serialNumKeyword, manufacturerKeyword, conditionKeyword, storageLocationKeyword, page, callback) => {
         // 한 페이지당 결과 수
@@ -89,7 +78,7 @@ const Device = {
         // 페이지 번호에 따른 OFFSET 계산
         const offset = (page - 1) * resultsPerPage;
         
-        let query = getAllDevice();
+        let query = selectAllDevice();
         query += `
             WHERE 1=1
         `;
@@ -124,8 +113,7 @@ const Device = {
         query += `
             ORDER BY
                 d.Device_ID,
-                dh.Registration_Date,
-                dh.Modified_Date,
+                d.Registration_Date,
                 d.Owner_Dept_ID,
                 d.Manage_Dept_ID,
                 dm.Manufacturer,
@@ -158,7 +146,7 @@ const Device = {
 
     // 기기 ID로 기기 세부 정보 가져오기
     getDeviceById: (deviceId, callback) => {
-        let query = getAllDevice();
+        let query = selectAllDevice();
         query += ` WHERE d.Device_ID = ${deviceId}`;
 
         connection.query(query, (error, results) => {
@@ -198,6 +186,23 @@ const Device = {
             }
             }
         );
+    },
+
+    insertDevice: (deviceData, callback) => {
+        const { deviceName, deviceType } = deviceData; 
+      
+        const query = `
+          INSERT INTO devices (device_name, device_type)
+          VALUES (?, ?)
+        `;
+      
+        db.query(query, [deviceName, deviceType], (error, results) => {
+            if (error) {
+                callback(error, null);
+            } else {
+                callback(null, results);
+            }
+        });
     },
 };
 

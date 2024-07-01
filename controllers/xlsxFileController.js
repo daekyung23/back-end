@@ -1,4 +1,4 @@
-const xlsxFileModel = require('../models/xlsxFileModel');
+const xlsxFileModel = require('../repositories/xlsxFileModel');
 const path = require('path'); // 경로 관련 모듈 가져오기
 
 exports.uploadExcel = async (req, res) => {

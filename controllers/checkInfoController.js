@@ -1,4 +1,4 @@
-const CheckInfo = require('../models/checkInfoModel');
+const CheckInfo = require('../repositories/checkInfoModel');
 
 const getAllCheckInfos = async (req, res) => {
   try {

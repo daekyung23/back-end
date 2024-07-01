@@ -1,13 +1,22 @@
 const connection = require('../database');
+const util = require('util');
 
 const xlsx = require('xlsx');
 const async = require('async');
 
+// Promisify the necessary methods
+const query = util.promisify(connection.query).bind(connection);
+const beginTransaction = util.promisify(connection.beginTransaction).bind(connection);
+const commit = util.promisify(connection.commit).bind(connection);
+const rollback = util.promisify(connection.rollback).bind(connection);
+
+
 exports.uploadExcel = async (file) => {
     console.log("Transaction start");
-    await connection.beginTransaction();
+    await beginTransaction();
 
     try {
+
         console.log("Reading Excel file");
         const workbook = readExcelFile(file.path);
 
@@ -39,6 +48,8 @@ exports.uploadExcel = async (file) => {
         console.log("Performing topological sort");
         const sortedTables = await topologicalSort(dbTables);
         console.log("Sorted tables:", sortedTables);
+
+        await startUploadExcelFile();
 
         // 모든 테이블에 데이터 입력
         for (const tableName of sortedTables) {
@@ -96,11 +107,13 @@ exports.uploadExcel = async (file) => {
             }
         }
 
+        await endUploadExcelFile();
+
         console.log("Committing transaction");
-        await connection.commit();
+        await commit();
     } catch (error) {
         console.error("Error occurred, rolling back transaction", error);
-        await connection.rollback();
+        await rollback();
         throw error;
     } finally {
         connection.release();
@@ -110,7 +123,7 @@ exports.uploadExcel = async (file) => {
 
 exports.downloadExcel = async (dbName) => {
     console.log("Transaction start for downloading Excel");
-    await connection.beginTransaction();
+    await beginTransaction();
 
     try {
         console.log("Fetching table data for all tables");
@@ -142,19 +155,71 @@ exports.downloadExcel = async (dbName) => {
         xlsx.writeFile(workbook, filePath);
 
         console.log("Committing transaction");
-        await connection.commit();
+        await commit();
         return filePath;
     } catch (error) {
         console.log("Error occurred, rolling back transaction", error);
-        await connection.rollback();
+        await rollback();
         throw error;
     }
 };
+
+async function fetchAllForeignKeys() {
+    return query(`
+        SELECT TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
+        FROM information_schema.KEY_COLUMN_USAGE
+        WHERE REFERENCED_TABLE_SCHEMA = 'mydb';
+    `);
+}
+
+async function dropForeignKeys(foreignKeys) {
+    for (const key of foreignKeys) {
+        await query(`ALTER TABLE \`${key.TABLE_NAME}\` DROP FOREIGN KEY \`${key.CONSTRAINT_NAME}\``);
+    }
+}
+
+async function addForeignKeys(foreignKeys) {
+    for (const key of foreignKeys) {
+        await query(`ALTER TABLE \`${key.TABLE_NAME}\` ADD CONSTRAINT \`${key.CONSTRAINT_NAME}\` FOREIGN KEY (\`${key.COLUMN_NAME}\`) REFERENCES \`${key.REFERENCED_TABLE_NAME}\`(\`${key.REFERENCED_COLUMN_NAME}\`)`);
+    }
+}
+
 
 function readExcelFile(filePath) {
     const workbook = xlsx.readFile(filePath);
     return workbook;
 }
+
+async function startUploadExcelFile() {
+    try {
+        await query('SET @IS_STORAGE_TRIGGER_DISABLED = TRUE');
+        await query('SET @IS_CUSTOMER_LOCATION_TRIGGER_DISABLED = TRUE');
+
+        const foreignKeys = await fetchAllForeignKeys();
+        await dropForeignKeys(foreignKeys);
+        await query('ALTER TABLE location MODIFY COLUMN Location_ID INT NOT NULL');
+        await addForeignKeys(foreignKeys);
+    } catch (error) {
+        console.error('Error during startUploadExcelFile:', error);
+        throw error;
+    }
+}
+
+async function endUploadExcelFile() {
+    try {
+        await query('SET @IS_STORAGE_TRIGGER_DISABLED = FALSE');
+        await query('SET @IS_CUSTOMER_LOCATION_TRIGGER_DISABLED = FALSE');
+
+        const foreignKeys = await fetchAllForeignKeys();
+        await dropForeignKeys(foreignKeys);
+        await query('ALTER TABLE location MODIFY COLUMN Location_ID INT NOT NULL AUTO_INCREMENT');
+        await addForeignKeys(foreignKeys);
+    } catch (error) {
+        console.error('Error during endUploadExcelFile:', error);
+        throw error;
+    }
+}
+
 
 async function fetchAllTables() {
     return new Promise((resolve, reject) => {

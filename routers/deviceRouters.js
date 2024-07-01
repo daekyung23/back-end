@@ -7,4 +7,6 @@ router.get('/search', deviceController.searchDevices);
 router.get('/byId/:deviceId', deviceController.getDeviceById);
 router.get('/allCondition', deviceController.getAllDeviceConditions);
 
+router.post('/register', deviceController.registerNewDevice);
+
 module.exports = router;

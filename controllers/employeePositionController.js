@@ -1,4 +1,4 @@
-const EmployeePositions = require('../models/employeePositionModel');
+const EmployeePositions = require('../repositories/employeePositionModel');
 
 const getAllEmployeePositions = async (req, res) => {
   try {

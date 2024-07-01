@@ -1,4 +1,4 @@
-const Storage = require('../models/storageModel');
+const Storage = require('../repositories/storageModel');
 
 const getAllStorages = async (req, res) => {
   try {

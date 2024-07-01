@@ -1,4 +1,4 @@
-const CustomerLocation = require('../models/customerLocationModel');
+const CustomerLocation = require('../repositories/customerLocationModel');
 
 
 const getAllCustomerLocationById = async(req, res) => {

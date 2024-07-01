@@ -1,4 +1,4 @@
-const Customer = require('../models/customerModel');
+const Customer = require('../repositories/customerModel');
 
 const registerNewCustomer = async (req, res) => {
     const customerData = req.body;
