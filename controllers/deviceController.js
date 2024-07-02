@@ -1,9 +1,9 @@
 const Device = require('../repositories/deviceRepository'); 
 
 const searchDevices = async (req, res) => {
-    const { modelNameKeyword, serialNumKeyword, manufacturerKeyword, conditionKeyword, storageLocationKeyword, page } = req.query;
+    const { modelNameKeyword, serialNumKeyword, manufacturerKeyword, conditionKeyword, storageLocationKeyword, page, itemsPerPage, pagesPerPageSet } = req.query;
 
-    Device.searchDevices(modelNameKeyword, serialNumKeyword, manufacturerKeyword, conditionKeyword, storageLocationKeyword, page, (error, results) => {
+    Device.searchDevices(modelNameKeyword, serialNumKeyword, manufacturerKeyword, conditionKeyword, storageLocationKeyword, page, itemsPerPage, pagesPerPageSet, (error, results) => {
         if (error) {
             console.error('Error in searching device details:', error);
             res.status(500).json({ error: 'Internal server error' });

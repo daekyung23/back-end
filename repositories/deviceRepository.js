@@ -1,11 +1,24 @@
 const connection = require('../database');
 
-function selectDeviceCount() {
-    return `
-        SELECT COUNT(Device_ID) AS Total_Device_Count
+function deviceCountInPageSet(page, itemsPerPage, pagesPerPageSet) {
+    const pageSet = Math.ceil(page / pagesPerPageSet);
+    const pageSetStartItem = (pageSet - 1) * (itemsPerPage * pagesPerPageSet) + 1;
+    const nextPageSetStartItem = pageSetStartItem + (itemsPerPage * pagesPerPageSet);
+    const params = [nextPageSetStartItem - pageSetStartItem, pageSetStartItem - 1];
+
+    const query =  `
+        SELECT COUNT(Device_ID) AS Device_Count
         FROM Device d
-        ${joinDetails()}
+        LIMIT ? OFFSET ?
     `;
+
+    connection.query(query, params, (error, results) => {
+        if (error) {
+            callback(error, null);
+        } else {
+            callback(null, results[0].Device_Count);
+        }
+    });
 }
 
 function selectAllDevice() {
@@ -72,11 +85,9 @@ function joinDetails() {
 
 Device = {
     // 기기 세부 정보 검색
-    searchDevices: (modelNameKeyword, serialNumKeyword, manufacturerKeyword, conditionKeyword, storageLocationKeyword, page, callback) => {
-        // 한 페이지당 결과 수
-        const resultsPerPage = 20;
+    searchDevices: (modelNameKeyword, serialNumKeyword, manufacturerKeyword, conditionKeyword, storageLocationKeyword, page, itemsPerPage, pagesPerPageSet, callback) => {
         // 페이지 번호에 따른 OFFSET 계산
-        const offset = (page - 1) * resultsPerPage;
+        const offset = (page - 1) * itemsPerPage;
         
         let query = selectAllDevice();
         query += `
@@ -131,15 +142,27 @@ Device = {
         query += `
             LIMIT ? OFFSET ?
         `;
-        params.push(resultsPerPage, offset);
-
-
-
+        params.push(itemsPerPage, offset);
         connection.query(query, params, (error, results) => {
             if (error) {
                 callback(error, null);
             } else {
                 callback(null, results);
+                deviceCountInPageSet(page, itemsPerPage, pagesPerPageSet, (err, deviceCount) => {
+                    if (err) {
+                        callback(err, null);
+                    } else {
+                        isNextPageSet = deviceCount > itemsPerPage * pagesPerPageSet;
+                        pagesetEnd = Math.ceil(deviceCount/itemsPerPage) - (isNextPageSet? 1 : 0);
+                        const resultWithPagination = {
+                            pagesetEnd,
+                            isNextPageSet,
+                            results // 실제 검색 결과
+                        };
+
+                        callback(null, resultWithPagination);
+                    }   
+                });
             }
         });
     },
