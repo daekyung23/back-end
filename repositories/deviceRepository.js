@@ -1,25 +1,11 @@
+const { filter } = require('async');
 const connection = require('../database');
+const util = require('util');
 
-function deviceCountInPageSet(page, itemsPerPage, pagesPerPageSet) {
-    const pageSet = Math.ceil(page / pagesPerPageSet);
-    const pageSetStartItem = (pageSet - 1) * (itemsPerPage * pagesPerPageSet) + 1;
-    const nextPageSetStartItem = pageSetStartItem + (itemsPerPage * pagesPerPageSet);
-    const params = [nextPageSetStartItem - pageSetStartItem, pageSetStartItem - 1];
-
-    const query =  `
-        SELECT COUNT(Device_ID) AS Device_Count
-        FROM Device d
-        LIMIT ? OFFSET ?
-    `;
-
-    connection.query(query, params, (error, results) => {
-        if (error) {
-            callback(error, null);
-        } else {
-            callback(null, results[0].Device_Count);
-        }
-    });
-}
+const query = util.promisify(connection.query).bind(connection);
+const beginTransaction = util.promisify(connection.beginTransaction).bind(connection);
+const commit = util.promisify(connection.commit).bind(connection);
+const rollback = util.promisify(connection.rollback).bind(connection);
 
 function selectAllDevice() {
     return `
@@ -85,44 +71,48 @@ function joinDetails() {
 
 Device = {
     // 기기 세부 정보 검색
-    searchDevices: (modelNameKeyword, serialNumKeyword, manufacturerKeyword, conditionKeyword, storageLocationKeyword, page, itemsPerPage, pagesPerPageSet, callback) => {
-        // 페이지 번호에 따른 OFFSET 계산
-        const parsedItemsPerPage  = parseInt(itemsPerPage);
-        const offset = (page - 1) * parsedItemsPerPage;
+    searchDevices: async (modelNameKeyword, serialNumKeyword, manufacturerKeyword, conditionKeyword, storageLocationKeyword, page, itemsPerPage, pagesPerPageSet, callback) => {
+
+        page = parseInt(page, 10);
+        itemsPerPage = parseInt(itemsPerPage, 10);
+        pagesPerPageSet = parseInt(pagesPerPageSet, 10);
         
-        let query = selectAllDevice();
-        query += `
+        // 페이지 번호에 따른 OFFSET 계산
+        console.log(page, itemsPerPage, pagesPerPageSet);
+        const offset = (page - 1) * itemsPerPage;
+
+        let filterQuery = `
             WHERE 1=1
         `;
 
-        const params = [];
+        const filterParams = [];
 
         if (modelNameKeyword) {
-            query += ` AND dm.Model_Name LIKE ?`;
-            params.push(`%${modelNameKeyword}%`);
+            filterQuery += ` AND dm.Model_Name LIKE ?`;
+            filterParams.push(`%${modelNameKeyword}%`);
         }
 
         if (serialNumKeyword) {
-            query += ` AND d.Serial_Num LIKE ?`;
-            params.push(`%${serialNumKeyword}%`);
+            filterQuery += ` AND d.Serial_Num LIKE ?`;
+            filterParams.push(`%${serialNumKeyword}%`);
         }
 
         if (manufacturerKeyword) {
-            query += ` AND dm.Manufacturer LIKE ?`;
-            params.push(`%${manufacturerKeyword}%`);
+            filterQuery += ` AND dm.Manufacturer LIKE ?`;
+            filterParams.push(`%${manufacturerKeyword}%`);
         }
 
         if (conditionKeyword) {
-            query += ` AND d.Condition LIKE ?`;
-            params.push(`%${conditionKeyword}%`);
+            filterQuery += ` AND d.Condition LIKE ?`;
+            filterParams.push(`%${conditionKeyword}%`);
         }
 
         if (storageLocationKeyword) {
-            query += ` AND s.Storage_Location_Name LIKE ?`;
-            params.push(`%${storageLocationKeyword}%`);
+            filterQuery += ` AND s.Storage_Location_Name LIKE ?`;
+            filterParams.push(`%${storageLocationKeyword}%`);
         }
 
-        query += `
+        filterQuery += `
             ORDER BY
                 d.Device_ID,
                 d.Registration_Date,
@@ -134,38 +124,52 @@ Device = {
                 d.Mac,
                 Customer_Location_Name,
                 Storage_Location_Name,
-                d.Condition,
-                Fax,
-                Desk,
-                Shelf
+                d.Condition
         `;
 
-        query += `
-            LIMIT ? OFFSET ?
-        `;
-        params.push(parsedItemsPerPage, offset);
-        connection.query(query, params, (error, results) => {
-            if (error) {
-                callback(error, null);
-            } else {
-                callback(null, results);
-                deviceCountInPageSet(page, itemsPerPage, pagesPerPageSet, (err, deviceCount) => {
-                    if (err) {
-                        callback(err, null);
-                    } else {
-                        isNextPageSet = deviceCount > itemsPerPage * pagesPerPageSet;
-                        pagesetEnd = Math.ceil(deviceCount/itemsPerPage) - (isNextPageSet? 1 : 0);
-                        const resultWithPagination = {
-                            pagesetEnd,
-                            isNextPageSet,
-                            results // 실제 검색 결과
-                        };
+        const searchQuery = selectAllDevice() + filterQuery +  `LIMIT ? OFFSET ?`;
+        let searchParams = filterParams.slice();
+        searchParams.push(itemsPerPage, offset);
 
-                        callback(null, resultWithPagination);
-                    }   
-                });
-            }
-        });
+        const pageSet = Math.ceil(page / pagesPerPageSet);
+        const pageSetStartItem = (pageSet - 1) * (itemsPerPage * pagesPerPageSet) + 1;
+        const nextPageSetStartItem = pageSetStartItem + (itemsPerPage * pagesPerPageSet);
+    
+        let countQuery = `
+            SELECT COUNT(d.Device_ID) AS Device_Count
+            FROM Device d
+        `;
+        countQuery += joinDetails() + filterQuery + `LIMIT ? OFFSET ?`
+        let countParams = filterParams.slice();
+        countParams.push(nextPageSetStartItem - pageSetStartItem, pageSetStartItem - 1);
+
+        try {
+            // 트랜잭션 시작
+            await beginTransaction();
+    
+            // 검색 쿼리 실행
+            const searchResults = await query(searchQuery, searchParams);
+    
+            // 카운트 쿼리 실행
+            const countResult = await query(countQuery, countParams);
+            const deviceCount = countResult[0].Device_Count;
+    
+            const isNextPageSet = deviceCount > itemsPerPage * pagesPerPageSet;
+            const pagesetEnd = Math.ceil(deviceCount / itemsPerPage) - (isNextPageSet ? 1 : 0);
+            const resultWithPagination = {
+                pagesetEnd,
+                isNextPageSet,
+                searchResults
+            };
+    
+            // 트랜잭션 커밋
+            await commit();
+            callback(null, resultWithPagination);
+        } catch (error) {
+            // 트랜잭션 롤백
+            await rollback();
+            callback(error, null);
+        }
     },
 
     // 기기 ID로 기기 세부 정보 가져오기

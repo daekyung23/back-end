@@ -1,7 +1,8 @@
 const Device = require('../repositories/deviceRepository'); 
 
 const searchDevices = async (req, res) => {
-    const { modelNameKeyword, serialNumKeyword, manufacturerKeyword, conditionKeyword, storageLocationKeyword, page, itemsPerPage, pagesPerPageSet } = req.query;
+  console.log(req.query)
+  const { modelNameKeyword, serialNumKeyword, manufacturerKeyword, conditionKeyword, storageLocationKeyword, page, itemsPerPage, pagesPerPageSet } = req.query;
 
     Device.searchDevices(modelNameKeyword, serialNumKeyword, manufacturerKeyword, conditionKeyword, storageLocationKeyword, page, itemsPerPage, pagesPerPageSet, (error, results) => {
         if (error) {
