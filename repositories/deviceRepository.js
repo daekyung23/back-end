@@ -87,7 +87,8 @@ Device = {
     // 기기 세부 정보 검색
     searchDevices: (modelNameKeyword, serialNumKeyword, manufacturerKeyword, conditionKeyword, storageLocationKeyword, page, itemsPerPage, pagesPerPageSet, callback) => {
         // 페이지 번호에 따른 OFFSET 계산
-        const offset = (page - 1) * itemsPerPage;
+        const parsedItemsPerPage  = parseInt(itemsPerPage);
+        const offset = (page - 1) * parsedItemsPerPage;
         
         let query = selectAllDevice();
         query += `
@@ -142,7 +143,7 @@ Device = {
         query += `
             LIMIT ? OFFSET ?
         `;
-        params.push(itemsPerPage, offset);
+        params.push(parsedItemsPerPage, offset);
         connection.query(query, params, (error, results) => {
             if (error) {
                 callback(error, null);
