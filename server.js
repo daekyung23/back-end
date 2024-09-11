@@ -1,48 +1,46 @@
+// server.js
 const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-
-const app = express();
-const employeeRouters = require('./routers/employeeRouter');
-const departmentRouters = require('./routers/departmentRouters');
-const employeePositionRouters = require('./routers/employeePositionRouters');
-const customerRouters = require('./routers/customerRouters');
-const customerHasReceptionTypeRouters = require('./routers/customerHasReceptionTypeRouters');
-const customerLocationRouters = require('./routers/customerLocationRouters');
-const areaRotuers = require('./routers/areaRouters');
-const deviceRouters = require('./routers/deviceRouters');
-const deviceModelRouters = require('./routers/deviceModelRouters');
-const deviceHistoryRouters = require('./routers/deviceHistoryRouters');
-const storageRouters = require('./routers/storageRouters');
-const xlsxFileRouter = require('./routers/xlsxFileRouter');
-const checkInfoRouters = require('./routers/checkInfoRouters');
-const corsOptions = {exposedHeaders: ['Content-Disposition'],};
-
+const pool = require('./utils/database');
 const port = 3001;
+const app = express();
 
-app.use(cors(corsOptions));
-app.use(express.json()); // JSON 요청 바디 파싱
-app.use(express.urlencoded({ extended: true })); // URL-encoded 요청 바디 파싱
+app.use(express.json()); // JSON 요청 본문을 처리하기 위한 미들웨어 추가
 
+// 기본 경로에 대한 라우터 설정
+const userRouter = require('./routers/user-router');
+app.use('/user', userRouter);
 
-app.get('/', (req, res) => {
-  res.send('Hello from the backend!');
-});
+const deptRouter = require('./routers/dept-router');
+app.use('/dept', deptRouter);
 
-app.use('/employee', employeeRouters);
-app.use('/department', departmentRouters);
-app.use('/employeePosition', employeePositionRouters);
-app.use('/customer', customerRouters);
-app.use('/customerHasReceptionType', customerHasReceptionTypeRouters);
-app.use('/customerLocation', customerLocationRouters);
-app.use('/area', areaRotuers);
-app.use('/device', deviceRouters);
-app.use('/deviceHistory', deviceHistoryRouters);
-app.use('/deviceModel', deviceModelRouters);
-app.use('/storage', storageRouters);
-app.use('/xlsxFile', xlsxFileRouter);
-app.use('/checkInfo', checkInfoRouters);
+const warehouseRouter = require('./routers/warehouse-router');
+app.use('/warehouse', warehouseRouter);
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+const deviceModelRouter = require('./routers/device-model-router');
+app.use('/device-model', deviceModelRouter);
+
+const deviceDriverRouter = require('./routers/device-driver-router');
+app.use('/device-driver', deviceDriverRouter);
+
+const consumableModelRouter = require('./routers/consumable-model-router');
+app.use('/consumabel-model', consumableModelRouter);
+
+// 서버 시작 전 DB 연결 확인
+(async () => {
+  try {
+    // 풀에서 연결을 얻어 테스트 쿼리를 수행하여 연결 상태를 확인합니다.
+    const connection = await pool.getConnection();
+    await connection.ping(); // 연결 테스트
+    connection.release(); // 연결 반환
+    console.log('Successfully connected to MySQL database.');
+  } catch (err) {
+    console.error('Failed to connect to MySQL database:', err);
+    process.exit(1); // 연결 실패 시 서버 종료
+  }
+})();
+
+// 서버를 지정된 포트에서 시작
+const PORT = process.env.PORT || port;
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
