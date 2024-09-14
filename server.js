@@ -1,10 +1,16 @@
 // server.js
 const express = require('express');
+const cors = require('cors');
 const pool = require('./utils/database');
 const port = 3001;
 const app = express();
 
 app.use(express.json()); // JSON 요청 본문을 처리하기 위한 미들웨어 추가
+
+// 모든 출처에서의 요청을 허용
+app.use(cors());
+// 기존의 다른 미들웨어 및 라우터 설정들
+app.use(express.json());
 
 // 기본 경로에 대한 라우터 설정
 const userRouter = require('./routers/user-router');
