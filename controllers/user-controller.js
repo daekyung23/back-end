@@ -1,7 +1,7 @@
 const userRepository = require('../repositories/user-repository');
 
 const searchUser = async (req, res) => {
-  const { searchTerms = '', isActive = 'Y', page = 1 } = req.query;
+  const { searchTerms = '', isActive = 'ALL', page = 1 } = req.query;
   const pageSize = 10; // 페이지 크기 설정
   const offset = (page - 1) * pageSize; // 페이지네이션 로직
 
