@@ -8,8 +8,18 @@ set databaseName=mydb
 REM 백업 파일이 저장된 디렉토리 설정
 set backupDir=.\backup_data
 
-REM MySQL 설치 경로 (mysql.exe 파일의 전체 경로)
-set mysqlPath="C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe"
+REM MySQL 설치 경로 확인 (C 또는 E 드라이브에서 자동 확인)
+if exist "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" (
+    set mysqlPath="C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe"
+    echo MySQL found on C drive.
+) else if exist "E:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" (
+    set mysqlPath="E:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe"
+    echo MySQL found on E drive.
+) else (
+    echo MySQL installation not found on C: or E: drive.
+    pause
+    exit /b
+)
 
 REM 최신 덤프 파일 찾기 (파일 이름에 날짜 및 시간이 포함된 형식)
 set latestDumpFile=
