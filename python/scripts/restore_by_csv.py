@@ -23,33 +23,19 @@ def create_database_if_not_exists(connection, database_name):
     finally:
         cursor.close()
 
-def recreate_table_from_schema(connection, table_name, schema_file):
+def disable_foreign_key_checks(connection):
     cursor = connection.cursor()
-    try:
-        with open(schema_file, 'r', encoding='utf-8-sig') as f:
-            schema = json.load(f)
+    cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
+    connection.commit()
+    print("Foreign key checks disabled.")
+    cursor.close()
 
-        cursor.execute(f"DROP TABLE IF EXISTS `{table_name}`")
-        create_table_sql = f"CREATE TABLE `{table_name}` ("
-
-        column_definitions = []
-        for column in schema:
-            column_definition = f"`{column['Field']}` {column['Type']}"
-            if column['Null'] == 'NO':
-                column_definition += " NOT NULL"
-            if column['Key'] == 'PRI':
-                column_definition += " PRIMARY KEY"
-            if column['Extra']:
-                column_definition += f" {column['Extra']}"
-            column_definitions.append(column_definition)
-        
-        create_table_sql += ", ".join(column_definitions) + ")"
-        cursor.execute(create_table_sql)
-        print(f"Table '{table_name}' recreated successfully.")
-    except mysql.connector.Error as err:
-        print(f"Error recreating table '{table_name}': {err}")
-    finally:
-        cursor.close()
+def enable_foreign_key_checks(connection):
+    cursor = connection.cursor()
+    cursor.execute("SET FOREIGN_KEY_CHECKS = 1;")
+    connection.commit()
+    print("Foreign key checks enabled.")
+    cursor.close()
 
 def import_csv_to_db(connection, table_name, csv_file):
     cursor = connection.cursor()
@@ -106,21 +92,24 @@ def main():
     dump_file = os.path.join(latest_backup_dir, 'mydb_schema_dump.sql')
     restore_db_structure(db_config, dump_file)
 
+    # 외부키 제약 해제
+    disable_foreign_key_checks(connection)
+
     # 각 테이블의 스키마와 데이터를 복구
     for file_name in os.listdir(latest_backup_dir):
         if file_name.endswith('_schema.json'):
             table_name = file_name.replace('_schema.json', '')
             schema_file = os.path.join(latest_backup_dir, file_name)
             csv_file = os.path.join(latest_backup_dir, f"{table_name}.csv")
-
-            # 테이블 재생성
-            recreate_table_from_schema(connection, table_name, schema_file)
             
             # CSV 데이터를 데이터베이스에 삽입
             if os.path.exists(csv_file):
                 import_csv_to_db(connection, table_name, csv_file)
             else:
                 print(f"CSV file not found for table '{table_name}'")
+
+    # 외부키 제약 활성화
+    enable_foreign_key_checks(connection)
 
     connection.close()
     print("Database restoration completed.")
