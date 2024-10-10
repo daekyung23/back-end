@@ -210,7 +210,7 @@ DROP TABLE IF EXISTS `device`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `device` (
-  `device_id` int NOT NULL,
+  `device_id` int NOT NULL AUTO_INCREMENT,
   `device_model_id` int NOT NULL,
   `owner_dept_id` int NOT NULL,
   `mgmt_dept_id` int NOT NULL,
@@ -219,7 +219,7 @@ CREATE TABLE `device` (
   `mac` varchar(50) NOT NULL,
   `last_inspection_log_id` int DEFAULT NULL,
   `last_location_log_id` int DEFAULT NULL,
-  `status_id` int NOT NULL,
+  `status_id` int NOT NULL DEFAULT 1,
   PRIMARY KEY (`device_id`),
   KEY `fk_device_device_model1_idx` (`device_model_id`),
   KEY `fk_device_dept1_idx` (`owner_dept_id`),
@@ -524,7 +524,7 @@ DROP TABLE IF EXISTS `location`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `location` (
-  `location_id` int NOT NULL,
+  `location_id` int NOT NULL AUTO_INCREMENT,
   `location_type` enum('warehouse','client_branch') NOT NULL,
   `warehouse_id` int DEFAULT NULL,
   `client_branch_id` int DEFAULT NULL,
@@ -656,7 +656,7 @@ DROP TABLE IF EXISTS `warehouse`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `warehouse` (
-  `warehouse_id` int NOT NULL,
+  `warehouse_id` int NOT NULL AUTO_INCREMENT,
   `warehouse_name` varchar(100) NOT NULL,
   `mgmt_dept_id` int NOT NULL,
   PRIMARY KEY (`warehouse_id`),
