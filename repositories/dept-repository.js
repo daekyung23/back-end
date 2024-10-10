@@ -1,19 +1,13 @@
-const pool = require('../utils/database');
+const DBHelper = require('../utils/DBHelper'); // DBHelper 불러오기
 
-const Dept = {
-  getAllDept : async () => {
-    try {
-      const [rows] = await pool.query(
-        `
-        SELECT *
-        FROM dept
-        `
-      );
-      return rows;
-    } catch (error) {
-      throw error;
-    }
+const DeptRepository = {
+  getAllDept: async () => {
+    const selectFrom = `
+      SELECT *
+      FROM dept
+    `;
+    return await DBHelper.search(selectFrom);
   },
 };
 
-module.exports = Dept;
+module.exports = DeptRepository;

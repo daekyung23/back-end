@@ -5,31 +5,17 @@ const pool = require('./utils/database');
 const port = 3001;
 const app = express();
 
-app.use(express.json()); // JSON 요청 본문을 처리하기 위한 미들웨어 추가
-
-// 모든 출처에서의 요청을 허용
-app.use(cors());
-// 기존의 다른 미들웨어 및 라우터 설정들
 app.use(express.json());
+app.use(cors());
 
-// 기본 경로에 대한 라우터 설정
-const userRouter = require('./routers/user-router');
-app.use('/user', userRouter);
-
-const deptRouter = require('./routers/dept-router');
-app.use('/dept', deptRouter);
-
-const warehouseRouter = require('./routers/warehouse-router');
-app.use('/warehouse', warehouseRouter);
-
-const deviceModelRouter = require('./routers/device-model-router');
-app.use('/device-model', deviceModelRouter);
-
-const deviceDriverRouter = require('./routers/device-driver-router');
-app.use('/device-driver', deviceDriverRouter);
-
-const consumableModelRouter = require('./routers/consumable-model-router');
-app.use('/consumabel-model', consumableModelRouter);
+app.use('/consumable-model', require('./routers/consumable-model-router'));
+app.use('/dept', require('./routers/dept-router'));
+app.use('/device-driver', require('./routers/device-driver-router'));
+app.use('/device-model', require('./routers/device-model-router'));
+app.use('/device', require('./routers/device-router'));
+app.use('/user', require('./routers/user-router'));
+app.use('/user-position', require('./routers/user-position-router'));
+app.use('/warehouse', require('./routers/warehouse-router'));
 
 // 서버 시작 전 DB 연결 확인
 (async () => {

@@ -1,47 +1,64 @@
-const pool = require('../utils/database');
+const DBHelper = require('../utils/DBHelper'); // DBHelper 불러오기
 
-const User = {
-  searchUser: async (searchTerms, isActive, offset, pageSize) => {
-    try {
-      const query = `
-        SELECT *
-        FROM user u
-        LEFT JOIN dept d ON u.dept_id = d.dept_id
-        WHERE (dept_name LIKE ? OR user_name LIKE ? OR login_id LIKE ? OR email LIKE ?)
-        ${isActive === null ? '' : 'AND is_active = ?'}
-        LIMIT ?, ?;
-      `;
+const UserRepository = {
 
-      const params = [`%${searchTerms}%`, `%${searchTerms}%`, `%${searchTerms}%`, `%${searchTerms}%`];
-      if (isActive !== null) params.push(isActive);
-      params.push(offset, pageSize);
+  fromJoin: `
+    FROM user u
+    LEFT JOIN dept d ON u.dept_id = d.dept_id
+  `,
 
-      const [rows] = await pool.query(query, params);
-      return rows;
-    } catch (error) {
-      throw error;
+  searchCondition: (searchTerms, isActive) => {
+    const where = {
+      condition: "(? OR ? OR ? OR ?)",  
+      params: [
+        { field: "d.dept_name", operator: "LIKE", value: `%${searchTerms}%` },
+        { field: "u.user_name", operator: "LIKE", value: `%${searchTerms}%` },
+        { field: "u.login_id", operator: "LIKE", value: `%${searchTerms}%` },
+        { field: "u.email", operator: "LIKE", value: `%${searchTerms}%` }
+      ]
+    };
+
+    if (isActive !== null) {
+      where.params.push({ field: "u.is_active", operator: "=", value: isActive });
+      where.condition = `(${where.condition}) AND`;
     }
+
+    return where;
+  },
+
+  searchUser: async (searchTerms, isActive, offset, pageSize) => {
+    const select = 'SELECT *'
+    let selectFromJoin = select + UserRepository.fromJoin;
+    const where = UserRepository.searchCondition(searchTerms, isActive);
+    const limit = { offset, pageSize };
+    return await DBHelper.search(selectFromJoin, where, null, limit);
   },
 
   searchUserCount: async (searchTerms, isActive) => {
-    try {
-      const countQuery = `
-        SELECT COUNT(*) as total
-        FROM user u
-        LEFT JOIN dept d ON u.dept_id = d.dept_id
-        WHERE (dept_name LIKE ? OR user_name LIKE ? OR login_id LIKE ? OR email LIKE ?)
-        ${isActive === null ? '' : 'AND is_active = ?'};
-      `;
-
-      const params = [`%${searchTerms}%`, `%${searchTerms}%`, `%${searchTerms}%`, `%${searchTerms}%`];
-      if (isActive !== null) params.push(isActive);
-
-      const [countResult] = await pool.query(countQuery, params);
-      return countResult[0].total; // 총 레코드 수 반환
-    } catch (error) {
-      throw error;
-    }
+    const select = 'SELECT COUNT(*) as total';
+    let selectFromJoin = select + UserRepository.fromJoin;
+    const where = UserRepository.searchCondition(searchTerms, isActive);
+    const rows = await DBHelper.search(selectFromJoin, where);
+    return rows[0].total;
   },
+
+  // 사용자 존재 확인
+  checkDuplicateLoginId: async (login_id) => {
+    const rows = await DBHelper.search('user', { login_id });
+    return rows.length > 0;
+  },
+
+  // 사용자 생성
+  createUser: async (user) => {
+    return await DBHelper.insert('user', user);
+  },
+
+  // 사용자 정보 수정
+  patchUser: async (login_id, user) => {
+    return await DBHelper.patch('user', user, { login_id });
+  }
+
+
 };
 
-module.exports = User;
+module.exports = UserRepository;

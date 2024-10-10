@@ -1,4 +1,5 @@
 const deptRepository = require('../repositories/dept-repository');
+const { toValidate } = require('../utils/validation');
 
 // 재귀 함수를 통해 상위 부서 계층 정보를 추출하고 JSON 형식으로 반환하는 함수
 const getHierarchy = (row, rows) => {
@@ -24,7 +25,10 @@ const getHierarchy = (row, rows) => {
 };
 
 const searchDept = async (req, res) => {
-  const { searchTerms = '', page = 1 } = req.query; // 기본 페이지 번호는 1
+  let { searchTerms, page } = req.query;
+  searchTerms = toValidate(searchTerms, '');
+  page = toValidate(page, 1);
+
   const pageSize = 10; // 페이지 크기 설정
   const offset = (page - 1) * pageSize; // 페이지네이션 로직
 
@@ -48,8 +52,8 @@ const searchDept = async (req, res) => {
       : allHierarchies;
 
     // 총 페이지 수 계산
-    const totalRows = filteredRows.length;
-    const totalPages = Math.ceil(totalRows / pageSize);
+    const rowCounts = filteredRows.length;
+    const totalPages = Math.ceil(rowCounts / pageSize);
 
     // 페이지네이션 적용
     const paginatedRows = filteredRows.slice(offset, offset + pageSize);
