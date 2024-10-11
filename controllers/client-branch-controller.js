@@ -65,7 +65,7 @@ const changeClientBranchActivation = async (req, res) => {
   }
   const client_branch = { client_branch_id };
   try {
-    const updatedBranch = await clientBranchRepository.changeClientBranchActivation(client_branch_id, client_branch);
+    const updatedBranch = await clientBranchRepository.changeMultipleClientBranchActivations([client_branch_id], client_branch);
     res.json(updatedBranch);
   } catch (error) {
     res.status(500).json({ message: 'Error changing client branch activation', error });
