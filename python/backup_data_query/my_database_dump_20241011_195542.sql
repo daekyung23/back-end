@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: mydb
 -- ------------------------------------------------------
--- Server version 8.0.33
+-- Server version	8.0.33
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -125,9 +125,8 @@ DROP TABLE IF EXISTS `client`;
 CREATE TABLE `client` (
   `client_id` int NOT NULL,
   `parent_client_id` int DEFAULT NULL,
-  `default_client_branch_rate_id` int NOT NULL,
+  `default_client_branch_rate_id` int DEFAULT NULL,
   `client_name` varchar(45) NOT NULL,
-  `is_active` tinyint NOT NULL DEFAULT '1',
   PRIMARY KEY (`client_id`),
   KEY `fk_client_client1_idx` (`parent_client_id`),
   KEY `fk_client_client_branch_rate1_idx` (`default_client_branch_rate_id`),
@@ -234,6 +233,28 @@ CREATE TABLE `consumable_model` (
 LOCK TABLES `consumable_model` WRITE;
 /*!40000 ALTER TABLE `consumable_model` DISABLE KEYS */;
 /*!40000 ALTER TABLE `consumable_model` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `deleteneeded`
+--
+
+DROP TABLE IF EXISTS `deleteneeded`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `deleteneeded` (
+  `id` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `deleteneeded`
+--
+
+LOCK TABLES `deleteneeded` WRITE;
+/*!40000 ALTER TABLE `deleteneeded` DISABLE KEYS */;
+/*!40000 ALTER TABLE `deleteneeded` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -923,4 +944,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-11 20:46:38
+-- Dump completed on 2024-10-11 19:55:43

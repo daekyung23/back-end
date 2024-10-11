@@ -8,6 +8,10 @@ const UserPositionRepository = {
     `;
     return await DBHelper.search(selectFrom);
   },
+
+  deleteUserPosition: async (user_position_id) => {
+    return await DBHelper.delete('user_position', { user_position_id });
+  },
 };
 
 module.exports = UserPositionRepository;

@@ -1,4 +1,5 @@
 const userPositionRepository = require('../repositories/user-position-repository');
+const { isValid } = require('../utils/validation');
 
 const getAllUserPositions = async (req, res) => {
   try {
@@ -9,6 +10,21 @@ const getAllUserPositions = async (req, res) => {
   }
 };
 
+const deleteUserPosition = async (req, res) => {
+  const { user_position_id } = req.params;
+  if (!isValid(user_position_id)) {
+    return res.status(400).json({ message: 'Missing user_position_id' });
+  }
+
+  try {
+    const deletedPosition = await userPositionRepository.deleteUserPosition(user_position_id);
+    res.json(deletedPosition);
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting user position', error });
+  }
+};
+
 module.exports = {
   getAllUserPositions,
+  deleteUserPosition,
 };

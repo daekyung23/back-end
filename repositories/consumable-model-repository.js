@@ -14,9 +14,9 @@ const ConsumableModelRepository = {
     const where = {
       condition: "((? OR ? OR ?) AND ?)", 
       params: [
-        { field: "cm.manufacturer", operator: "LIKE", value: `%${searchTerms}%` },
-        { field: "model_name", operator: "LIKE", value: `%${searchTerms}%` },
-        { field: "consumable_name", operator: "LIKE", value: `%${searchTerms}%` },
+        { field: "cm.manufacturer", operator: "LIKE", value: searchTerms, likeLeft: "%", likeRight: "%" },
+        { field: "model_name", operator: "LIKE", value: searchTerms, likeLeft: "%", likeRight: "%" },
+        { field: "consumable_name", operator: "LIKE", value: searchTerms, likeLeft: "%", likeRight: "%" },
         { field: "consumable_type", operator: "=", value: consumableType }
       ]
     };
@@ -38,6 +38,18 @@ const ConsumableModelRepository = {
     const rows = await DBHelper.search(selectFromJoin, where);
     return rows[0].total;  // 총 레코드 수 반환
   },
+
+  createConsumableModel: async (consumableModel) => {
+    return await DBHelper.insert('consumable_model', consumableModel);
+  },
+
+  patchConsumableModel: async (consumable_model_id, consumableModel) => {
+    return await DBHelper.patch('consumable_model', consumableModel, { consumable_model_id });
+  },
+
+  deleteConsumableModel: async (consumable_model_id) => {
+    return await DBHelper.delete('consumable_model', { consumable_model_id });
+  }
 };
 
 module.exports = ConsumableModelRepository;

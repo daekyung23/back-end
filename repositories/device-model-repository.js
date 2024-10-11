@@ -7,8 +7,8 @@ const DeviceModelRepository = {
     const where = {
       condition: "? OR ?",  
       params: [
-        { field: "model_name", operator: "LIKE", value: `%${searchTerms}%` },
-        { field: "manufacturer", operator: "LIKE", value: `%${searchTerms}%` }
+        { field: "model_name", operator: "LIKE", value: searchTerms, likeLeft: "%", likeRight: "%" },
+        { field: "manufacturer", operator: "LIKE", value: searchTerms, likeLeft: "%", likeRight: "%" }
       ]
     };
     return where;
@@ -31,6 +31,10 @@ const DeviceModelRepository = {
     const rows = await DBHelper.search(selectFromJoin, where);
     return rows[0].total; // 총 레코드 수 반환
   },
+
+  deleteDeviceModel: async (device_model_id) => {
+    return await DBHelper.delete('device_model', { device_model_id });
+  }
 };
 
 module.exports = DeviceModelRepository;

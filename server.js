@@ -8,6 +8,8 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+app.use('/client-branch', require('./routers/client-branch-router'));
+app.use('/client', require('./routers/client-router'));
 app.use('/consumable-model', require('./routers/consumable-model-router'));
 app.use('/dept', require('./routers/dept-router'));
 app.use('/device-driver', require('./routers/device-driver-router'));

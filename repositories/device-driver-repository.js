@@ -11,8 +11,8 @@ const DeviceDriverRepository = {
     const where = {
       condition: "? OR ?",  
       params: [
-        { field: "model_name", operator: "LIKE", value: `%${searchTerms}%` },
-        { field: "printer_language", operator: "LIKE", value: `%${searchTerms}%` }
+        { field: "model_name", operator: "LIKE", value: searchTerms, likeLeft: "%", likeRight: "%" },
+        { field: "printer_language", operator: "LIKE", value: searchTerms, likeLeft: "%", likeRight: "%" }
       ]
     };
     return where;
@@ -34,6 +34,18 @@ const DeviceDriverRepository = {
     const rows = await DBHelper.search(selectFromJoin, where);
     return rows[0].total;  // 총 레코드 수 반환
   },
+
+  createDeviceDriver: async (deviceDriver) => {
+    return await DBHelper.insert('device_driver', deviceDriver);
+  },
+
+  patchDeviceDriver: async (device_driver_id, deviceDriver) => {
+    return await DBHelper.patch('device_driver', deviceDriver, { device_driver_id });
+  },
+
+  deleteDeviceDriver: async (device_driver_id) => {
+    return await DBHelper.delete('device_driver', { device_driver_id });
+  }
 };
 
 module.exports = DeviceDriverRepository;

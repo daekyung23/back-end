@@ -1,5 +1,5 @@
 const deptRepository = require('../repositories/dept-repository');
-const { toValidate } = require('../utils/validation');
+const { isValid, isUndefined, toValidate } = require('../utils/validation');
 
 // 재귀 함수를 통해 상위 부서 계층 정보를 추출하고 JSON 형식으로 반환하는 함수
 const getHierarchy = (row, rows) => {
@@ -26,7 +26,7 @@ const getHierarchy = (row, rows) => {
 
 const searchDept = async (req, res) => {
   let { searchTerms, page } = req.query;
-  searchTerms = toValidate(searchTerms, '');
+  searchTerms = toValidate( searchTerms, '');
   page = toValidate(page, 1);
 
   const pageSize = 10; // 페이지 크기 설정
@@ -68,6 +68,73 @@ const searchDept = async (req, res) => {
   }
 };
 
+/**
+ * 특정 부서 ID에 대한 하위 부서를 검색합니다.
+ */
+getChildrenById = async (req, res) => {
+  const { dept_id } = req.query;
+  if(isUndefined(dept_id)) {
+    return res.status(400).json({ message: 'Missing dept_id' });
+  }
+
+  try {
+    const childDepts = await deptRepository.getChildDeptById(dept_id);
+    res.json(childDepts);
+  } catch (error) {
+    res.status(500).json({ message: 'Error getting child depts', error });
+  }
+};
+
+createDept = async (req, res) => {
+  const { dept_name, ...optionalFields } = req.body;
+  const requiredFields = { dept_name };
+  const validationError = validateFields(requiredFields, res);
+  if (validationError) return validationError;
+  const dept = { ...requiredFields, ...optionalFields };
+
+  try {
+    const newDept = await deptRepository.createDept(dept);
+    res.json(newDept);
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating dept', error });
+  }
+}
+
+updateDept = async (req, res) => {
+  const { dept_id, ...updateFields } = req.body;
+  if (!isValid(dept_id)) {
+    return res.status(400).json({ message: 'Missing dept_id' });
+  }
+
+  try {
+    if (Object.keys(updateFields).length === 0) {
+      return res.status(400).json({ message: 'No fields to update' });
+    }
+    const updatedDept = await deptRepository.patchDept(dept_id, updateFields);
+    res.json(updatedDept);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating dept', error });
+  }
+}
+
+deleteDept = async (req, res) => {
+  const { dept_id } = req.body;
+  if (!isValid(dept_id)) {
+    return res.status(400).json({ message: 'Missing dept_id' });
+  }
+
+  try {
+    const deletedDept = await deptRepository.deleteDept(dept_id);
+    res.json(deletedDept);
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting dept', error });
+  }
+};
+
 module.exports = {
   searchDept,
+  getChildrenById,
+  createDept,
+  updateDept,
+  deleteDept,
 };

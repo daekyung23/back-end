@@ -13,8 +13,8 @@ const WarehouseRepository = {
     const where = {
       condition: "? OR ?",  
       params: [
-        { field: "d.dept_name", operator: "LIKE", value: `%${searchTerms}%` },
-        { field: "w.warehouse_name", operator: "LIKE", value: `%${searchTerms}%` }
+        { field: "d.dept_name", operator: "LIKE", value: searchTerms, likeLeft: "%", likeRight: "%" },
+        { field: "w.warehouse_name", operator: "LIKE", value: searchTerms, likeLeft: "%", likeRight: "%" }
       ]
     };
     return where;
@@ -88,6 +88,19 @@ const WarehouseRepository = {
     }
   },
 
+  deleteWarehouse: async (warehouse_id) => {
+    const connection = await pool.getConnection(); // DB 연결 가져오기
+    await connection.beginTransaction(); // 트랜잭션 시작
+    try {
+      await DBHelper.delete('location', { warehouse_id });
+      await DBHelper.delete('warehouse', { warehouse_id });
+      await connection.commit();
+    } catch (error) {
+      await connection.rollback();
+      console.error('Error in deleteWarehouse repository:', error);
+      throw error;
+    }
+  }
 };
 
 module.exports = WarehouseRepository;

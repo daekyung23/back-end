@@ -1,5 +1,5 @@
 const deviceRepository = require('../repositories/device-repository');
-const { isValid, toValidate } = require('../utils/validation'); 
+const { isValid, toValidate, validateFields } = require('../utils/validation'); 
 
 const searchDevice = async (req, res) => {
   let { searchTerms, page } = req.query;
@@ -39,22 +39,9 @@ const createDevice = async (req, res) => {
   } = req.body;
 
   const requiredFields = { device_model_id, owner_dept_id, mgmt_dept_id, serial, mac };
-
-  // Check required fields
-  for (const [field, value] of Object.entries(requiredFields)) {
-    if (!isValid(value)) {
-      return res.status(400).json({ error: `${field} is required and cannot be null or undefined.` });
-    }
-  }
-
-  const device = {
-    device_model_id,
-    owner_dept_id,
-    mgmt_dept_id,
-    serial,
-    mac,
-    ...optionalFields
-  };
+  const validationError = validateFields(requiredFields, res);
+  if (validationError) return validationError;
+  const device = { ...requiredFields, ...optionalFields };
 
   try {
     const result = await deviceRepository.createDevice(device);
@@ -93,10 +80,25 @@ const changeDeviceStatus = async (req, res) => {
   }
 };
 
+const deleteDevice = async (req, res) => {
+  const { device_id } = req.params;
+  if (!isValid(device_id)) {
+    return res.status(400).json({ error: 'Missing device_id' });
+  }
+
+  try {
+    await deviceRepository.deleteDevice(device_id);
+    res.json({ message: 'Device deleted' });
+  } catch (error) {
+    console.error('Error in deleteDevice controller:', error);
+    res.status(500).json({ error: 'Failed to delete device' });
+  }
+}
 
 module.exports = {
   searchDevice,
   createDevice,
   updateDevice,
   changeDeviceStatus,
+  deleteDevice,
 };

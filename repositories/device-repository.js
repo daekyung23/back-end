@@ -19,9 +19,9 @@ const DeviceRepository = {
     const where = {
       condition: "(? OR ? OR ?)",  
       params: [
-        { field: "dm.model_name", operator: "LIKE", value: `%${searchTerms}%` },
-        { field: "d.serial", operator: "LIKE", value: `%${searchTerms}%` },
-        { field: "cb.client_branch_name", operator: "LIKE", value: `%${searchTerms}%` }
+        { field: "dm.model_name", operator: "LIKE", value: searchTerms, likeLeft: "%", likeRight: "%" },
+        { field: "d.serial", operator: "LIKE", value: searchTerms, likeLeft: "%", likeRight: "%" },
+        { field: "cb.client_branch_name", operator: "LIKE", value: searchTerms, likeLeft: "%", likeRight: "%" }
       ]
     };
 
@@ -39,7 +39,7 @@ const DeviceRepository = {
     `;
   
     let selectFromJoin = select + DeviceRepository.fromJoin; 
-    const where = DeviceRepository.searchCondition(searchTerms, isActive);
+    const where = DeviceRepository.searchCondition(searchTerms, is_active);
     const limit = { offset, pageSize };
     const groupBy = `d.device_id`;
     return await DBHelper.search(selectFromJoin, where, groupBy, limit);
@@ -48,7 +48,7 @@ const DeviceRepository = {
   searchDeviceCount: async (searchTerms) => {
     const select = 'SELECT COUNT(*) as total';
     let selectFromJoin = select + DeviceRepository.fromJoin;
-    const where = DeviceRepository.searchCondition(searchTerms, isActive);
+    const where = DeviceRepository.searchCondition(searchTerms, is_active);
     const groupBy = `d.device_id`; 
     const rows = await DBHelper.search(selectFromJoin, where, groupBy);
     return rows[0].total;
@@ -66,6 +66,10 @@ const DeviceRepository = {
 
   patchDevice: async (device_id, device) => {
     return await DBHelper.patch('device', device, { device_id });
+  },
+
+  deleteDevice: async (device_id) => {
+    return await DBHelper.delete('device', { device_id });
   }
 };
 

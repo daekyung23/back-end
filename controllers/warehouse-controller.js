@@ -1,5 +1,5 @@
 const warehouseRepository = require('../repositories/warehouse-repository');
-const { toValidate } = require('../utils/validation'); 
+const { toValidate, validateFields } = require('../utils/validation'); 
 
 const searchWarehouse = async (req, res) => {
   let { searchTerms, page } = req.query;
@@ -37,9 +37,8 @@ const checkDuplicateWarehouse = async (req, res) => {
 const createWarehouse = async (req, res) => {
   const { warehouse_name, mgmt_dept_id } = req.body;
   const warehouse = { warehouse_name, mgmt_dept_id };
-  if (!isValid(warehouse)) {
-    return res.status(400).json({ message: 'Missing required fields' });
-  }
+  const validationError = validateFields(warehouse, res);
+  if (validationError) return validationError;
 
   try {
     const newLocation = await warehouseRepository.createWarehouse(warehouse);
@@ -68,6 +67,21 @@ const updateWarehouse = async (req, res) => {
   }
 };
 
+const deleteWarehouse = async (req, res) => {
+  const { warehouse_id } = req.params;
+  if (!isValid(warehouse_id)) {
+    return res.status(400).json({ message: 'Missing warehouse_id' });
+  }
+
+  try {
+    const deletedWarehouse = await warehouseRepository.deleteWarehouse(warehouse_id);
+    res.json(deletedWarehouse);
+  } catch (error) {
+    console.error('Error in deleteWarehouse controller:', error); // 컨트롤러에서의 에러 로그
+    res.status(500).json({ message: 'Error deleting warehouse', error });
+  }
+};
+
 
 
 module.exports = {
@@ -75,4 +89,5 @@ module.exports = {
   checkDuplicateWarehouse,
   createWarehouse,
   updateWarehouse,
+  deleteWarehouse,
 };
