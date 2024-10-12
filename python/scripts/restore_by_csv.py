@@ -58,10 +58,22 @@ def import_csv_to_db(connection, table_name, csv_file):
         print(f"Error importing data for table '{table_name}': {err}")
     finally:
         cursor.close()
+        
+def find_mysql_executable():
+    # 명확한 두 경로에서 mysql.exe 파일 확인
+    possible_paths = [
+        r"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe",
+        r"E:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe"
+    ]
 
+    for path in possible_paths:
+        if os.path.exists(path):
+            return path
+
+    raise FileNotFoundError("mysql.exe not found in the specified paths.")
 
 def restore_db_structure(db_config, dump_file):
-    mysql_path = r"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe"  # mysql의 경로를 지정
+    mysql_path = find_mysql_executable()
     command = f'"{mysql_path}" --host={db_config["host"]} --user={db_config["user"]} --password={db_config["password"]} {db_config["database"]} < "{dump_file}"'
     print(f"Executing: {command}")
     subprocess.run(command, shell=True, check=True)
