@@ -68,7 +68,7 @@ const updateWarehouse = async (req, res) => {
 };
 
 const deleteWarehouse = async (req, res) => {
-  const { warehouse_id } = req.params;
+  const { warehouse_id } = req.query;
   if (!isValid(warehouse_id)) {
     return res.status(400).json({ message: 'Missing warehouse_id' });
   }

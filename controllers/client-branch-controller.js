@@ -1,8 +1,18 @@
 const clientBranchRepository = require('../repositories/client-branch-repository');
 const { toValidate } = require('../utils/validation');
-
+/**-------------------------------------------------------------------------
+ * 고객사 지점을 검색합니다.
+ * @param {Express.Request} req     
+ * @param {BranchSearchQuery} req.query         
+ * @param {Express.Response} res              
+ * 
+ * @typedef {Object} BranchSearchQuery         
+ * @property {string} [searchTerms] - 검색어 (default: '')
+ * @property {number} [page]        - 페이지 번호 (default: 1)
+ * @property {string} [is_active]   - 활성 상태 (default: undefined - 모든 상태)
+ */
 const searchClientBranch = async (req, res) => {
-  let { searchTerms, is_active, page } = req.query;
+  let { searchTerms, page, is_active } = req.query;
   searchTerms = toValidate(searchTerms, '');
   page = toValidate(page, 1);
   const pageSize = 10;
@@ -18,6 +28,25 @@ const searchClientBranch = async (req, res) => {
   }
 };
 
+/**-------------------------------------------------------------------------
+ * 새로운 고객사 지점을 생성합니다.
+ * @param {Express.Request} req                   
+ * @param {BranchCreateBody} req.body                    
+ * @param {Express.Response} res                  
+ * 
+ * @typedef {Object} BranchCreateBody                        
+ * @property {number} sigungu_id                   - 시군구 ID
+ * @property {number} mgmt_dept_id                 - 관리 부서 ID
+ * @property {number} client_id                    - 클라이언트 ID
+ * @property {string} client_branch_name           - 지점 이름
+ * @property {number} client_branch_rate_id        - 지점 등급 ID
+ * @property {string|null} [branch_mgr_name]       - 담당자 이름 (default: null in DB)
+ * @property {string|null} [branch_mgr_mobile_num] - 담당자 휴대폰 번호 (default: null in DB)
+ * @property {string|null} [branch_mgr_office_num] - 담당자 사무실 번호 (default: null in DB)
+ * @property {string|null} [branch_mgr_email]      - 담당자 이메일 (default: null in DB)
+ * @property {number} [remote_support]             - 원격 지원 여부 (0: 미지원, 1: 지원)
+ * @property {number} [push_alert]                 - 푸시 알림 설정 (0: 미설정, 1: 설정)
+ */
 const createClientBranch = async (req, res) => {
   const {
     sigungu_id,
@@ -41,6 +70,27 @@ const createClientBranch = async (req, res) => {
   }
 }
 
+/**-------------------------------------------------------------------------
+ * 고객사 지점 정보를 업데이트합니다.
+ * @param {Express.Request} req                   
+ * @param {BranchUpdateBody} req.body                    
+ * @param {Express.Response} res  
+ * 
+ * @typedef {Object} BranchUpdateBody             
+ * @property {number} client_branch_id          - 고객사 지점 ID
+ * @property {number} [sigungu_id]              - 시군구 ID
+ * @property {number} [mgmt_dept_id]            - 관리 부서 ID
+ * @property {number} [client_id]               - 클라이언트 ID
+ * @property {string} [client_branch_name]      - 지점 이름
+ * @property {number} [client_branch_rate_id]   - 지점 등급 ID
+ * @property {string|null} [branch_mgr_name]         - 담당자 이름
+ * @property {string|null} [branch_mgr_mobile_num]   - 담당자 휴대폰 번호
+ * @property {string|null} [branch_mgr_office_num]   - 담당자 사무실 번호
+ * @property {string|null} [branch_mgr_email]        - 담당자 이메일
+ * @property {number} [remote_support]          - 원격 지원 여부 (0: 미지원, 1: 지원)
+ * @property {number} [push_alert]              - 푸시 알림 설정 (0: 미설정, 1: 설정)
+ * @property {number} [is_active]               - 활성 상태 (0: 비활성, 1: 활성)
+ */
 const updateClientBranch = async (req, res) => {
   const { client_branch_id, ...updateFields } = req.body;
   if (!isValid(client_branch_id)) {
@@ -58,8 +108,18 @@ const updateClientBranch = async (req, res) => {
   }
 };
 
+/**-------------------------------------------------------------------------
+ * 고객사 지점의 활성 상태를 변경합니다.
+ * @param {Express.Request} req
+ * @param {BranchActivationRequest} req.body
+ * @param {Express.Response} res
+ * 
+ * @typedef {Object} BranchActivationRequest
+ * @property {number} client_branch_id - 고객사 지점 ID
+ * @property {number} is_active        - 활성 상태 (0: 비활성, 1: 활성)
+ */
 const changeClientBranchActivation = async (req, res) => {
-  const { client_branch_id } = req.params;
+  const { client_branch_id } = req.body;
   if (!isValid(client_branch_id)) {
     return res.status(400).json({ message: 'Missing client_branch_id' });
   }
@@ -72,8 +132,17 @@ const changeClientBranchActivation = async (req, res) => {
   }
 }
 
+/**-------------------------------------------------------------------------
+ * 고객사 지점을 삭제합니다.
+ * @param {Express.Request} req
+ * @param {BranchDeleteQuery} req.query
+ * @param {Express.Response} res
+ * 
+ * @typedef {Object} BranchDeleteQuery
+ * @property {number} client_branch_id - 삭제할 고객사 지점 ID
+ */
 const deleteClientBranch = async (req, res) => {
-  const { client_branch_id } = req.params;
+  const { client_branch_id } = req.query;
   if (!isValid(client_branch_id)) {
     return res.status(400).json({ message: 'Missing client_branch_id' });
   }

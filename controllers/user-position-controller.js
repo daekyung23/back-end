@@ -11,7 +11,7 @@ const getAllUserPositions = async (req, res) => {
 };
 
 const deleteUserPosition = async (req, res) => {
-  const { user_position_id } = req.params;
+  const { user_position_id } = req.query;
   if (!isValid(user_position_id)) {
     return res.status(400).json({ message: 'Missing user_position_id' });
   }

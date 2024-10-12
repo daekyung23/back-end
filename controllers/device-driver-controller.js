@@ -51,7 +51,7 @@ const updateDeviceDriver = async (req, res) => {
 };
 
 const deleteDeviceDriver = async (req, res) => {
-  const { device_driver_id } = req.params;
+  const { device_driver_id } = req.query;
   if (!isValid(device_driver_id)) {
     return res.status(400).json({ message: 'Missing device_driver_id' });
   }

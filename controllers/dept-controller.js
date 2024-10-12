@@ -118,7 +118,7 @@ updateDept = async (req, res) => {
 }
 
 deleteDept = async (req, res) => {
-  const { dept_id } = req.body;
+  const { dept_id } = req.query;
   if (!isValid(dept_id)) {
     return res.status(400).json({ message: 'Missing dept_id' });
   }

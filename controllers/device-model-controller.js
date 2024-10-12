@@ -20,7 +20,7 @@ const searchDeviceModel = async (req, res) => {
 };
 
 const deleteDeviceModel = async (req, res) => {
-  const { device_model_id } = req.params;
+  const { device_model_id } = req.query;
   if (!device_model_id) {
     return res.status(400).json({ message: 'Missing device_model_id' });
   }

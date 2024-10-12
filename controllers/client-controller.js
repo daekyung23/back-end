@@ -165,7 +165,7 @@ const changeClientActivation = async (req, res) => {
 };
 
 const deleteClient = async (req, res) => {
-  const { client_id } = req.params;
+  const { client_id } = req.query;
   if (!isValid(client_id)) {
     return res.status(400).json({ message: 'Missing client_id' });
   }

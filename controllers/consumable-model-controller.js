@@ -58,7 +58,7 @@ const updateConsumableModel = async (req, res) => {
 }
 
 const deleteConsumableModel = async (req, res) => {
-  const { consumable_model_id } = req.params;
+  const { consumable_model_id } = req.query;
   if (!isValid(consumable_model_id)) {
     return res.status(400).json({ message: 'Missing consumable_model_id' });
   }

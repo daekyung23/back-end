@@ -53,7 +53,7 @@ const createDevice = async (req, res) => {
 };
 
 const updateDevice = async (req, res) => {
-  const { device_id, ...updateFields } = req.params;
+  const { device_id, ...updateFields } = req.body;
   if (!isValid(device_id)) {
     return res.status(400).json({ error: 'Missing device_id' });
   }
@@ -81,7 +81,7 @@ const changeDeviceStatus = async (req, res) => {
 };
 
 const deleteDevice = async (req, res) => {
-  const { device_id } = req.params;
+  const { device_id } = req.query;
   if (!isValid(device_id)) {
     return res.status(400).json({ error: 'Missing device_id' });
   }
