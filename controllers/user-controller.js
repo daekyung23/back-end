@@ -3,9 +3,9 @@ const { isValid, toValidate, validateFields } = require('../utils/validation');
 
 /**--------------------------------------------------------------------------
  * 사용자를 검색합니다.
- * @param {Express.Request} req      
+ * @param {import('express').Request} req      
  * @param {UserSearchQuery} req.query 
- * @param {Express.Response} res    
+ * @param {import('express').Response} res    
  * 
  * @typedef {Object} UserSearchQuery 
  * @property {string} [searchTerms]   - 검색어 default ''
@@ -32,9 +32,9 @@ const searchUser = async (req, res) => {
 
 /**--------------------------------------------------------------------------
  * 로그인 ID의 중복 여부를 확인합니다.
- * @param {Express.Request} req             
+ * @param {import('express').Request} req             
  * @param {UserDuplicateCheckQuery} req.query 
- * @param {Express.Response} res             
+ * @param {import('express').Response} res             
  * 
  * @typedef {Object} UserDuplicateCheckQuery
  * @property {string} loginId - 확인할 로그인 ID
@@ -55,9 +55,9 @@ const checkDuplicateLoginId = async (req, res) => {
 
 /**--------------------------------------------------------------------------
  * 새로운 사용자를 생성합니다.
- * @param {Express.Request} req          
+ * @param {import('express').Request} req          
  * @param {UserCreateBody} req.body     
- * @param {Express.Response} res      
+ * @param {import('express').Response} res      
  * 
  * @typedef {Object} UserCreateBody         
  * @property {string} login_id                - 로그인 ID 
@@ -97,9 +97,9 @@ const createUser = async (req, res) => {
 
 /**--------------------------------------------------------------------------
  * 사용자 정보를 업데이트합니다.
- * @param {Express.Request} req         
+ * @param {import('express').Request} req         
  * @param {UserUpdateBody} req.body 
- * @param {Express.Response} res       
+ * @param {import('express').Response} res       
  * 
  * @typedef {Object} UserUpdateBody     
  * @property {string} login_id                - 로그인 ID (기준)
@@ -139,9 +139,9 @@ const updateUser = async (req, res) => {
 
 /**--------------------------------------------------------------------------
  * 사용자의 활성 상태를 변경합니다.
- * @param {Express.Request} req               
+ * @param {import('express').Request} req               
  * @param {UserActivationChangeBody} req.body 
- * @param {Express.Response} res              
+ * @param {import('express').Response} res              
  * 
  * @typedef {Object} UserActivationChangeBody
  * @property {string} loginId  - 로그인 ID (기준)
@@ -160,9 +160,9 @@ const changeUserActivation = async (req, res) => {
 
 /**--------------------------------------------------------------------------
  * 사용자를 삭제합니다.
- * @param {Express.Request} req       
+ * @param {import('express').Request} req       
  * @param {UserDeleteQuery} req.query
- * @param {Express.Response} res      
+ * @param {import('express').Response} res      
  * 
  * @typedef {Object} UserDeleteQuery  
  * @property {string} loginId - 삭제할 사용자의 로그인 ID  

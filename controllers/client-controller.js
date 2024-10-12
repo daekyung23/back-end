@@ -2,8 +2,20 @@ const ClientRepository = require('../repositories/client-repository');
 const ClientBranchRepository = require('../repositories/client-branch-repository');
 const { toValidate } = require('../utils/validation');
 
+/**-------------------------------------------------------------------------
+ * 고객사 검색 API 컨트롤러
+ * @param {import('express').Request} req
+ * @param {SearchClientQuery} req.query 
+ * @param {import('express').Response} res 
+ * 
+ * @typedef {Object} SearchClientQuery
+ * @property {string} [searchTerms] - 검색어 default ''
+ * @property {number} [page]        - 페이지 번호 default 1
+ * @property {string} [is_active]   - 활성 상태 default undefined
+ * @property {string} [client_rate] - 클라이언트 등급 default undefined
+ */
 const searchClient = async (req, res) => {
-  let { searchTerms, client_rate, page } = req.query;
+  let { searchTerms, page, is_active, client_rate} = req.query;
   searchTerms = toValidate(searchTerms, '');
   page = toValidate(page, 1);
   const pageSize = 10;
@@ -19,14 +31,25 @@ const searchClient = async (req, res) => {
   }
 }
 
+/**-------------------------------------------------------------------------
+ * 고객사를 생성 API 컨트롤러
+ * @param {import('express').Request} req
+ * @param {ClientCreateBody} req.body
+ * @param {import('express').Response} res
+ * 
+ * @typedef {Object} ClientCreateBody
+ * @property {string} client_name             - 클라이언트 이름
+ * @property {number} default_client_rate_id  - 클라이언트 등급 ID
+ * @property {number|null} [parent_client_id] - 상위 클라이언트 ID
+*/
 const createClient = async (req, res) => {
   const {
     client_name,
-    client_type,
+    default_client_rate_id,
     ...optionalFields
   } = req.body;
 
-  const requiredFields = { client_name, client_type };
+  const requiredFields = { client_name, default_client_rate_id };
   const validationError = validateFields(requiredFields, res);
   if (validationError) return validationError;
   const client = { ...requiredFields, ...optionalFields };

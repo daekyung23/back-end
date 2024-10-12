@@ -2,9 +2,9 @@ const clientBranchRepository = require('../repositories/client-branch-repository
 const { toValidate } = require('../utils/validation');
 /**-------------------------------------------------------------------------
  * 고객사 지점을 검색합니다.
- * @param {Express.Request} req     
+ * @param {import('express').Request} req
  * @param {BranchSearchQuery} req.query         
- * @param {Express.Response} res              
+ * @param {import('express').Response} res              
  * 
  * @typedef {Object} BranchSearchQuery         
  * @property {string} [searchTerms] - 검색어 (default: '')
@@ -30,9 +30,9 @@ const searchClientBranch = async (req, res) => {
 
 /**-------------------------------------------------------------------------
  * 새로운 고객사 지점을 생성합니다.
- * @param {Express.Request} req                   
+ * @param {import('express').Request} req                   
  * @param {BranchCreateBody} req.body                    
- * @param {Express.Response} res                  
+ * @param {import('express').Response} res                  
  * 
  * @typedef {Object} BranchCreateBody                        
  * @property {number} sigungu_id                   - 시군구 ID
@@ -72,9 +72,9 @@ const createClientBranch = async (req, res) => {
 
 /**-------------------------------------------------------------------------
  * 고객사 지점 정보를 업데이트합니다.
- * @param {Express.Request} req                   
+ * @param {import('express').Request} req                   
  * @param {BranchUpdateBody} req.body                    
- * @param {Express.Response} res  
+ * @param {import('express').Response} res  
  * 
  * @typedef {Object} BranchUpdateBody             
  * @property {number} client_branch_id          - 고객사 지점 ID
@@ -110,9 +110,9 @@ const updateClientBranch = async (req, res) => {
 
 /**-------------------------------------------------------------------------
  * 고객사 지점의 활성 상태를 변경합니다.
- * @param {Express.Request} req
+ * @param {import('express').Request} req
  * @param {BranchActivationRequest} req.body
- * @param {Express.Response} res
+ * @param {import('express').Response} res
  * 
  * @typedef {Object} BranchActivationRequest
  * @property {number} client_branch_id - 고객사 지점 ID
@@ -134,9 +134,9 @@ const changeClientBranchActivation = async (req, res) => {
 
 /**-------------------------------------------------------------------------
  * 고객사 지점을 삭제합니다.
- * @param {Express.Request} req
+ * @param {import('express').Request} req
  * @param {BranchDeleteQuery} req.query
- * @param {Express.Response} res
+ * @param {import('express').Response} res
  * 
  * @typedef {Object} BranchDeleteQuery
  * @property {number} client_branch_id - 삭제할 고객사 지점 ID
