@@ -1,5 +1,5 @@
 const deviceDriverRepository = require('../repositories/device-driver-repository');
-const { toValidate, validateFields } = require('../utils/validation');
+const { toValidate, validateFields, isValid } = require('../utils/validation');
 
 const searchDeviceDriver = async (req, res) => {
   let { searchTerms, page } = req.query;

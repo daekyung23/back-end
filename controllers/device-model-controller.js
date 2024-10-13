@@ -33,7 +33,32 @@ const deleteDeviceModel = async (req, res) => {
   }
 };
 
+const getAllManufacturers = async (req, res) => {
+  try {
+    const manufacturers = await deviceModelRepository.getAllManufacturers();
+    res.json(manufacturers);
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving manufacturers', error });
+  }
+};
+
+const getModelsByManufacturer = async (req, res) => {
+  const { manufacturer } = req.query;
+  if (!manufacturer) {
+    return res.status(400).json({ message: 'Missing manufacturer' });
+  }
+
+  try {
+    const models = await deviceModelRepository.getModelsByManufacturer(manufacturer);
+    res.json(models);
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving models', error });
+  }
+};
+
 module.exports = {
   searchDeviceModel,
   deleteDeviceModel,
+  getAllManufacturers,
+  getModelsByManufacturer,
 };

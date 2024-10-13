@@ -34,7 +34,21 @@ const DeviceModelRepository = {
 
   deleteDeviceModel: async (device_model_id) => {
     return await DBHelper.delete('device_model', { device_model_id });
+  },
+
+  // 모든 제조사를 가져오는 함수
+  getAllManufacturers: async () => {
+    const query = 'SELECT DISTINCT manufacturer FROM device_model';
+    return await DBHelper.search(query);
+  },
+
+  // 특정 제조사의 모델명을 가져오는 함수
+  getModelsByManufacturer: async (manufacturer) => {
+    // 쿼리에서 파라미터를 직접 문자열로 삽입
+    const query = `SELECT device_model_id, model_name FROM device_model WHERE manufacturer = '${manufacturer}'`;
+    return await DBHelper.search(query);  // 파라미터 없이 쿼리 실행
   }
+
 };
 
 module.exports = DeviceModelRepository;
