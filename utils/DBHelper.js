@@ -1,5 +1,5 @@
 const pool = require('./database'); // DB 연결 파일
-const parseWhere = require('./parseWhere');
+const { parseWhere } = require('./parseWhere');
 
 const DBHelper = {
 
