@@ -7,7 +7,7 @@ const toValidate = (value, defaultValue = null) => (isValid(value) ? value : def
 
 const validateFields = (requiredFields, res) => {
   for (const [field, value] of Object.entries(requiredFields)) {
-    if (!isValueValid(value)) {
+    if (!isValid(value)) {
       return res.status(400).json({ error: `${field} is required and cannot be null or undefined.` });
     }
   }
