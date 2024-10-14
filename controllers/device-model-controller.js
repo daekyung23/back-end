@@ -19,7 +19,39 @@ const searchDeviceModel = async (req, res) => {
   }
 };
 
-checkDuplicateDeviceModel = async (req, res) => {
+const createDeviceModel = async (req, res) => {
+  try {
+    const { model_name, manufacturer, color_support } = req.body;
+
+    if (!model_name || !manufacturer) {
+      return res.status(400).json({ message: 'Invalid input' });
+    }
+
+    const newModel = await deviceModelRepository.createDeviceModel(req.body);
+    res.status(201).json({ message: 'Device model created successfully', data: newModel });
+  } catch (error) {
+    console.error('Error creating device model:', error);
+    res.status(500).json({ message: 'Error creating device model', error });
+  }
+};
+
+const updateDeviceModel = async (req, res) => {
+  try {
+    const { device_model_id, model_name, manufacturer, color_support } = req.body;
+    console.log(color_support);
+    if (!device_model_id || !model_name || !manufacturer || typeof color_support === 'undefined') {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    const updatedModel = await deviceModelRepository.updateDeviceModel(req.body);
+    res.status(200).json({ message: 'Device model updated successfully', data: updatedModel });
+  } catch (error) {
+    console.error('Error updating device model:', error);
+    res.status(500).json({ message: 'Error updating device model', error });
+  }
+};
+
+const checkDuplicateDeviceModel = async (req, res) => {
   const { model_name } = req.query;
   if (!model_name) {
     return res.status(400).json({ message: 'Missing device_model_name' });
@@ -73,6 +105,8 @@ const getModelsByManufacturer = async (req, res) => {
 module.exports = {
   searchDeviceModel,
   checkDuplicateDeviceModel,
+  createDeviceModel,
+  updateDeviceModel,
   deleteDeviceModel,
   getAllManufacturers,
   getModelsByManufacturer,
