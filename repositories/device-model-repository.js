@@ -32,6 +32,19 @@ const DeviceModelRepository = {
     return rows[0].total; // 총 레코드 수 반환
   },
 
+  checkDuplicateDeviceModel: async (model_name) => {
+    const select = 'SELECT COUNT(*) as total ';
+    const from = 'FROM device_model';
+    const where = {
+      condition: "?", 
+      params: [
+        { field: "model_name", operator: "=", value: model_name },
+      ]
+    };
+    const rows = await DBHelper.search(select+from, where);
+    return rows[0].total > 0;
+  },
+
   deleteDeviceModel: async (device_model_id) => {
     return await DBHelper.delete('device_model', { device_model_id });
   },

@@ -35,6 +35,20 @@ const DeviceDriverRepository = {
     return rows[0].total;  // 총 레코드 수 반환
   },
 
+  checkDuplicateDeviceDriver: async (deivce_model_id, printer_language) => {
+    const select = 'SELECT COUNT(*) as total ';
+    const from = 'FROM device_driver';
+    const where = {
+      condition: "(? AND ?)", 
+      params: [
+        { field: "device_model_id", operator: "=", value: deivce_model_id },
+        { field: "printer_language", operator: "=", value: printer_language },
+      ]
+    };
+    const rows = await DBHelper.search(select+from, where);
+    return rows[0].total>0;
+  },
+
   createDeviceDriver: async (deviceDriver) => {
     return await DBHelper.insert('device_driver', deviceDriver);
   },

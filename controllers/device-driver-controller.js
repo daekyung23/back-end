@@ -18,11 +18,40 @@ const searchDeviceDriver = async (req, res) => {
   }
 };
 
+const checkDuplicateDeviceDriver = async (req, res) => {
+  const { device_model_id, printer_language } = req.query;
+  if (!isValid(device_model_id) || !isValid(printer_language)) {
+    return res.status(400).json({ message: 'Missing device_model_id or printer_language' });
+  }
+
+  try {
+    const exists = await deviceDriverRepository.checkDuplicateDeviceDriver(device_model_id, printer_language);
+    res.json(exists);
+  } catch (error) {
+    res.status(500).json({ message: 'Error checking duplicate device driver', error });
+  }
+}
+
 const createDeviceDriver = async (req, res) => {
-  const { device_model_id , ...optionalFields } = req.body;
-  const requiredFields = { device_model_id };
+  const { 
+    device_model_id , 
+    manufacturer,
+    printer_language,
+    install_file_address,
+    ...optionalFields
+  } = req.body;
+
+  const requiredFields = { 
+    device_model_id , 
+    manufacturer,
+    printer_language,
+    install_file_address,
+   };
   const validationError = validateFields(requiredFields, res);
   if (validationError) return validationError;
+  if(await deviceDriverRepository.checkDuplicateDeviceDriver(device_model_id, printer_language)) {
+    return res.status(400).json({ message: 'Duplicate device driver' });
+  }
   const driver = { ...requiredFields, ...optionalFields };
 
   try {
@@ -66,6 +95,7 @@ const deleteDeviceDriver = async (req, res) => {
 
 module.exports = {
   searchDeviceDriver,
+  checkDuplicateDeviceDriver,
   createDeviceDriver,
   updateDeviceDriver,
   deleteDeviceDriver,

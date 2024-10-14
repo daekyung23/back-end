@@ -2,6 +2,38 @@ const pool = require('./database'); // DB 연결 파일
 const { parseWhere } = require('./parseWhere');
 
 const DBHelper = {
+  /**--------------------------------------------------------------------------
+   * @param {Object} where
+
+   * @typedef {Object} Where
+   * @property {string} condition - WHERE 절 조건 문자열
+   * @property {Param[]} params - WHERE 절 조건 파라미터 배열
+   * 
+   * @typedef {Object} Param
+   * @property {string} field - 필드명
+   * @property {string} operator - 비교 연산자
+   * @property {string|number|Array} value - 비교 값
+   * @property {string} [likeLeft] - LIKE 절 왼쪽 와일드카드
+   * @property {string} [likeRight] - LIKE 절 오른쪽 와일드카드
+   * 
+   * @typedef {Object} Limit
+   * @property {number} offset - OFFSET 값
+   * @property {number} pageSize - LIMIT 값
+   * 
+   * @returns {Object} - { sql: string, values: Array }
+   * 
+   * @example
+   * const where = {
+   *  condition: "(? OR ?) AND (? OR ?)",
+   * params: [
+   *  { field: "name", operator: "LIKE", value: "John", likeLeft: "%", likeRight: "%" },
+   *  { field: "office_num", operator: "=", value: null },
+   *  { field: "permission", operator: "IN", value: ["manager", "admin"] }
+   *  //추가 예정 기능
+   *  { field: "role_name", operator: "=", value: 
+   *     {subQuery: "SELECT role_name FROM approval_role WHERE role_id = ?", value: 1} }
+   * ]
+   */
 
   /**--------------------------------------------------------------------------
    * SELECT 쿼리를 실행합니다.
@@ -79,18 +111,31 @@ const DBHelper = {
   insert: async (table, body, connection = pool) => {
     let query = `INSERT INTO ${table} (`;
     const columns = Object.keys(body);
-    const params = Object.values(body);
 
+    const params = [];
+    const valuePlaceholders = columns.map((column) => {
+      const value = body[column];
+      if (typeof value === 'object' && value.subQuery) {
+        // 서브쿼리와 서브쿼리 파라미터를 처리
+        params.push(...(value.params || [])); // 서브쿼리의 파라미터 추가
+        return `(${value.subQuery})`; // 서브 쿼리를 직접 삽입
+      } else {
+        // 일반 값은 ? 플레이스홀더 사용
+        params.push(value);
+        return '?';
+      }
+    });
     query += columns.join(', ') + ') VALUES (';
-    query += columns.map(() => '?').join(', ') + ')';
+    query += valuePlaceholders.join(', ') + ')';
 
     // 쿼리 및 파라미터 출력
     console.log('Executing query:', query);
     console.log('With parameters:', params);
 
-    const [result] =  await connection.query(query, params);
+    const [result] = await connection.query(query, params);
     return result;
   },
+
 
   /**--------------------------------------------------------------------------
    * 특정 조건에 맞는 데이터를 삭제합니다.

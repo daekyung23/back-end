@@ -84,6 +84,9 @@ const createUser = async (req, res) => {
   const requiredFields = { user_name, login_id, password, dept_id, position_id };
   const validationError = validateFields(requiredFields, res);
   if (validationError) return validationError;
+  if (await userRepository.checkDuplicateLoginId(login_id)) {
+    return res.status(400).json({ message: 'Duplicate login_id' });
+  }
   const user = { ...requiredFields, ...optionalFields };
 
   try {

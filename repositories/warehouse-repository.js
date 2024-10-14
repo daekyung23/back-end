@@ -39,7 +39,6 @@ const WarehouseRepository = {
     const select = 'SELECT COUNT(*) as total';
     const selectFromJoin = select + WarehouseRepository.fromJoin;
     const where = WarehouseRepository.searchCondition(searchTerms);
-    const rows = await DBHelper.search(selectFromJoin, where);
     try {
       const rows = await DBHelper.search(selectFromJoin, where);
       return rows[0].total; // 총 레코드 수 반환
@@ -50,9 +49,17 @@ const WarehouseRepository = {
   },
   
   checkDuplicateWarehouse: async (warehouse_name) => {
+    const select = 'SELECT COUNT(*) as total ';
+    const from = 'FROM warehouse';
+    const where = {
+      condition: "?", 
+      params: [
+        { field: "warehouse_name", operator: "=", value: warehouse_name },
+      ]
+    };
     try {
-      const rows = await DBHelper.search('warehouse', { warehouse_name });
-      return rows.length > 0;
+      const rows = await DBHelper.search(select+from, where);
+      return rows[0].total > 0;
     } catch (error) {
       console.error('Error in checkWarehouseName repository:', error);
       throw error;

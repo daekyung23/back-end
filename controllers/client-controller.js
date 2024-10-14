@@ -62,6 +62,18 @@ const createClient = async (req, res) => {
   }
 }
 
+/**-------------------------------------------------------------------------
+ * 고객사 정보를 업데이트합니다.
+ * @param {import('express').Request} req
+ * @param {ClientUpdateBody} req.body
+ * @param {import('express').Response} res
+ *  
+ * @typedef {Object} ClientUpdateBody
+ * @property {string} client_id - 클라이언트 ID
+ * @property {string} [client_name] - 클라이언트 이름
+ * @property {number} [default_client_rate_id] - 클라이언트 등급 ID
+ * @property {number|null} [parent_client_id] - 상위 클라이언트 ID
+ */
 const updateClient = async (req, res) => {
   const { client_id, ...updateFields } = req.body;
   if (!isValid(client_id)) {

@@ -1,8 +1,20 @@
-/**--------------------------------------------------------------------------
- * 조건 문자열을 파싱하여 SQL 조건 문자열과 값 배열을 반환합니다.
- * @param {Object} where - { condition: string, params: {Object}} }
- * @returns {Object} - { sql: string, values: Array }
- */
+ /**--------------------------------------------------------------------------
+   * 조건 문자열을 파싱하여 SQL 조건 문자열과 값 배열을 반환합니다.
+   * @param {Object} where - 조건 문자열과 값 배열을 포함하는 객체
+   * @param {string} where.condition - 조건 문자열
+   * @param {Param[]} where.params - 조건 값 배열
+   * @typedef {Object} Where
+   * @property {string} condition - WHERE 절 조건 문자열
+   * 
+   * @typedef {Object} Param
+   * @property {string} field - 필드명
+   * @property {string} operator - 비교 연산자
+   * @property {string|number|Array} value - 비교 값
+   * @property {string} [likeLeft] - LIKE 절 왼쪽 와일드카드
+   * @property {string} [likeRight] - LIKE 절 오른쪽 와일드카드
+   * 
+   * @returns {Object} - { sql: string, values: Array }
+   */
 const parseWhere = (where) => {
   let condition = where.condition;
   let params = where.params;

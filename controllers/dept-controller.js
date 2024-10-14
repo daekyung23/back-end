@@ -85,11 +85,28 @@ getChildrenById = async (req, res) => {
   }
 };
 
+checkDuplicateDept = async (req, res) => {
+  const { parent_dept_id, dept_name } = req.query;
+  if (!isValid(dept_name)) {
+    return res.status(400).json({ message: 'Missing dept_name' });
+  }
+
+  try {
+    const exists = await deptRepository.checkDuplicateDept(parent_dept_id, dept_name);
+    res.json(exists);
+  } catch (error) {
+    res.status(500).json({ message: 'Error checking duplicate dept', error });
+  }
+}
+
 createDept = async (req, res) => {
   const { dept_name, ...optionalFields } = req.body;
   const requiredFields = { dept_name };
   const validationError = validateFields(requiredFields, res);
   if (validationError) return validationError;
+  if(await deptRepository.checkDuplicateDept( parent_dept_id, dept_name)) {
+    return res.status(400).json({ message: 'Duplicate dept_name' });
+  }
   const dept = { ...requiredFields, ...optionalFields };
 
   try {

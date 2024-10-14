@@ -19,6 +19,20 @@ const searchDeviceModel = async (req, res) => {
   }
 };
 
+checkDuplicateDeviceModel = async (req, res) => {
+  const { model_name } = req.query;
+  if (!model_name) {
+    return res.status(400).json({ message: 'Missing device_model_name' });
+  }
+
+  try {
+    const exists = await deviceModelRepository.checkDuplicateDeviceModel(model_name);
+    res.json(exists);
+  } catch (error) {
+    res.status(500).json({ message: 'Error checking duplicate device model', error });
+  }
+};
+
 const deleteDeviceModel = async (req, res) => {
   const { device_model_id } = req.query;
   if (!device_model_id) {
@@ -58,6 +72,7 @@ const getModelsByManufacturer = async (req, res) => {
 
 module.exports = {
   searchDeviceModel,
+  checkDuplicateDeviceModel,
   deleteDeviceModel,
   getAllManufacturers,
   getModelsByManufacturer,

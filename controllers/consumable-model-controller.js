@@ -1,5 +1,5 @@
 const consumableModel = require('../repositories/consumable-model-repository');
-const { toValidate, validateFields } = require('../utils/validation');
+const { isValid, toValidate, validateFields } = require('../utils/validation');
 
 const searchConsumableModel = async (req, res) => {
   let { searchTerms, consumableType, page} = req.query; // 기본 페이지 번호 1
@@ -18,6 +18,20 @@ const searchConsumableModel = async (req, res) => {
   }
 };
 
+const checkDuplicateConsumableModel = async (req, res) => {
+  const { consumable_name } = req.query;
+  if (!isValid(consumable_name)) {
+    return res.status(400).json({ message: 'Missing consumable_name' });
+  }
+
+  try {
+    const exists = await consumableModel.checkDuplicateConsumableModel(consumable_name);
+    res.json(exists);
+  } catch (error) {
+    res.status(500).json({ message: 'Error checking duplicate consumable model', error });
+  }
+};
+
 const createConsumableModel = async (req, res) => {
   const {
     manufacturer,
@@ -28,6 +42,9 @@ const createConsumableModel = async (req, res) => {
   const requiredFields = { manufacturer, consumable_name, consumable_type };
   const validationError = validateFields(requiredFields, res);
   if (validationError) return validationError;
+  if(await ConsumableModelRepository.checkDuplicateConsumableModel(consumable_name)) {
+    return res.status(400).json({ message: 'Duplicate consumable model' });
+  }
   const consumableModel = { ...requiredFields };
 
   try {
@@ -74,6 +91,7 @@ const deleteConsumableModel = async (req, res) => {
 
 module.exports = {
   searchConsumableModel,
+  checkDuplicateConsumableModel,
   createConsumableModel,
   updateConsumableModel,
   deleteConsumableModel,

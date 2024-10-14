@@ -39,6 +39,9 @@ const createWarehouse = async (req, res) => {
   const warehouse = { warehouse_name, mgmt_dept_id };
   const validationError = validateFields(warehouse, res);
   if (validationError) return validationError;
+  if (await warehouseRepository.checkDuplicateWarehouse(warehouse_name)) {
+    return res.status(400).json({ message: 'Duplicate warehouse' });
+  }
 
   try {
     const newLocation = await warehouseRepository.createWarehouse(warehouse);

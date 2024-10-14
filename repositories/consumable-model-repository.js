@@ -4,8 +4,8 @@ const ConsumableModelRepository = {
 
   // 공통 JOIN 절
   fromJoin: `
-    FROM consumable_model cm
-    LEFT JOIN device_consumable_compatibility dcc ON cm.consumable_model_id = dcc.device_model_id
+    FROM device_consumable_compatibility dcc
+    LEFT JOIN consumable_model cm ON cm.consumable_model_id = dcc.consumable_model_id
     LEFT JOIN device_model dm ON dm.device_model_id = dcc.device_model_id
   `,
 
@@ -37,6 +37,19 @@ const ConsumableModelRepository = {
     const where = ConsumableModelRepository.searchCondition(searchTerms, consumableType);
     const rows = await DBHelper.search(selectFromJoin, where);
     return rows[0].total;  // 총 레코드 수 반환
+  },
+
+  checkDuplicateConsumableModel: async (consumable_name) => {
+    const select = 'SELECT COUNT(*) as total ';
+    const from = 'FROM consumable_model';
+    const where = {
+      condition: "?", 
+      params: [
+        { field: "consumable_name", operator: "=", value: consumable_name },
+      ]
+    };
+    const rows = await DBHelper.search(select+from, where);
+    return rows[0].total> 0;
   },
 
   createConsumableModel: async (consumableModel) => {

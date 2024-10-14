@@ -39,8 +39,16 @@ const UserRepository = {
 
   // 사용자 존재 확인
   checkDuplicateLoginId: async (login_id) => {
-    const rows = await DBHelper.search('user', { login_id });
-    return rows.length > 0;
+    const select = 'SELECT COUNT(*) as total ';
+    const from = 'FROM user';
+    const where = {
+      condition: "?", 
+      params: [
+        { field: "login_id", operator: "=", value: login_id },
+      ]
+    };
+    const rows = await DBHelper.search(select+from, where);
+    return rows[0].total > 0;
   },
 
   // 사용자 생성

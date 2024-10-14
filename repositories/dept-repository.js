@@ -30,6 +30,20 @@ const DeptRepository = {
     return await DBHelper.search(selectFrom, where);
   },
 
+  checkDuplicateDept: async (parent_dept_id, dept_name) => {
+    const select = 'SELECT COUNT(*) as total ';
+    const from = 'FROM dept';
+    const where = {
+      condition: "?", 
+      params: [
+        { field: "parent_dept_id", operator: "=", value: parent_dept_id },
+        { field: "dept_name", operator: "=", value: dept_name },
+      ]
+    };
+    const rows = await DBHelper.search(select+from, where);
+    return rows[0].total > 0;
+  },
+
   createDept: async (dept) => {
     return await DBHelper.insert('dept', dept);
   },
