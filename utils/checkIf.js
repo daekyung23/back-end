@@ -7,6 +7,39 @@ class HttpError extends Error {
   }
 }
 
+/**
+ * @class CheckIf
+ * @description 유효성 검사를 위한 클래스
+ * @param {any} value - 검사할 값
+ * @returns {CheckIf} - CheckIf 인스턴스
+ * @example
+ * checkIf(value).isValid // boolean
+ * checkIf(object).areValid.elseThrow(400);
+ * checkIf(value).isFound.elseThrow('이름', 404); // isValid와 유사
+ * checkIf(value).areFound.elseThrow('이름', 404); // length.inRange('이름', 0)과 유사
+ * 
+ * checkIf(value).isString // boolean
+ * checkIf(value).isNumber // boolean
+ * checkIf(value).isBoolean // boolean
+ * checkIf(value).isArray // boolean
+ * checkIf(value).isObject // boolean
+ * checkIf(value).isDate // boolean
+ * checkIf(object).length.inRange('길이', min, max) // boolean
+ * checkIf(array).length.inRange('길이', min, max) // boolean
+ * checkIf(string).length.inRange('길이', min, max) // boolean
+ * 
+ * checkIf(value).isValid.elseThrow('이름', 500);
+ * checkIf(value).isString.elseThrow('이름', 500);
+ * checkIf(value).isNumber.elseThrow('나이', 500);
+ * checkIf(value).isBoolean.elseThrow('성별', 500);
+ * checkIf(value).isArray.elseThrow('취미', 500);
+ * checkIf(value).isObject.elseThrow('주소', 500);
+ * checkIf(value).isDate.elseThrow('생일', 500);
+ * 
+ * checkIf(object).length.inRange(2, 10).elseThrow('이름', 2, 10);
+ * checkIf(array).length.inRange(2, 10).elseThrow('이름', 2, 10);
+ * checkIf(string).length.inRange(2, 10).elseThrow('이름', 2, 10);
+ */
 class CheckIf {
   constructor(value = null) {
     this.update(value);
@@ -24,10 +57,12 @@ class CheckIf {
     }
   }
 
-  createValidator(isFn, elseThrowFn, or) {
-    const validator = () => isFn;
-    validator.elseThrow = elseThrowFn;
-    validator.toString = () => String(isValid);
+  createValidator(value, elseThrow, or) {
+    const validator = () => value;
+    validator.elseThrow = elseThrow;
+    validator.toString = () => String(value);
+    validator.ValueOf = () => value;
+    [Symbol.toPrimitive] = () => value;
     return validator;
   }
 

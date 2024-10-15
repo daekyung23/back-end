@@ -18,7 +18,7 @@ const responseLogger = (req, res, next) => {
     };
 
     res.on('finish', () => {
-        if (res.statusCode >= 400 && ENABLE_LOGGING) {
+        if (res.statusCode >= 400 && ENABLE_RESPONSE_LOGGING) {
             log(`[에러] ${res.statusCode}`, '에러');
             log(`[요청]: ${req.method} ${req.url}`)
         }
