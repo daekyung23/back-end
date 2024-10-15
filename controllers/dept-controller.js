@@ -2,24 +2,43 @@ const deptRepository = require('../repositories/dept-repository');
 const { isValid, isUndefined, toValidate } = require('../utils/validation');
 
 // 재귀 함수를 통해 상위 부서 계층 정보를 추출하고 JSON 형식으로 반환하는 함수
-const getHierarchy = (row, rows) => {
+const getHierarchy = (row, deptMap) => {//rows) => {
   let hierarchy = [];
   let currentRow = row;
 
+  // 상위 부서 탐색
   while (currentRow && currentRow.parent_dept_id) {
-    const parent = rows.find(r => r.dept_id === currentRow.parent_dept_id);
+    const parent = deptMap[currentRow.parent_dept_id];
     if (parent) {
-      hierarchy.unshift(parent.dept_name);
+      hierarchy.unshift({ id: parent.dept_id, name: parent.dept_name });
     }
     currentRow = parent;
   }
+  // while (currentRow && currentRow.parent_dept_id) {
+  //   const parent = rows.find(r => r.dept_id === currentRow.parent_dept_id);
+  //   if (parent) {
+  //     hierarchy.unshift(parent.dept_name);
+  //   }
+  //   currentRow = parent;
+  // }
 
-  const hierarchyObject = {};
-  hierarchy.forEach((name, index) => {
-    hierarchyObject[`dept_${index + 1}`] = name;
+  // const hierarchyObject = {};
+  // hierarchy.forEach((name, index) => {
+  //   hierarchyObject[`dept_${index + 1}`] = name;
+  // });
+
+  // hierarchyObject[`dept_${hierarchy.length + 1}`] = row.dept_name;
+
+  // 현재 부서 추가
+  hierarchy.push({ id: row.dept_id, name: row.dept_name });
+
+  // 계층 정보를 dept_n_id 및 dept_n으로 변환
+  const hierarchyObject = { dept_id: row.dept_id };
+  hierarchy.forEach((dept, index) => {
+    const level = index + 1;
+    hierarchyObject[`dept_${level}_id`] = dept.id;
+    hierarchyObject[`dept_${level}`] = dept.name;
   });
-
-  hierarchyObject[`dept_${hierarchy.length + 1}`] = row.dept_name;
 
   return hierarchyObject;
 };
@@ -35,14 +54,26 @@ const searchDept = async (req, res) => {
   try {
     const rows = await deptRepository.getAllDept();
 
+    // dept_id를 키로 하는 매핑 객체 생성 (성능 최적화)
+    const deptMap = {};
+    rows.forEach(r => {
+      deptMap[r.dept_id] = r;
+    });
+
     // 모든 부서에 대해 계층 정보를 추출하여 JSON 생성
     const allHierarchies = rows.map(row => {
-      const hierarchy = getHierarchy(row, rows);
-      return {
-        dept_id: row.dept_id,
-        ...hierarchy
-      };
+      const hierarchy = getHierarchy(row, deptMap);
+      return hierarchy;
     });
+
+    // 모든 부서에 대해 계층 정보를 추출하여 JSON 생성
+    // const allHierarchies = rows.map(row => {
+    //   const hierarchy = getHierarchy(row, rows);
+    //   return {
+    //     dept_id: row.dept_id,
+    //     ...hierarchy
+    //   };
+    // });
 
     // 검색어 필터링 적용 (검색어가 존재할 경우)
     const filteredRows = searchTerms
@@ -64,7 +95,13 @@ const searchDept = async (req, res) => {
       totalPages
     });
   } catch (error) {
-    res.status(500).json({ message: 'Error searching depts', error });
+    res.status(500).json({ 
+      message: 'Error searching depts', 
+      error: {
+        message: error.message,
+        stack: error.stack
+      }
+    });
   }
 };
 

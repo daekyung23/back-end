@@ -49,7 +49,7 @@ const DeviceModelRepository = {
     return await DBHelper.insert('device_model', device_model);
   },
   
-  DeviceModel: async (device_model_id, device_model) => {
+  patchDeviceModel: async (device_model_id, device_model) => {
     return await DBHelper.patch('device_model', device_model, { device_model_id });
   },
   
