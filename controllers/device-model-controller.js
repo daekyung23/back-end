@@ -41,7 +41,6 @@ const createDeviceModel = async (req, res) => {
 
 const updateDeviceModel = async (req, res) => {
   const { device_model_id, ...updateFields } = req.body;
-  console.log(color_support);
 
   if (!isValid(device_model_id)) {
     return res.status(400).json({ error: 'Missing login_id' });
