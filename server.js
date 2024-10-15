@@ -1,11 +1,19 @@
 // server.js
+require('dotenv').config();
+require('express-async-errors');
+
 const express = require('express');
-const cors = require('cors');
 const pool = require('./utils/database');
 const app = express();
 
+const cors = require('cors');
+const requestLogger = require('./middlewares/request-logger');
+const responseLogger = require('./middlewares/response-logger')
+
 app.use(express.json());
 app.use(cors());
+app.use(requestLogger);
+app.use(responseLogger);
 
 app.use('/client-branch', require('./routers/client-branch-router'));
 app.use('/client', require('./routers/client-router'));
@@ -31,6 +39,12 @@ app.use('/warehouse', require('./routers/warehouse-router'));
     process.exit(1); // 연결 실패 시 서버 종료
   }
 })();
+
+// 에러 처리 미들웨어(서버 실행 직전 위치)
+app.use((err, req, res, next) => {
+  console.error(err); // 에러를 콘솔에 출력
+  res.status(err.status || 500).json({ message: err.message || 'Internal Server Error' }); // 에러 메시지와 상태 코드 응답
+});
 
 // 서버를 지정된 포트에서 시작
 const port = process.env.PORT || 3001;
