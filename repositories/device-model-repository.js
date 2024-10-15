@@ -45,16 +45,12 @@ const DeviceModelRepository = {
     return rows[0].total > 0;
   },
 
-  createDeviceModel: async ({ model_name, manufacturer, color_support }) => {
-    const query = 'INSERT INTO device_model (model_name, manufacturer, color_support) VALUES (?, ?, ?)';
-    const params = [model_name, manufacturer, color_support];
-    return await DBHelper.insert(query, params);
+  createDeviceModel: async (device_model) => {
+    return await DBHelper.insert('device_model', device_model);
   },
   
-  updateDeviceModel: async ({ device_model_id, model_name, manufacturer, color_support }) => {
-    const query = 'UPDATE device_model SET model_name = ?, manufacturer = ?, color_support = ? WHERE device_model_id = ?';
-    const params = [model_name, manufacturer, color_support, device_model_id];
-    return await DBHelper.patch(query, params);
+  DeviceModel: async (device_model_id, device_model) => {
+    return await DBHelper.patch('device_model', device_model, { device_model_id });
   },
   
   deleteDeviceModel: async (device_model_id) => {

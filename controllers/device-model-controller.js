@@ -20,36 +20,45 @@ const searchDeviceModel = async (req, res) => {
 };
 
 const createDeviceModel = async (req, res) => {
-  try {
-    const { model_name, manufacturer, color_support } = req.body;
+    const { model_name, manufacturer, color_support, ...optionalFields } = req.body;
 
-    if (!model_name || !manufacturer) {
-      return res.status(400).json({ message: 'Invalid input' });
+    const requiredFields = { model_name, manufacturer, color_support };
+    const validationError = validateFields(requiredFields, res);
+    if (validationError) return validationError;
+    if (await deviceModelRepository.checkDuplicateDeviceModel(model_name)) {
+      return res.status(400).json({ message: 'Duplicate login_id' });
     }
-
-    const newModel = await deviceModelRepository.createDeviceModel(req.body);
-    res.status(201).json({ message: 'Device model created successfully', data: newModel });
+    const model= { ...requiredFields, ...optionalFields };
+    
+  try {
+    const result = await deviceModelRepository.createDeviceModel(model);
+    res.status(201).json(result);
   } catch (error) {
     console.error('Error creating device model:', error);
-    res.status(500).json({ message: 'Error creating device model', error });
+    res.status(500).json({ error: 'Error creating device model'});
   }
 };
 
 const updateDeviceModel = async (req, res) => {
-  try {
-    const { device_model_id, model_name, manufacturer, color_support } = req.body;
-    console.log(color_support);
-    if (!device_model_id || !model_name || !manufacturer || typeof color_support === 'undefined') {
-      return res.status(400).json({ message: 'Missing required fields' });
-    }
+  const { device_model_id, ...updateFields } = req.body;
+  console.log(color_support);
 
-    const updatedModel = await deviceModelRepository.updateDeviceModel(req.body);
-    res.status(200).json({ message: 'Device model updated successfully', data: updatedModel });
+  if (!isValid(device_model_id)) {
+    return res.status(400).json({ error: 'Missing login_id' });
+  }
+
+  if (Object.keys(updateFields).length === 0) {
+    return res.status(400).json({ error: 'No fields to update' });
+  }
+
+  try {
+    const result = await deviceModelRepository.patchDeviceModel(device_model_id, updateFields);
+    res.json(result);
   } catch (error) {
     console.error('Error updating device model:', error);
-    res.status(500).json({ message: 'Error updating device model', error });
+    res.status(500).json({ error: 'Failed to update device model' });
   }
-};
+}
 
 const checkDuplicateDeviceModel = async (req, res) => {
   const { model_name } = req.query;
