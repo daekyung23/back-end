@@ -1,5 +1,5 @@
 const deviceModelRepository = require('../repositories/device-model-repository');
-const { toValidate, validateFields } = require('../utils/validation');
+const { toValidate, validateFields, isValid } = require('../utils/validation');
 
 const searchDeviceModel = async (req, res) => {
   let { searchTerms, page } = req.query;
