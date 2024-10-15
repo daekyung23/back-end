@@ -1,5 +1,7 @@
 const DBHelper = require('../utils/DBHelper'); // DBHelper 불러오기
 const { isValid } = require('../utils/validation');
+const log = require('../utils/log');
+const { HttpError, checkIf } = require('../utils/checkIf');
 const UserRepository = {
 
   fromJoin: `
@@ -24,6 +26,7 @@ const UserRepository = {
   searchUser: async (searchTerms, is_active, offset, pageSize) => {
     const select = 'SELECT *'
     let selectFromJoin = select + UserRepository.fromJoin;
+    log(!!checkIf(selectFromJoin).isValid);
     const where = UserRepository.searchCondition(searchTerms, is_active);
     const limit = { offset, pageSize };
     return await DBHelper.search(selectFromJoin, where, null, limit);

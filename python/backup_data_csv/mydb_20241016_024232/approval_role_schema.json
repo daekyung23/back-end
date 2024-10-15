@@ -5,7 +5,7 @@
         "Null": "NO",
         "Key": "PRI",
         "Default": null,
-        "Extra": ""
+        "Extra": "auto_increment"
     },
     {
         "Field": "role_name",

@@ -2,7 +2,6 @@
 const express = require('express');
 const cors = require('cors');
 const pool = require('./utils/database');
-const port = 3001;
 const app = express();
 
 app.use(express.json());
@@ -34,7 +33,7 @@ app.use('/warehouse', require('./routers/warehouse-router'));
 })();
 
 // 서버를 지정된 포트에서 시작
-const PORT = process.env.PORT || port;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+const port = process.env.PORT || 3001;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });

@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `approval_role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `approval_role` (
-  `role_id` int NOT NULL,
+  `role_id` int NOT NULL AUTO_INCREMENT,
   `role_name` varchar(45) NOT NULL,
   `upper_role_id` int DEFAULT NULL,
   PRIMARY KEY (`role_id`),
@@ -40,7 +40,7 @@ DROP TABLE IF EXISTS `call`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `call` (
-  `call_id` int NOT NULL,
+  `call_id` int NOT NULL AUTO_INCREMENT,
   `call_type_id` int NOT NULL,
   `client_branch_id` int NOT NULL,
   `requester_name` varchar(50) NOT NULL,
@@ -79,7 +79,7 @@ DROP TABLE IF EXISTS `call_type`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `call_type` (
-  `call_type_id` int NOT NULL,
+  `call_type_id` int NOT NULL AUTO_INCREMENT,
   `call_type_name` varchar(50) NOT NULL,
   `parent_call_type_id` int DEFAULT NULL,
   PRIMARY KEY (`call_type_id`),
@@ -96,7 +96,7 @@ DROP TABLE IF EXISTS `client`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `client` (
-  `client_id` int NOT NULL,
+  `client_id` int NOT NULL AUTO_INCREMENT,
   `parent_client_id` int DEFAULT NULL,
   `default_client_branch_rate_id` int NOT NULL,
   `client_name` varchar(45) NOT NULL,
@@ -117,7 +117,7 @@ DROP TABLE IF EXISTS `client_branch`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `client_branch` (
-  `client_branch_id` int NOT NULL,
+  `client_branch_id` int NOT NULL AUTO_INCREMENT,
   `sigungu_id` int NOT NULL,
   `mgmt_dept_id` int NOT NULL,
   `client_id` int NOT NULL,
@@ -150,7 +150,7 @@ DROP TABLE IF EXISTS `client_rate`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `client_rate` (
-  `client_rate_id` int NOT NULL,
+  `client_rate_id` int NOT NULL AUTO_INCREMENT,
   `rate_type` varchar(10) NOT NULL,
   `rate_detail` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`client_rate_id`)
@@ -165,7 +165,7 @@ DROP TABLE IF EXISTS `consumable_model`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `consumable_model` (
-  `consumable_model_id` int NOT NULL,
+  `consumable_model_id` int NOT NULL AUTO_INCREMENT,
   `manufacturer` varchar(100) NOT NULL,
   `consumable_name` varchar(100) NOT NULL,
   `consumable_type` varchar(100) NOT NULL,
@@ -181,7 +181,7 @@ DROP TABLE IF EXISTS `dept`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `dept` (
-  `dept_id` int NOT NULL,
+  `dept_id` int NOT NULL AUTO_INCREMENT,
   `parent_dept_id` int DEFAULT NULL,
   `dept_name` varchar(100) NOT NULL,
   PRIMARY KEY (`dept_id`),
@@ -232,7 +232,7 @@ DROP TABLE IF EXISTS `device_approval`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `device_approval` (
-  `approval_id` int NOT NULL,
+  `approval_id` int NOT NULL AUTO_INCREMENT,
   `approval_type_id` int NOT NULL,
   `sub_approval_id` int DEFAULT NULL,
   `requester_id` int NOT NULL,
@@ -269,7 +269,7 @@ DROP TABLE IF EXISTS `device_approval_type`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `device_approval_type` (
-  `approval_type_id` int NOT NULL,
+  `approval_type_id` int NOT NULL AUTO_INCREMENT,
   `approval_type_name` varchar(45) NOT NULL,
   PRIMARY KEY (`approval_type_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -301,7 +301,7 @@ DROP TABLE IF EXISTS `device_driver`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `device_driver` (
-  `device_driver_id` int NOT NULL,
+  `device_driver_id` int NOT NULL AUTO_INCREMENT,
   `device_model_id` int NOT NULL,
   `manufacturer` varchar(100) DEFAULT NULL,
   `printer_language` varchar(45) DEFAULT NULL,
@@ -320,7 +320,7 @@ DROP TABLE IF EXISTS `device_inspection_log`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `device_inspection_log` (
-  `device_inspection_log_id` int NOT NULL,
+  `device_inspection_log_id` int NOT NULL AUTO_INCREMENT,
   `device_id` int NOT NULL,
   `inspector_id` int NOT NULL,
   `inspection_date` date NOT NULL,
@@ -390,7 +390,7 @@ DROP TABLE IF EXISTS `device_location_log`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `device_location_log` (
-  `device_location_log_id` int NOT NULL,
+  `device_location_log_id` int NOT NULL AUTO_INCREMENT,
   `device_id` int NOT NULL,
   `location_date` date NOT NULL,
   `location_id` int NOT NULL,
@@ -411,7 +411,7 @@ DROP TABLE IF EXISTS `device_model`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `device_model` (
-  `device_model_id` int NOT NULL,
+  `device_model_id` int NOT NULL AUTO_INCREMENT,
   `model_name` varchar(100) NOT NULL,
   `manufacturer` varchar(100) NOT NULL,
   `color_support` tinyint NOT NULL,
@@ -427,7 +427,7 @@ DROP TABLE IF EXISTS `device_option`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `device_option` (
-  `device_option_id` int NOT NULL,
+  `device_option_id` int NOT NULL AUTO_INCREMENT,
   `option_model_id` int NOT NULL,
   `serial` varchar(50) DEFAULT NULL,
   `is_active` tinyint NOT NULL DEFAULT '1',
@@ -470,7 +470,7 @@ DROP TABLE IF EXISTS `device_status`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `device_status` (
-  `status_id` int NOT NULL,
+  `status_id` int NOT NULL AUTO_INCREMENT,
   `status_name` varchar(45) NOT NULL,
   PRIMARY KEY (`status_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -484,7 +484,7 @@ DROP TABLE IF EXISTS `inspection_approval`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `inspection_approval` (
-  `approval_id` int NOT NULL,
+  `approval_id` int NOT NULL AUTO_INCREMENT,
   `requester_id` int NOT NULL,
   `request_at` timestamp NOT NULL,
   `approver_role_id` int DEFAULT NULL,
@@ -532,7 +532,7 @@ DROP TABLE IF EXISTS `option_model`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `option_model` (
-  `option_model_id` int NOT NULL,
+  `option_model_id` int NOT NULL AUTO_INCREMENT,
   `option_model_name` varchar(100) NOT NULL,
   `option_type` varchar(45) NOT NULL,
   `manufacturer` varchar(100) NOT NULL,
@@ -548,7 +548,7 @@ DROP TABLE IF EXISTS `sido`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sido` (
-  `sido_id` int NOT NULL,
+  `sido_id` int NOT NULL AUTO_INCREMENT,
   `sido_name` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`sido_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -562,7 +562,7 @@ DROP TABLE IF EXISTS `sigungu`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sigungu` (
-  `sigungu_id` int NOT NULL,
+  `sigungu_id` int NOT NULL AUTO_INCREMENT,
   `sigungu_name` varchar(45) NOT NULL,
   `sido_id` int NOT NULL,
   PRIMARY KEY (`sigungu_id`),
@@ -612,7 +612,7 @@ DROP TABLE IF EXISTS `user_position`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `user_position` (
-  `user_position_id` int NOT NULL,
+  `user_position_id` int NOT NULL AUTO_INCREMENT,
   `position_name` varchar(45) NOT NULL,
   PRIMARY KEY (`user_position_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
