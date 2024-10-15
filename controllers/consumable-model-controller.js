@@ -42,7 +42,7 @@ const createConsumableModel = async (req, res) => {
   const requiredFields = { manufacturer, consumable_name, consumable_type };
   const validationError = validateFields(requiredFields, res);
   if (validationError) return validationError;
-  if(await ConsumableModelRepository.checkDuplicateConsumableModel(consumable_name)) {
+  if(await consumableModel.checkDuplicateConsumableModel(consumable_name)) {
     return res.status(400).json({ message: 'Duplicate consumable model' });
   }
   const consumableModel = { ...requiredFields };
