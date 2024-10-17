@@ -58,7 +58,9 @@ const createConsumableModel = async (req, res) => {
 
     res.status(201).json({createdConsumableModel, result}); // 성공적인 생성 시 201 상태 코드 반환
   } catch (error) {
-    await DBHelper.rollback(connection);
+    if (connection) {
+      await DBHelper.rollback(connection);
+    }
     res.status(500).json({ error: 'Failed to create consumable model' });
   }
 }
@@ -80,7 +82,9 @@ const updateConsumableModel = async (req, res) => {
     await DBHelper.commit(connection);
     res.json({updatedConsumableModel, result2});
   } catch (error) {
-    await DBHelper.rollback(connection);
+    if (connection) {
+      await DBHelper.rollback(connection);
+    }
     console.error('Error in updateConsumableModel controller:', error);
     res.status(500).json({ message: 'Error updating consumable model', error });
   }
