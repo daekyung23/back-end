@@ -1,4 +1,4 @@
-const consumableModel = require('../repositories/consumable-model-repository');
+const consumableModelRepository = require('../repositories/consumable-model-repository');
 const { isValid, toValidate, validateFields } = require('../utils/validation');
 
 const searchConsumableModel = async (req, res) => {
@@ -9,8 +9,8 @@ const searchConsumableModel = async (req, res) => {
   const offset = (page - 1) * pageSize; // 페이지네이션 로직
 
   try {
-    const rows = await consumableModel.searchConsumableModel(searchTerms, consumableType, offset, pageSize);
-    const rowCounts = await consumableModel.searchConsumableModelCount(searchTerms, consumableType);
+    const rows = await consumableModelRepository.searchConsumableModel(searchTerms, consumableType, offset, pageSize);
+    const rowCounts = await consumableModelRepository.searchConsumableModelCount(searchTerms, consumableType);
     const totalPages = Math.ceil(rowCounts / pageSize);
     res.json({ consumableModels: rows, totalPages });
   } catch (error) {
@@ -25,7 +25,7 @@ const checkDuplicateConsumableModel = async (req, res) => {
   }
 
   try {
-    const exists = await consumableModel.checkDuplicateConsumableModel(consumable_name);
+    const exists = await consumableModelRepository.checkDuplicateConsumableModel(consumable_name);
     res.json(exists);
   } catch (error) {
     res.status(500).json({ message: 'Error checking duplicate consumable model', error });
@@ -42,13 +42,13 @@ const createConsumableModel = async (req, res) => {
   const requiredFields = { manufacturer, consumable_name, consumable_type };
   const validationError = validateFields(requiredFields, res);
   if (validationError) return validationError;
-  if(await consumableModel.checkDuplicateConsumableModel(consumable_name)) {
+  if(await consumableModelRepository.checkDuplicateConsumableModel(consumable_name)) {
     return res.status(400).json({ message: 'Duplicate consumable model' });
   }
   const consumableModel = { ...requiredFields };
 
   try {
-    const result = await consumableModel.createConsumableModel(consumableModel);
+    const result = await consumableModelRepository.createConsumableModel(consumableModel);
     res.status(201).json(result); // 성공적인 생성 시 201 상태 코드 반환
   } catch (error) {
     console.error('Error creating consumable model:', error); // 에러 로그
@@ -66,7 +66,7 @@ const updateConsumableModel = async (req, res) => {
     if (Object.keys(updateFields).length === 0) {
       return res.status(400).json({ message: 'No fields to update' });
     }
-    const updatedConsumableModel = await consumableModel.patchConsumableModel(consumable_model_id, updateFields);
+    const updatedConsumableModel = await consumableModelRepository.patchConsumableModel(consumable_model_id, updateFields);
     res.json(updatedConsumableModel);
   } catch (error) {
     console.error('Error in updateConsumableModel controller:', error);
@@ -81,7 +81,7 @@ const deleteConsumableModel = async (req, res) => {
   }
 
   try {
-    await consumableModel.deleteConsumableModel(consumable_model_id);
+    await consumableModelRepository.deleteConsumableModel(consumable_model_id);
     res.json({ message: 'Consumable model deleted' });
   } catch (error) {
     console.error('Error in deleteConsumableModel controller:', error);
