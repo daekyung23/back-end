@@ -53,9 +53,11 @@ const createConsumableModel = async (req, res) => {
   const connection = await DBHelper.beginTransaction();
   try {
     const createdConsumableModel = await consumableModelRepository.createConsumableModel(consumableModel);
-    const result = await deviceConsumableCompatibilityRepository.createAllDeviceConsumableCompatibility(createdConsumableModel.consumable_model_id, device_model_id_array);
+    Object.entries(createdConsumableModel).forEach(([key, value]) => {
+      console.log(`${key}: ${value}`);
+    });
+    const result = await deviceConsumableCompatibilityRepository.createAllDeviceConsumableCompatibility(createdConsumableModel.insertId, device_model_id_array);
     await DBHelper.commit(connection);
-
     res.status(201).json({createdConsumableModel, result}); // 성공적인 생성 시 201 상태 코드 반환
   } catch (error) {
     if (connection) {
