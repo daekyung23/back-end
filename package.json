@@ -22,7 +22,9 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.11.1",
     "node": "^21.2.0",
-    "xlsx": "^0.18.5"
+    "runtypes": "^6.7.0",
+    "xlsx": "^0.18.5",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"

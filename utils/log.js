@@ -11,14 +11,14 @@ const log = (message, level = '정보') => {
         const timestamp = new Date().toISOString();
         switch (level) {
             case '에러':
-                console.error(`[에러] - ${timestamp}: ${String(message)}`);
+                console.error(`[에러] - ${timestamp}: ${message}`);
                 break;
             case '경고':
-                console.warn(`[경고] - ${timestamp}: ${String(message)}`);
+                console.warn(`[경고] - ${timestamp}: ${message}`);
                 break;
             case '정보':
             default:
-                console.log(`[정보] - ${timestamp}: ${String(message)}`);
+                console.log(`[정보] - ${timestamp}: ${message}`);
                 break;
         }
     }

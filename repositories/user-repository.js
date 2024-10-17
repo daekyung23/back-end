@@ -23,16 +23,19 @@ const UserRepository = {
     return where;
   },
 
-  searchUser: async (searchTerms, is_active, offset, pageSize) => {
+  searchUser: async (query, pagination) => {
+    const { searchTerms, is_active } = query;
+    const { offset, pageSize } = pagination;
     const select = 'SELECT *'
     let selectFromJoin = select + UserRepository.fromJoin;
-    log(!!checkIf(selectFromJoin).isValid);
+    //log(checkIf(selectFromJoin).isValid);
     const where = UserRepository.searchCondition(searchTerms, is_active);
     const limit = { offset, pageSize };
     return await DBHelper.search(selectFromJoin, where, null, limit);
   },
 
-  searchUserCount: async (searchTerms, is_active) => {
+  searchUserCount: async (query) => {
+    const { searchTerms, is_active } = query;
     const select = 'SELECT COUNT(*) as total';
     let selectFromJoin = select + UserRepository.fromJoin;
     const where = UserRepository.searchCondition(searchTerms, is_active);

@@ -1,5 +1,8 @@
 const userRepository = require('../repositories/user-repository');
 const { isValid, toValidate, validateFields } = require('../utils/validation'); 
+const { z } = require('zod');
+const { checkIf } = require('../utils/checkIf');
+const log = require('../utils/log');
 
 /**--------------------------------------------------------------------------
  * 사용자를 검색합니다.
@@ -13,44 +16,28 @@ const { isValid, toValidate, validateFields } = require('../utils/validation');
  * @property {string} [isActive]      - 활성 상태 default 'ALL'
  */
 const searchUser = async (req, res) => {
-  let { searchTerms, page, is_active} = req.query;
-  searchTerms = toValidate(searchTerms, '');
-  page = toValidate(page, 1);
+  const schema = z.object({
+    searchTerms: z.string().optional().default(''),
+    page: z.coerce.number().int().min(1).optional().default(1),
+    isActive: z.coerce.number().int().min(0).max(1).optional()
+  });
 
+  const input =  schema.parse(req.query);
+  const { page, ...condition } = input;
   const pageSize = 10;
-  const offset = (page - 1) * pageSize;
+  const pagination = { pageSize, offset: (page - 1) * pageSize }
 
-  try {
-    const rows = await userRepository.searchUser(searchTerms, is_active, offset, pageSize);
-    const rowCounts = await userRepository.searchUserCount(searchTerms, is_active);
-    const totalPages = Math.ceil(rowCounts / pageSize);
-    res.json({ users: rows, totalPages });
-  } catch (error) {
-    res.status(500).json({ message: 'Error searching users', error });
-  }
+  const users = await userRepository.searchUser(condition, pagination);
+  const userCounts = await userRepository.searchUserCount(condition);
+  const totalPages = Math.ceil(userCounts / pageSize);
+  res.json({ users, totalPages });
 };
 
-/**--------------------------------------------------------------------------
- * 로그인 ID의 중복 여부를 확인합니다.
- * @param {import('express').Request} req             
- * @param {UserDuplicateCheckQuery} req.query 
- * @param {import('express').Response} res             
- * 
- * @typedef {Object} UserDuplicateCheckQuery
- * @property {string} loginId - 확인할 로그인 ID
- */
 const checkDuplicateLoginId = async (req, res) => {
-  const { login_id } = req.query;
-  if (!isValid(login_id)) {
-    return res.status(400).json({ message: 'Missing login_id' });
-  }
-
-  try {
-    const exists = await userRepository.checkDuplicateLoginId(login_id);
-    res.json(exists);
-  } catch (error) {
-    res.status(500).json({ error: 'Error checking duplicate login_id' });
-  }
+  const schema = z.object({ login_id: z.string() });
+  const input = schema.parse(req.query);
+  const exists = await userRepository.checkDuplicateLoginId(input.login_id);
+  res.json(exists);
 };
 
 /**--------------------------------------------------------------------------
@@ -71,7 +58,21 @@ const checkDuplicateLoginId = async (req, res) => {
  * @property {number|null} [approval_role_id] - 승인 권한 ID (default: null in DB)
  * @property {string} [permission]            - 권한 ('user', 'manager', 'admin', default: 'user' in DB)
  */
+
 const createUser = async (req, res) => {
+  const schema = z.object({
+    user_name: z.string(),
+    login_id: z.string(),
+    password: z.string(),
+    dept_id: z.number(),
+    position_id: z.number(),
+    mobile_num: z.string().nullable().optional(),
+    office_num: z.string().nullable().optional(),
+    email: z.string().nullable().optional(),
+    approval_role_id: z.number().nullable().optional(),
+    permission: z.enum(['user', 'manager', 'admin']).optional() // default: 'user' in DB
+  });
+
   const {
     user_name,
     login_id,

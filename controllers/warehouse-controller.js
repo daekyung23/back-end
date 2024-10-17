@@ -44,8 +44,8 @@ const createWarehouse = async (req, res) => {
   }
 
   try {
-    const newLocation = await warehouseRepository.createWarehouse(warehouse);
-    res.json(newLocation);
+    const { newWarehouse, newLocation } = await warehouseRepository.createWarehouse(warehouse);
+    res.json({ newWarehouse, newLocation });
   } catch (error) {
     console.error('Error in createWarehouse controller:', error); // 컨트롤러에서의 에러 로그
     res.status(500).json({ message: 'Error creating warehouse', error });
