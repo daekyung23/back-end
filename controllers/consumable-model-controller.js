@@ -72,12 +72,13 @@ const updateConsumableModel = async (req, res) => {
   if (!isValid(consumable_model_id)) {
     return res.status(400).json({ message: 'Missing consumable_model_id' });
   }
-  
+
   const connection = await DBHelper.beginTransaction();
   try {
     if (Object.keys(updateFields).length === 0) {
       return res.status(400).json({ message: 'No fields to update' });
     }
+    delete updateFields.device_model_id_array;
     const updatedConsumableModel = await consumableModelRepository.patchConsumableModel(consumable_model_id, updateFields);
     const result = await deviceConsumableCompatibilityRepository.deleteAllDeviceConsumableCompatibilityByConsumableModelId(consumable_model_id);
     const result2 = await deviceConsumableCompatibilityRepository.createAllDeviceConsumableCompatibility(consumable_model_id, req.body.device_model_id_array);
