@@ -51,14 +51,14 @@ const createConsumableModel = async (req, res) => {
   const consumableModel = { ...requiredFields };
 
   try {
-    DBHelper.beginTransaction();
+    const connection = await DBHelper.beginTransaction();
     const createdConsumableModel = await consumableModelRepository.createConsumableModel(consumableModel);
     const result = await deviceConsumableCompatibilityRepository.createAllDeviceConsumableCompatibility(createdConsumableModel.consumable_model_id, device_model_id_array);
-    DBHelper.commit();
+    await DBHelper.commit(connection);
 
     res.status(201).json({createdConsumableModel, result}); // 성공적인 생성 시 201 상태 코드 반환
   } catch (error) {
-    DBHelper.rollback();
+    await DBHelper.rollback(connection);
     res.status(500).json({ error: 'Failed to create consumable model' });
   }
 }
@@ -73,14 +73,14 @@ const updateConsumableModel = async (req, res) => {
     if (Object.keys(updateFields).length === 0) {
       return res.status(400).json({ message: 'No fields to update' });
     }
-    DBHelper.beginTransaction();
+    const connection = await DBHelper.beginTransaction();
     const updatedConsumableModel = await consumableModelRepository.patchConsumableModel(consumable_model_id, updateFields);
     const result = await deviceConsumableCompatibilityRepository.deleteAllDeviceConsumableCompatibilityByConsumableModelId(consumable_model_id);
     const result2 = await deviceConsumableCompatibilityRepository.createAllDeviceConsumableCompatibility(consumable_model_id, req.body.device_model_id_array);
-    DBHelper.commit();
+    await DBHelper.commit(connection);
     res.json({updatedConsumableModel, result2});
   } catch (error) {
-    DBHelper.rollback();
+    await DBHelper.rollback(connection);
     console.error('Error in updateConsumableModel controller:', error);
     res.status(500).json({ message: 'Error updating consumable model', error });
   }

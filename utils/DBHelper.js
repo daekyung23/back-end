@@ -184,6 +184,9 @@ const DBHelper = {
    * @param {import('mysql2/promise').Connection} connection - 트랜잭션 커넥션 객체
    */
   rollback: async (connection) => {
+    if (!connection) {
+      return;
+    }
     await connection.rollback();
     connection.release();
   },
