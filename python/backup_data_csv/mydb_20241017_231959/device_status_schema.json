@@ -1,0 +1,18 @@
+[
+    {
+        "Field": "status_id",
+        "Type": "int",
+        "Null": "NO",
+        "Key": "PRI",
+        "Default": null,
+        "Extra": "auto_increment"
+    },
+    {
+        "Field": "status_name",
+        "Type": "varchar(45)",
+        "Null": "NO",
+        "Key": "",
+        "Default": null,
+        "Extra": ""
+    }
+]

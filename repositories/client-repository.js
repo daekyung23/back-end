@@ -16,7 +16,7 @@ const ClientRepository = {
       params: [
         { field: "c.client_name", operator: "LIKE", value: searchTerms, likeLeft: "%", likeRight: "%" },
         { field: "c.parent_client_id", operator: "=", value: null },
-        { field: "u.is_active", operator: "=", value: is_active },
+        { field: "c.is_active", operator: "=", value: is_active },
         { field: "cr.rate_type", operator: "=", value: client_rate }
       ]
     };
