@@ -74,6 +74,20 @@ const ClientRepository = {
     return result;
   },
 
+  checkDuplicateClient: async (client_name) => {
+    const select = 'SELECT COUNT(*) as total ';
+    const from = 'FROM client';
+    const where = {
+      condition: "?", 
+      params: [
+        { field: "client_name", operator: "=", value: client_name },
+      ]
+    };
+    
+    const rows = await DBHelper.search(select + from, where);
+    return rows[0].total > 0;  // 중복된 고객이 있으면 true 반환
+  },
+
   deleteClient: async (client_id) => {
     return await DBHelper.delete('client', { client_id });
   }

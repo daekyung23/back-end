@@ -211,7 +211,27 @@ const deleteClient = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Error deleting client', error });
   }
-}
+};
+
+const checkDuplicateClient = async (req, res) => {
+  const { client_name } = req.query;
+
+  if (!client_name) {
+    return res.status(400).json({ message: 'Client name is required' });
+  }
+
+  try {
+    const isDuplicate = await ClientRepository.checkDuplicateClient(client_name);
+    if (isDuplicate) {
+      return res.status(200).json({ message: 'Duplicate client found' });
+    } else {
+      return res.status(200).json({ message: 'Client name is available' });
+    }
+  } catch (error) {
+    console.error('Error checking duplicate client:', error);
+    return res.status(500).json({ message: 'Error checking duplicate client', error });
+  }
+};
 
 module.exports = {
   searchClient,
@@ -219,4 +239,5 @@ module.exports = {
   updateClient,
   changeClientActivation,
   deleteClient,
+  checkDuplicateClient,
 };
