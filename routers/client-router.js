@@ -7,5 +7,7 @@ router.post('/create', clientController.createClient);
 router.patch('/update', clientController.updateClient);
 router.patch('/change-activation', clientController.changeClientActivation);
 router.delete('/delete', clientController.deleteClient);
+router.get('/check', clientController.checkDuplicateClient);
 
 module.exports = router;
+

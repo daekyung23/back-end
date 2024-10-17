@@ -16,7 +16,7 @@ const ClientRepository = {
       params: [
         { field: "c.client_name", operator: "LIKE", value: searchTerms, likeLeft: "%", likeRight: "%" },
         { field: "c.parent_client_id", operator: "=", value: null },
-        { field: "u.is_active", operator: "=", value: is_active },
+        { field: "c.is_active", operator: "=", value: is_active },
         { field: "cr.rate_type", operator: "=", value: client_rate }
       ]
     };
@@ -72,6 +72,20 @@ const ClientRepository = {
     const params = [is_active, ...clientIds];
     const [result] = await connection.query(query, params);
     return result;
+  },
+
+  checkDuplicateClient: async (client_name) => {
+    const select = 'SELECT COUNT(*) as total ';
+    const from = 'FROM client';
+    const where = {
+      condition: "?", 
+      params: [
+        { field: "client_name", operator: "=", value: client_name },
+      ]
+    };
+    
+    const rows = await DBHelper.search(select + from, where);
+    return rows[0].total > 0;  // 중복된 고객이 있으면 true 반환
   },
 
   deleteClient: async (client_id) => {
