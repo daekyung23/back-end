@@ -12,20 +12,21 @@ const { toValidate } = require('../utils/validation');
  * @property {string} [is_active]   - 활성 상태 (default: undefined - 모든 상태)
  */
 const searchClientBranch = async (req, res) => {
-  let { searchTerms, page, is_active } = req.query;
-  searchTerms = toValidate(searchTerms, '');
-  page = toValidate(page, 1);
-  const pageSize = 10;
-  const offset = (page - 1) * pageSize;
+  const schema = z.object({
+    searchTerms: z.string().optional().default(''),
+    page: z.coerce.number().int().min(1).optional().default(1),
+    isActive: z.coerce.number().int().min(0).max(1).optional()
+  });
 
-  try {
-    const rows = await clientBranchRepository.searchClientBranch(searchTerms, is_active, offset, pageSize);
-    const rowCounts = await clientBranchRepository.searchClientBranchCount(searchTerms, is_active);
-    const totalPages = Math.ceil(rowCounts / pageSize);
-    res.json({ clientBranches: rows, totalPages });
-  } catch (error) {
-    res.status(500).json({ message: 'Error searching client branches', error });
-  }
+  const input = schema.parse(req.query);
+  const { page, ...condition } = input;
+  const pageSize = 10;
+  const pagination = { pageSize, offset: (page - 1) * pageSize }
+
+  const clientBranches = await clientBranchRepository.searchClientBranch(condition, pagination);
+  const clientBranchCounts = await clientBranchRepository.searchClientBranchCount(condition);
+  const totalPages = Math.ceil(clientBranchCounts / pageSize);
+  res.json({ clientBranches, totalPages });
 };
 
 /**-------------------------------------------------------------------------

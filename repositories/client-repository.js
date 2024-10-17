@@ -59,7 +59,23 @@ const ClientRepository = {
   },
 
   createClient: async (client) => {
-    return await DBHelper.insert('client', client);
+    const {
+      rate_type,
+      ...others
+    } = client;
+
+    // 필요한 데이터를 객체로 구성
+    const postBody = {
+        ...others,
+        default_client_branch_rate_id: { 
+            subQuery: "SELECT client_rate_id FROM client_rate WHERE rate_type = ?", 
+            params: [rate_type] // 서브쿼리에 사용할 파라미터
+        },
+        is_active: 1
+    };
+
+    // DBHelper의 insert 함수 호출
+    return await DBHelper.insert('client', postBody);
   },
 
   patchClient: async (client_id, client, connection) => {

@@ -45,11 +45,11 @@ const searchClient = async (req, res) => {
 const createClient = async (req, res) => {
   const {
     client_name,
-    default_client_rate_id,
+    rate_type,
     ...optionalFields
   } = req.body;
 
-  const requiredFields = { client_name, default_client_rate_id };
+  const requiredFields = { client_name, rate_type };
   const validationError = validateFields(requiredFields, res);
   if (validationError) return validationError;
   const client = { ...requiredFields, ...optionalFields };

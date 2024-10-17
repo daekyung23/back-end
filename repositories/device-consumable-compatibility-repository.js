@@ -5,7 +5,7 @@ const deviceConsumableCompatibilityRepository = {
   createAllDeviceConsumableCompatibility: async (consumable_model_id, device_model_id_array) => {
 
     const query = `
-      INSERT INTO photo (device_model_id, consumable_model_id)
+      INSERT INTO device_consumable_compatibility (device_model_id, consumable_model_id)
       VALUES ${device_model_id_array.map(() => '(?, ?)').join(', ')}
     `;
 
@@ -14,7 +14,7 @@ const deviceConsumableCompatibilityRepository = {
       consumable_model_id
   ]);
 
-  const [result] = await db.execute(query, values);
+  const result = await db.execute(query, values);
 
   return result;
 },

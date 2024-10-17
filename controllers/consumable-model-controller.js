@@ -82,9 +82,7 @@ const updateConsumableModel = async (req, res) => {
     await DBHelper.commit(connection);
     res.json({updatedConsumableModel, result2});
   } catch (error) {
-    if (connection) {
-      await DBHelper.rollback(connection);
-    }
+    await DBHelper.rollback(connection);
     console.error('Error in updateConsumableModel controller:', error);
     res.status(500).json({ message: 'Error updating consumable model', error });
   }

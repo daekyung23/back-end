@@ -11,10 +11,17 @@ const errorHandler = (err, req, res, next) => {
       response.errors = err.errors;
     }
 
+    // 스택 정보를 응답에 포함
+    response.stack = err.stack; // 스택 정보 추가
+
     return res.status(err.statusCode).json(response);
   } else {
     console.error(err); // 에러를 콘솔에 출력
-    res.status(500).json({ message: 'Internal Server Error' });
+    // 일반 에러의 경우 스택 정보를 포함
+    res.status(500).json({ 
+      message: 'Internal Server Error',
+      stack: err.stack // 스택 정보 추가
+    });
   }
 };
 
