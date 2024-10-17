@@ -1,5 +1,5 @@
 const deptRepository = require('../repositories/dept-repository');
-const { isValid, isUndefined, toValidate } = require('../utils/validation');
+const { isValid, isUndefined, toValidate, validateFields } = require('../utils/validation');
 
 // 재귀 함수를 통해 상위 부서 계층 정보를 추출하고 JSON 형식으로 반환하는 함수
 const getHierarchy = (row, deptMap) => {//rows) => {
