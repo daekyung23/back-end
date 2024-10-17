@@ -1,6 +1,7 @@
 const consumableModelRepository = require('../repositories/consumable-model-repository');
 const deviceConsumableCompatibilityRepository = require('../repositories/device-consumable-compatibility-repository');
 const { isValid, toValidate, validateFields } = require('../utils/validation');
+const DBHelper = require('../utils/DBHelper');
 
 const searchConsumableModel = async (req, res) => {
   let { searchTerms, consumableType, page} = req.query; // 기본 페이지 번호 1
