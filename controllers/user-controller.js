@@ -2,6 +2,20 @@ const userRepository = require('../repositories/user-repository');
 const { isValid, toValidate, validateFields } = require('../utils/validation'); 
 const { Object, String, Natural, Binary, Email, Enum } = require('../utils/custom-zod-types');
 
+const User = Object({
+  login_id: String.length(45),
+  user_name: String.length(45),
+  password: String.length(50),
+  dept_id: Natural,
+  position_id: Natural,
+  mobile_num: String.length(20).optional(), // default: null  
+  office_num: String.length(20).optional(), // default: null
+  email: Email.length(100).optional(),  // default: null
+  approval_role_id: Natural.optional(), // default: null
+  permission: Enum(['user', 'manager', 'admin']).optional(), // default: 'user' 
+  is_active: Binary.optional(), // default: 1
+});
+
 const searchUser = async (req, res) => {
   const UserSearchQuery = Object({
     searchTerms: String.default(''),
@@ -21,28 +35,13 @@ const searchUser = async (req, res) => {
 };
 
 const checkDuplicateLoginId = async (req, res) => {
-  const schema = Object({ login_id: String });
-  const input = schema.parse(req.query);
+  const input = User.pick({ login_id: true }).parse(req.query);
   const exists = await userRepository.checkDuplicateLoginId(input.login_id);
   res.json(exists);
 };
 
-const UserCreateBody = Object({
-  login_id: String.length(45),
-  user_name: String.length(45),
-  password: String.length(50),
-  dept_id: Natural,
-  position_id: Natural,
-  mobile_num: String.length(20).optional(), // default: null  
-  office_num: String.length(20).optional(), // default: null
-  email: Email.length(100).optional(),  // default: null
-  approval_role_id: Natural.optional(), // default: null
-  permission: Enum(['user', 'manager', 'admin']).optional(), // default: 'user' 
-});
-
 const createUser = async (req, res) => {
-  const input = UserCreateBody.parse(req.body);
-
+  const input = User.parse(req.body);
   if (await userRepository.checkDuplicateLoginId(input.login_id)) {
     return res.status(400).json({ message: 'Duplicate login_id' });
   }
@@ -51,27 +50,14 @@ const createUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const UserUpdateBody = UserCreateBody.partial().extend({
+  const UpdateUser = User.partial().extend({
     login_id: String.length(45),
-    is_active: Binary.optional(), // default: 1
   });
-  const input = UserUpdateBody.parse(req.body);
+  const input = UpdateUser.parse(req.body);
   const { login_id, ...updateFields } = input;
-
-  if (Object.keys(updateFields).length === 0) {
-    return res.status(400).json({ error: 'No fields to update' });
-  }
-
-  // 수정된 시간 추가
   updateFields.modified_at = new Date().toISOString();
-
-  try {
-    const result = await userRepository.patchUser(login_id, updateFields);
-    res.json(result);
-  } catch (error) {
-    console.error('Error updating user:', error);
-    res.status(500).json({ error: 'Failed to update user' });
-  }
+  const result = await userRepository.patchUser(login_id, updateFields);
+  res.json(result);
 };
 
 /**--------------------------------------------------------------------------
@@ -85,6 +71,10 @@ const updateUser = async (req, res) => {
  * @property {number} isActive - 새로운 활성 상태 (1: 활성, 0: 비활성)
  */
 const changeUserActivation = async (req, res) => {
+  const UserActivationChangeBody = Object({
+    login_id: String.length(45),
+    is_active: Binary,
+  });
   const { login_id, is_active } = req.body;
   const user = { is_active };
   try {

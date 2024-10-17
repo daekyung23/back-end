@@ -1,5 +1,6 @@
 const { updateClientBranch } = require('../controllers/client-branch-controller');
 const DBHelper = require('../utils/DBHelper'); // DBHelper 불러오기
+const db = require('../utils/database');
 
 const ClientRepository = {
 
@@ -78,8 +79,39 @@ const ClientRepository = {
     return await DBHelper.insert('client', postBody);
   },
 
-  patchClient: async (client_id, client, connection) => {
-    return await DBHelper.patch('client', client, { client_id }, connection);
+  patchClient: async (client_id, client) => {
+    const {
+      rate_type,
+      ...others
+    } = client;
+  
+    // 먼저 rate_type을 사용하여 client_rate_id를 조회
+    let default_client_branch_rate_id = null;
+    if (rate_type) {
+      const [rows] = await db.query(
+        "SELECT client_rate_id FROM client_rate WHERE rate_type = ?",
+        [rate_type]
+      );
+      if (rows.length > 0) {
+        default_client_branch_rate_id = rows[0].client_rate_id;
+      } else {
+        // 유효하지 않은 rate_type인 경우 에러 처리 또는 기본값 설정
+        throw new Error('Invalid rate_type provided.');
+      }
+    }
+  
+    // 필요한 데이터를 객체로 구성
+    const postBody = {
+      ...others,
+      // 조회한 client_rate_id를 설정
+      ...(default_client_branch_rate_id !== null && { default_client_branch_rate_id }),
+    };
+  
+    if (client.is_active !== undefined) {
+      postBody.is_active = client.is_active === 'Y' ? 1 : 0;
+    }
+  
+    return await DBHelper.patch('client', postBody, { client_id });
   },
 
   changeMultipleClientActivations: async (clientIds, { is_active }, connection) => {
