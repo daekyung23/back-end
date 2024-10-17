@@ -12,7 +12,7 @@ const errorHandler = (err, req, res, next) => {
     }
 
     // 스택 정보를 응답에 포함
-    response.stack = err.stack; // 스택 정보 추가
+    //response.stack = err.stack; // 스택 정보 추가
 
     return res.status(err.statusCode).json(response);
   } else {

@@ -3,6 +3,7 @@ const { isValid, toValidate, validateFields } = require('../utils/validation');
 const { z } = require('zod');
 const { checkIf } = require('../utils/checkIf');
 const log = require('../utils/log');
+const { Record, Number, String, Optional } = require('runtypes')
 
 /**--------------------------------------------------------------------------
  * 사용자를 검색합니다.
@@ -16,13 +17,15 @@ const log = require('../utils/log');
  * @property {string} [isActive]      - 활성 상태 default 'ALL'
  */
 const searchUser = async (req, res) => {
-  const schema = z.object({
-    searchTerms: z.string().optional().default(''),
-    page: z.coerce.number().int().min(1).optional().default(1),
-    isActive: z.coerce.number().int().min(0).max(1).optional()
+  // Runtype 스키마 정의
+  const UserSearchQuery = Record({
+    searchTerms: Optional(String).default(''), // 기본값 설정
+    page: Optional(Number.withConstraint(val => val >= 1)).default(1), // 기본값 설정
+    isActive: Optional(Number.withConstraint(val => val >= 0 && val <= 1))
   });
 
-  const input =  schema.parse(req.query);
+  // 입력 검증 및 기본값 설정
+  const input = UserSearchQuery.check(req.query);
   const { page, ...condition } = input;
   const pageSize = 10;
   const pagination = { pageSize, offset: (page - 1) * pageSize }
