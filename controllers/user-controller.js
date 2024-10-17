@@ -1,28 +1,15 @@
 const userRepository = require('../repositories/user-repository');
 const { isValid, toValidate, validateFields } = require('../utils/validation'); 
-const { z } = require('zod');
-const { checkIf } = require('../utils/checkIf');
-const log = require('../utils/log');
+const { Object, String, Natural, Binary, Email, Enum } = require('../utils/custom-zod-types');
 
-/**--------------------------------------------------------------------------
- * 사용자를 검색합니다.
- * @param {import('express').Request} req      
- * @param {UserSearchQuery} req.query 
- * @param {import('express').Response} res    
- * 
- * @typedef {Object} UserSearchQuery 
- * @property {string} [searchTerms]   - 검색어 default ''
- * @property {number} [page]          - 페이지 번호 default 1
- * @property {string} [isActive]      - 활성 상태 default 'ALL'
- */
 const searchUser = async (req, res) => {
-  const schema = z.object({
-    searchTerms: z.string().optional().default(''),
-    page: z.coerce.number().int().min(1).optional().default(1),
-    isActive: z.coerce.number().int().min(0).max(1).optional()
+  const UserSearchQuery = Object({
+    searchTerms: String.default(''),
+    page: Natural.default(1),
+    isActive: Binary.optional(), // default: 전부
   });
-
-  const input =  schema.parse(req.query);
+  
+  const input = UserSearchQuery.parse(req.query);
   const { page, ...condition } = input;
   const pageSize = 10;
   const pagination = { pageSize, offset: (page - 1) * pageSize }
@@ -34,96 +21,42 @@ const searchUser = async (req, res) => {
 };
 
 const checkDuplicateLoginId = async (req, res) => {
-  const schema = z.object({ login_id: z.string() });
+  const schema = Object({ login_id: String });
   const input = schema.parse(req.query);
   const exists = await userRepository.checkDuplicateLoginId(input.login_id);
   res.json(exists);
 };
 
-/**--------------------------------------------------------------------------
- * 새로운 사용자를 생성합니다.
- * @param {import('express').Request} req          
- * @param {UserCreateBody} req.body     
- * @param {import('express').Response} res      
- * 
- * @typedef {Object} UserCreateBody         
- * @property {string} login_id                - 로그인 ID 
- * @property {string} user_name               - 이름
- * @property {string} password                - 비밀번호
- * @property {number} dept_id                 - 부서 ID
- * @property {number} position_id             - 직위 ID
- * @property {string|null} [mobile_num]       - 휴대폰 번호 (default: null in DB)
- * @property {string|null} [office_num]       - 사무실 번호 (default: null in DB)
- * @property {string|null} [email]            - 이메일 (default: null in DB)
- * @property {number|null} [approval_role_id] - 승인 권한 ID (default: null in DB)
- * @property {string} [permission]            - 권한 ('user', 'manager', 'admin', default: 'user' in DB)
- */
+const UserCreateBody = Object({
+  login_id: String.length(45),
+  user_name: String.length(45),
+  password: String.length(50),
+  dept_id: Natural,
+  position_id: Natural,
+  mobile_num: String.length(20).optional(), // default: null  
+  office_num: String.length(20).optional(), // default: null
+  email: Email.length(100).optional(),  // default: null
+  approval_role_id: Natural.optional(), // default: null
+  permission: Enum(['user', 'manager', 'admin']).optional(), // default: 'user' 
+});
 
 const createUser = async (req, res) => {
-  const schema = z.object({
-    user_name: z.string(),
-    login_id: z.string(),
-    password: z.string(),
-    dept_id: z.number(),
-    position_id: z.number(),
-    mobile_num: z.string().nullable().optional(),
-    office_num: z.string().nullable().optional(),
-    email: z.string().nullable().optional(),
-    approval_role_id: z.number().nullable().optional(),
-    permission: z.enum(['user', 'manager', 'admin']).optional() // default: 'user' in DB
-  });
+  const input = UserCreateBody.parse(req.body);
 
-  const {
-    user_name,
-    login_id,
-    password,
-    dept_id,
-    position_id,
-    ...optionalFields
-  } = req.body;
-
-  const requiredFields = { user_name, login_id, password, dept_id, position_id };
-  const validationError = validateFields(requiredFields, res);
-  if (validationError) return validationError;
-  if (await userRepository.checkDuplicateLoginId(login_id)) {
+  if (await userRepository.checkDuplicateLoginId(input.login_id)) {
     return res.status(400).json({ message: 'Duplicate login_id' });
   }
-  const user = { ...requiredFields, ...optionalFields };
-
-  try {
-    const result = await userRepository.createUser(user);
-    res.status(201).json(result); // 성공적인 생성 시 201 상태 코드 반환
-  } catch (error) {
-    console.error('Error creating user:', error); // 에러 로그
-    res.status(500).json({ error: 'Failed to create user' });
-  }
+  const result = await userRepository.createUser(input);
+  res.status(201).json(result);
 };
 
-/**--------------------------------------------------------------------------
- * 사용자 정보를 업데이트합니다.
- * @param {import('express').Request} req         
- * @param {UserUpdateBody} req.body 
- * @param {import('express').Response} res       
- * 
- * @typedef {Object} UserUpdateBody     
- * @property {string} login_id                - 로그인 ID (기준)
- * @property {string} [user_name]             - 이름
- * @property {string} [password]              - 비밀번호
- * @property {number} [dept_id]               - 부서 ID
- * @property {number} [position_id]           - 직위 ID
- * @property {string|null} [mobile_num]       - 휴대폰 번호
- * @property {string|null} [office_num]       - 사무실 번호
- * @property {string|null} [email]            - 이메일
- * @property {number|null} [approval_role_id] - 승인 권한 ID
- * @property {string} [permission]            - 권한 ('user', 'manager', 'admin')
- * @property {number} [is_active]             - 활성 상태 (1: 활성, 0: 비활성)
- */
 const updateUser = async (req, res) => {
-  const { login_id, ...updateFields } = req.body;
-
-  if (!isValid(login_id)) {
-    return res.status(400).json({ error: 'Missing login_id' });
-  }
+  const UserUpdateBody = UserCreateBody.partial().extend({
+    login_id: String.length(45),
+    is_active: Binary.optional(), // default: 1
+  });
+  const input = UserUpdateBody.parse(req.body);
+  const { login_id, ...updateFields } = input;
 
   if (Object.keys(updateFields).length === 0) {
     return res.status(400).json({ error: 'No fields to update' });
