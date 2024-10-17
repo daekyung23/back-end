@@ -74,7 +74,6 @@ const WarehouseRepository = {
       const location = { 
         location_type: 'warehouse',
         warehouse_id: newWarehouse.warehouse_id,
-        client_branch_id: null
       };
       const newLocation = await DBHelper.insert('location', location);
       await connection.commit();
