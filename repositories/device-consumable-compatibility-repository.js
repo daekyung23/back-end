@@ -1,12 +1,26 @@
-const DBHelper = require('../utils/DBHelper'); // DBHelper 불러오기
+const DBHelper = require('../utils/DBHelper'); // DBHelper 
+const db = require('../utils/database');
 
 const deviceConsumableCompatibilityRepository = {
-  createDept: async (dept) => {
-    return await DBHelper.insert('dept', dept);
-  },
+  createAllDeviceConsumableCompatibility: async (consumable_model_id, device_model_id_array) => {
 
-  deleteDept: async (dept_id) => {
-    return await DBHelper.delete('dept', { dept_id });
+    const query = `
+      INSERT INTO photo (device_model_id, consumable_model_id)
+      VALUES ${device_model_id_array.map(() => '(?, ?)').join(', ')}
+    `;
+
+    const values = device_model_id_array.flatMap(device_model_id => [
+      device_model_id,
+      consumable_model_id
+  ]);
+
+  const [result] = await db.execute(query, values);
+
+  return result;
+},
+
+  deleteAllDeviceConsumableCompatibilityByConsumableModelId: async ( consumable_model_id ) => {
+    return await DBHelper.delete('device_consumable_compatibility', { consumable_model_id });
   },
 };
 

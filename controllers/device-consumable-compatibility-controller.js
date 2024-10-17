@@ -1,38 +1,26 @@
-const deviceRepository = require('../repositories/device-repository');
+const deviceConsumableCompatibilityRepository = require('../repositories/device-consumable-compatibility-repository');
 const { isValid, toValidate, validateFields } = require('../utils/validation'); 
 
-const createDevice = async (req, res) => {
-  const {
-    device_model_id,
-    owner_dept_id,
-    mgmt_dept_id,
-    serial,
-    mac,
-    ...optionalFields
-  } = req.body;
-
-  const requiredFields = { device_model_id, owner_dept_id, mgmt_dept_id, serial, mac };
-  const validationError = validateFields(requiredFields, res);
-  if (validationError) return validationError;
-  const device = { ...requiredFields, ...optionalFields };
+const createAllDeviceConsumableCompatibility = async (req, res) => {
+  const { consumable_model_id, device_model_id_array } = req.body;
 
   try {
-    const result = await deviceRepository.createDevice(device);
-    res.status(201).json(result); // 성공적인 생성 시 201 상태 코드 반환
+    await deviceConsumableCompatibilityRepository.createAllDeviceConsumableCompatibility(consumable_model_id, device_model_id_array);
+    res.json({ message: 'Device created' });
   } catch (error) {
-    console.error('Error creating device:', error); // 에러 로그
+    console.error('Error in createDevice controller:', error);
     res.status(500).json({ error: 'Failed to create device' });
   }
 };
 
-const deleteDevice = async (req, res) => {
-  const { device_id } = req.query;
-  if (!isValid(device_id)) {
-    return res.status(400).json({ error: 'Missing device_id' });
+const deleteAllDeviceConsumableCompatibilityByConsumableModelId = async (req, res) => {
+  const { consumable_model_id } = req.query;
+  if (!isValid(consumable_model_id)) {
+    return res.status(400).json({ error: 'Missing consumable_model_id' });
   }
 
   try {
-    await deviceRepository.deleteDevice(device_id);
+    await deviceConsumableCompatibilityRepository.deleteAllDeviceConsumableCompatibilityByConsumableModelId(consumable_model_id);
     res.json({ message: 'Device deleted' });
   } catch (error) {
     console.error('Error in deleteDevice controller:', error);
@@ -41,6 +29,6 @@ const deleteDevice = async (req, res) => {
 }
 
 module.exports = {
-  createDevice,
-  deleteDevice,
+  createAllDeviceConsumableCompatibility,
+  deleteAllDeviceConsumableCompatibilityByConsumableModelId,
 };

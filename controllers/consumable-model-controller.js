@@ -1,4 +1,5 @@
 const consumableModelRepository = require('../repositories/consumable-model-repository');
+const deviceConsumableCompatibilityRepository = require('../repositories/device-consumable-compatibility-repository');
 const { isValid, toValidate, validateFields } = require('../utils/validation');
 
 const searchConsumableModel = async (req, res) => {
@@ -36,7 +37,8 @@ const createConsumableModel = async (req, res) => {
   const {
     manufacturer,
     consumable_name,
-    consumable_type
+    consumable_type,
+    device_model_id_array
   } = req.body;
 
   const requiredFields = { manufacturer, consumable_name, consumable_type };
@@ -48,10 +50,14 @@ const createConsumableModel = async (req, res) => {
   const consumableModel = { ...requiredFields };
 
   try {
-    const result = await consumableModelRepository.createConsumableModel(consumableModel);
-    res.status(201).json(result); // 성공적인 생성 시 201 상태 코드 반환
+    DBHelper.beginTransaction();
+    const createdConsumableModel = await consumableModelRepository.createConsumableModel(consumableModel);
+    const result = await deviceConsumableCompatibilityRepository.createAllDeviceConsumableCompatibility(createdConsumableModel.consumable_model_id, device_model_id_array);
+    DBHelper.commit();
+
+    res.status(201).json({createdConsumableModel, result}); // 성공적인 생성 시 201 상태 코드 반환
   } catch (error) {
-    console.error('Error creating consumable model:', error); // 에러 로그
+    DBHelper.rollback();
     res.status(500).json({ error: 'Failed to create consumable model' });
   }
 }
@@ -66,9 +72,14 @@ const updateConsumableModel = async (req, res) => {
     if (Object.keys(updateFields).length === 0) {
       return res.status(400).json({ message: 'No fields to update' });
     }
+    DBHelper.beginTransaction();
     const updatedConsumableModel = await consumableModelRepository.patchConsumableModel(consumable_model_id, updateFields);
-    res.json(updatedConsumableModel);
+    const result = await deviceConsumableCompatibilityRepository.deleteAllDeviceConsumableCompatibilityByConsumableModelId(consumable_model_id);
+    const result2 = await deviceConsumableCompatibilityRepository.createAllDeviceConsumableCompatibility(consumable_model_id, req.body.device_model_id_array);
+    DBHelper.commit();
+    res.json({updatedConsumableModel, result2});
   } catch (error) {
+    DBHelper.rollback();
     console.error('Error in updateConsumableModel controller:', error);
     res.status(500).json({ message: 'Error updating consumable model', error });
   }
@@ -81,7 +92,10 @@ const deleteConsumableModel = async (req, res) => {
   }
 
   try {
+    DBHelper.beginTransaction();
+    await deviceConsumableCompatibilityRepository.deleteAllDeviceConsumableCompatibilityByConsumableModelId(consumable_model_id);
     await consumableModelRepository.deleteConsumableModel(consumable_model_id);
+    DBHelper.commit();
     res.json({ message: 'Consumable model deleted' });
   } catch (error) {
     console.error('Error in deleteConsumableModel controller:', error);
