@@ -8,12 +8,11 @@ const app = express();
 
 const cors = require('cors');
 const requestLogger = require('./middlewares/request-logger');
-const responseLogger = require('./middlewares/response-logger')
+
 
 app.use(express.json());
 app.use(cors());
 app.use(requestLogger);
-app.use(responseLogger);
 
 app.use('/client-branch', require('./routers/client-branch-router'));
 app.use('/client', require('./routers/client-router'));
@@ -40,10 +39,12 @@ app.use('/warehouse', require('./routers/warehouse-router'));
   }
 })();
 
-
 // 에러 처리 미들웨어(서버 실행 직전 위치)
 const errorHandler = require('./middlewares/error-handler');
 app.use(errorHandler);
+
+const responseLogger = require('./middlewares/response-logger')
+app.use(responseLogger);
 
 // 서버를 지정된 포트에서 시작
 const port = process.env.PORT || 3001;

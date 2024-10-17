@@ -1,9 +1,9 @@
-// responseLogger.js
+// middleware/response-logger.js
 const ENABLE_RESPONSE_LOGGING = process.env.ENABLE_LOGGING === 'true';
 const ENABLE_RESPONSE_BODY_LOGGING = process.env.ENABLE_RESPONSE_BODY_LOGGING === 'true';
 const log = require('../utils/log');
 
-// 응답 및 에러 로깅 미들웨어
+// Response and error logging middleware
 const responseLogger = (req, res, next) => {
     const originalSend = res.send;
 
@@ -18,10 +18,12 @@ const responseLogger = (req, res, next) => {
     };
 
     res.on('finish', () => {
-        if (res.statusCode >= 400 && ENABLE_RESPONSE_LOGGING) {
+        if (res.statusCode >= 400 && res.statusCode < 500 && ENABLE_RESPONSE_LOGGING) {
+            // Log only client errors (4xx)
             log(`[에러] ${res.statusCode}`, '에러');
-            log(`[요청]: ${req.method} ${req.url}`)
+            log(`[요청]: ${req.method} ${req.url}`);
         }
+        // Do not log server errors (5xx)
     });
 
     next();
