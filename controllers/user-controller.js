@@ -1,6 +1,6 @@
-const userRepository = require('../repositories/user-repository');
-const { isValid, toValidate, validateFields } = require('../utils/validation'); 
 const { Object, String, Natural, Binary, Email, Enum } = require('../utils/custom-zod-types');
+const { Search } = require('../models/search');
+const userRepository = require('../repositories/user-repository');
 
 const User = Object({
   login_id: String.length(45),
@@ -17,13 +17,11 @@ const User = Object({
 });
 
 const searchUser = async (req, res) => {
-  const UserSearchQuery = Object({
-    searchTerms: String.default(''),
-    page: Natural.default(1),
+  const UserSearch = Search.extend({
     isActive: Binary.optional(), // default: 전부
-  });
+  })
   
-  const input = UserSearchQuery.parse(req.query);
+  const input = UserSearch.parse(req.query);
   const { page, ...condition } = input;
   const pageSize = 10;
   const pagination = { pageSize, offset: (page - 1) * pageSize }
@@ -50,9 +48,10 @@ const createUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const UpdateUser = User.partial().extend({
-    login_id: String.length(45),
-  });
+  const UpdateUser = User.pick({ login_id: true }).merge(
+    User.partial()
+  );
+
   const input = UpdateUser.parse(req.body);
   const { login_id, ...updateFields } = input;
   updateFields.modified_at = new Date().toISOString();
@@ -60,60 +59,17 @@ const updateUser = async (req, res) => {
   res.json(result);
 };
 
-/**--------------------------------------------------------------------------
- * 사용자의 활성 상태를 변경합니다.
- * @param {import('express').Request} req               
- * @param {UserActivationChangeBody} req.body 
- * @param {import('express').Response} res              
- * 
- * @typedef {Object} UserActivationChangeBody
- * @property {string} loginId  - 로그인 ID (기준)
- * @property {number} isActive - 새로운 활성 상태 (1: 활성, 0: 비활성)
- */
-const changeUserActivation = async (req, res) => {
-  const UserActivationChangeBody = Object({
-    login_id: String.length(45),
-    is_active: Binary,
-  });
-  const { login_id, is_active } = req.body;
-  const user = { is_active };
-  try {
-    const result = await userRepository.patchUser(login_id, user);
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to update user' });
-  }
-};
-
-/**--------------------------------------------------------------------------
- * 사용자를 삭제합니다.
- * @param {import('express').Request} req       
- * @param {UserDeleteQuery} req.query
- * @param {import('express').Response} res      
- * 
- * @typedef {Object} UserDeleteQuery  
- * @property {string} loginId - 삭제할 사용자의 로그인 ID  
- */
 const deleteUser = async (req, res) => {
-  const { login_id } = req.query;
-  if (!isValid(login_id)) {
-    return res.status(400).json({ error: 'Missing login_id' });
-  }
-
-  try {
-    const result = await userRepository.deleteUser(login_id);
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to delete user' });
-  }
+  const input = User.pick({ login_id: true }).parse(req.query);
+  const result = await userRepository.deleteUser(input.login_id);
+  res.json(result);
 }
-
 
 module.exports = {
   searchUser,
   checkDuplicateLoginId,
   createUser,
   updateUser,
-  changeUserActivation,
+  //changeUserActivation,
   deleteUser,
 };
