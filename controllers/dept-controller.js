@@ -183,6 +183,15 @@ deleteDept = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Error deleting dept', error });
   }
+}
+
+const getAllDepts = async (req, res) => {
+  try {
+    const depts = await deptRepository.getAllDeptsNoPagination();
+    res.json(depts);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching all departments', error });
+  }
 };
 
 module.exports = {
@@ -191,4 +200,5 @@ module.exports = {
   createDept,
   updateDept,
   deleteDept,
+  getAllDepts,
 };

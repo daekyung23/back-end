@@ -9,7 +9,11 @@ const DeptRepository = {
     return await DBHelper.search(selectFrom);
   },
 
-
+  getAllDeptsNoPagination: async () => {
+    const selectFrom = `SELECT * FROM dept`;
+    return await DBHelper.search(selectFrom); // 전체 데이터를 반환
+  },
+  
   /**
    * 특정 부서 ID에 대한 하위 부서를 검색합니다.
    * @param {number|null} dept_id 
