@@ -6,7 +6,7 @@ router.get('/search', userController.searchUser);
 router.get('/check', userController.checkDuplicateLoginId);
 router.post('/create', userController.createUser);
 router.patch('/update', userController.updateUser);
-router.patch('/change-activation', userController.changeUserActivation);
+// router.patch('/change-activation', userController.changeUserActivation);
 router.delete('/delete', userController.deleteUser);
 
 module.exports = router;
