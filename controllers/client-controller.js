@@ -29,7 +29,23 @@ const searchClient = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Error searching clients', error });
   }
-}
+};
+
+// 특정 고객사의 하위 계열사 조회 API 컨트롤러 추가
+const getSubClients = async (req, res) => {
+  const { client_id } = req.params;
+  if (!client_id) {
+    return res.status(400).json({ message: 'client_id is required' });
+  }
+
+  try {
+    const subClients = await ClientRepository.getSubClientsByParentId(client_id);
+    res.json({ subClients });
+  } catch (error) {
+    console.error('Error fetching sub-clients:', error);
+    res.status(500).json({ message: 'Error fetching sub-clients', error });
+  }
+};
 
 /**-------------------------------------------------------------------------
  * 고객사를 생성 API 컨트롤러
@@ -240,4 +256,5 @@ module.exports = {
   changeClientActivation,
   deleteClient,
   checkDuplicateClient,
+  getSubClients
 };

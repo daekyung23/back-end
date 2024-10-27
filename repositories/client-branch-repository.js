@@ -81,7 +81,22 @@ const ClientBranchRepository = {
 
   deleteClientBranch: async (client_branch_id) => {
     return await DBHelper.delete('client_branch', { client_branch_id });
-  }
+  },
+
+  getBranchesByClientId: async (client_id) => {
+    const select = 'SELECT * FROM client_branch';
+    const where = {
+        condition: "?",
+        params: [{ field: 'client_id', operator: '=', value: client_id }]
+    };
+    try {
+        return await DBHelper.search(select, where);
+    } catch (error) {
+        console.error('Error in getBranchesByClientId repository:', error);
+        throw error;
+    }
+  },
+
 
 };
 

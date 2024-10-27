@@ -8,6 +8,7 @@ router.patch('/update', clientController.updateClient);
 router.patch('/change-activation', clientController.changeClientActivation);
 router.delete('/delete', clientController.deleteClient);
 router.get('/check', clientController.checkDuplicateClient);
+router.get('/subclients/:client_id', clientController.getSubClients);
 
 module.exports = router;
 

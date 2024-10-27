@@ -156,11 +156,30 @@ const deleteClientBranch = async (req, res) => {
   }
 };
 
+/**
+ * 특정 고객사 ID로 하위 지점 정보를 가져옵니다.
+ * @param {import('express').Request} req
+ * @param {import('express').Response} res
+ */
+const getBranchesByClientId = async (req, res) => {
+  const { client_id } = req.query;
+  if (!client_id) {
+      return res.status(400).json({ message: 'Missing client_id' });
+  }
+  try {
+      const branches = await clientBranchRepository.getBranchesByClientId(client_id);
+      res.json(branches);
+  } catch (error) {
+      res.status(500).json({ message: 'Error fetching branches by client ID', error });
+  }
+};
+
 module.exports = {
   searchClientBranch,
   createClientBranch,
   updateClientBranch,
   changeClientBranchActivation,
   deleteClientBranch,
+  getBranchesByClientId,
 };
 

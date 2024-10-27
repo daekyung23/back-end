@@ -59,6 +59,24 @@ const ClientRepository = {
     return rows;
   },
 
+  // parent_client_id로 하위 계열사를 조회하는 함수
+  getSubClientsByParentId: async (parent_client_id) => {
+    const selectFromJoin = `SELECT * FROM client`;
+    const where = {
+      condition: "?", 
+      params: [{field: 'parent_client_id', operator: '=', value: parent_client_id}] 
+    };
+
+    try {
+      const result = await DBHelper.search(selectFromJoin, where);
+      return result;
+    } catch (error) {
+      console.log('여기에서 로그가 나와'); // 디버깅용 로그
+      console.error('Error fetching sub-clients:', error);
+      throw error;
+    }
+  },
+
   createClient: async (client) => {
     const {
       rate_type,

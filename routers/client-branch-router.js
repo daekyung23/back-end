@@ -7,5 +7,6 @@ router.post('/create', clientBranchController.createClientBranch);
 router.patch('/update', clientBranchController.updateClientBranch);
 router.patch('/change-activation', clientBranchController.changeClientBranchActivation);
 router.delete('/delete', clientBranchController.deleteClientBranch);
+router.get('/by-client', clientBranchController.getBranchesByClientId);
 
 module.exports = router;
