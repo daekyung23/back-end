@@ -63,12 +63,12 @@ const UserRepository = {
   },
 
   // 사용자 정보 수정
-  patchUser: async (login_id, user) => {
-    return await DBHelper.patch('user', user, { login_id });
+  patchUser: async (user_id, user) => {
+    return await DBHelper.patch('user', user, { user_id });
   },
 
-  deleteUser: async (login_id) => {
-    return await DBHelper.delete('user', { login_id });
+  deleteUser: async (user_id) => {
+    return await DBHelper.delete('user', { user_id });
   }
 
 };
