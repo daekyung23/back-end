@@ -174,6 +174,20 @@ const getBranchesByClientId = async (req, res) => {
   }
 };
 
+const getClientIdByBranchId = async (req, res) => {
+  const { client_branch_id } = req.query;
+  try {
+      if (!client_branch_id) {
+          return res.status(400).json({ error: "client_branch_id is required" });
+      }
+      const result = await clientBranchRepository.getClientIdByBranchId(client_branch_id);
+      res.json(result);
+  } catch (error) {
+      console.error('Error fetching client ID by branch ID:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
 module.exports = {
   searchClientBranch,
   createClientBranch,
@@ -181,5 +195,6 @@ module.exports = {
   changeClientBranchActivation,
   deleteClientBranch,
   getBranchesByClientId,
+  getClientIdByBranchId
 };
 

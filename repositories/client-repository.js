@@ -71,7 +71,6 @@ const ClientRepository = {
       const result = await DBHelper.search(selectFromJoin, where);
       return result;
     } catch (error) {
-      console.log('여기에서 로그가 나와'); // 디버깅용 로그
       console.error('Error fetching sub-clients:', error);
       throw error;
     }
