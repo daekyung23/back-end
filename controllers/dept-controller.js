@@ -194,6 +194,38 @@ const getAllDepts = async (req, res) => {
   }
 };
 
+/**
+ * dept_id로 dept_name을 조회합니다.
+ */
+const getDeptNameById = async (req, res) => {
+  const { dept_id } = req.query;
+  if (!dept_id) {
+      return res.status(400).json({ message: 'Missing dept_id' });
+  }
+  try {
+      const deptName = await deptRepository.getDeptNameById(dept_id);
+      res.json({ dept_name: deptName });
+  } catch (error) {
+      res.status(500).json({ message: 'Error fetching department name', error });
+  }
+};
+
+/**
+* dept_name으로 dept_id를 조회합니다.
+*/
+const getDeptIdByName = async (req, res) => {
+  const { dept_name } = req.query;
+  if (!dept_name) {
+      return res.status(400).json({ message: 'Missing dept_name' });
+  }
+  try {
+      const deptId = await deptRepository.getDeptIdByName(dept_name);
+      res.json({ dept_id: deptId });
+  } catch (error) {
+      res.status(500).json({ message: 'Error fetching department ID', error });
+  }
+};
+
 module.exports = {
   searchDept,
   getChildrenById,
@@ -201,4 +233,6 @@ module.exports = {
   updateDept,
   deleteDept,
   getAllDepts,
+  getDeptNameById,
+  getDeptIdByName,
 };

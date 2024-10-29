@@ -59,6 +59,27 @@ const DeptRepository = {
   deleteDept: async (dept_id) => {
     return await DBHelper.delete('dept', { dept_id });
   },
+
+  getDeptNameById: async (dept_id) => {
+    const select = 'SELECT dept_name FROM dept';
+    const where = {
+        condition: "?",
+        params: [{ field: "dept_id", operator: "=", value: dept_id }]
+    };
+    const rows = await DBHelper.search(select, where);
+    return rows.length > 0 ? rows[0].dept_name : null;
+  },
+
+  getDeptIdByName: async (dept_name) => {
+      const select = 'SELECT dept_id FROM dept';
+      const where = {
+          condition: "?",
+          params: [{ field: "dept_name", operator: "=", value: dept_name }]
+      };
+      const rows = await DBHelper.search(select, where);
+      return rows.length > 0 ? rows[0].dept_id : null;
+  },
+
 };
 
 module.exports = DeptRepository;

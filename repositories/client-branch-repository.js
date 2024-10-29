@@ -98,7 +98,7 @@ const ClientBranchRepository = {
   },
 
   getClientIdByBranchId: async (client_branch_id) => {
-    const select = 'SELECT client_id, client_branch_name, client_branch_rate_id, sigungu_id, mgmt_dept_id FROM client_branch';
+    const select = 'SELECT * FROM client_branch';
     const where = {
         condition: "?",
         params: [{ field: 'client_branch_id', operator: '=', value: client_branch_id }]
