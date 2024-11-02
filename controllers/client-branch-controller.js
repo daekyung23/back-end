@@ -1,5 +1,4 @@
 const clientBranchRepository = require('../repositories/client-branch-repository');
-const { toValidate } = require('../utils/validation');
 /**-------------------------------------------------------------------------
  * 고객사 지점을 검색합니다.
  * @param {import('express').Request} req

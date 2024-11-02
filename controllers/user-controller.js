@@ -1,8 +1,8 @@
-const { Object, String, Natural, Binary, Email, Enum } = require('../utils/custom-zod-types');
+const { Schema, String, Natural, Binary, Email, Enum } = require('../utils/validation/custom-zod-types');
 const { Search } = require('../models/search');
 const userRepository = require('../repositories/user-repository');
 
-const User = Object({
+const User = Schema({
   login_id: String.min(5).max(20), // 최소 5자, 최대 20자
   user_name: String.min(1).max(45), // 최소 1자, 최대 45자
   password: String.min(4).max(50), // 최소 6자, 최대 50자

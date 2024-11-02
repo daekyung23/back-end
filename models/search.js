@@ -1,6 +1,6 @@
-const { Object, String, Natural } = require('../utils/custom-zod-types');
+const { Schema, String, Natural } = require('../utils/validation/custom-zod-types');
 
-const Search = Object({
+const Search = Schema({
   searchTerms: String.default(''),
   page: Natural.default(1),
 });
