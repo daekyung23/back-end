@@ -77,7 +77,7 @@ const updateUser = async (req, res) => {
       return res.status(400).json({ message: 'Required fields are missing' });
     }
 
-    updateFields.modified_at = new Date().toISOString();
+    updateFields.modified_at = new Date()
 
     // 데이터베이스 업데이트
     const result = await userRepository.patchUser(user_id, updateFields);

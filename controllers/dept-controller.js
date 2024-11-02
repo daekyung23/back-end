@@ -141,7 +141,7 @@ createDept = async (req, res) => {
   const requiredFields = { dept_name };
   const validationError = validateFields(requiredFields, res);
   if (validationError) return validationError;
-  if(await deptRepository.checkDuplicateDept( parent_dept_id, dept_name)) {
+  if(await deptRepository.checkDuplicateDept( optionalFields.parent_dept_id, dept_name)) {
     return res.status(400).json({ message: 'Duplicate dept_name' });
   }
   const dept = { ...requiredFields, ...optionalFields };
