@@ -63,7 +63,9 @@ def find_mysql_executable():
     # 명확한 두 경로에서 mysql.exe 파일 확인
     possible_paths = [
         r"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe",
-        r"E:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe"
+        r"E:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe",
+        "/usr/local/mysql/bin/mysql",
+        "/opt/homebrew/bin/mysql"
     ]
 
     for path in possible_paths:

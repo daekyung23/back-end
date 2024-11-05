@@ -6,18 +6,20 @@ const ClientBranchRepository = {
   fromJoin: `
     FROM client_branch cb
     LEFT JOIN client c ON cb.client_id = c.client_id
+    LEFT JOIN sigungu sgg ON cb.sigungu_id = sgg.sigungu_id
   `,
 
   // 검색 조건 생성
-  searchCondition: (searchTerms) => {
+  searchCondition: (searchTerm, isActive) => {
     const where = {
-      condition: "? OR ? OR ? OR ? OR ?",  
+      condition: "(? OR ? OR ? OR ? OR ?) AND ?",  
       params: [
-        { field: "cb.client_branch_name", operator: "LIKE", value: searchTerms, likeLeft: "%", likeRight: "%" },
-        { field: "cb.branch_mgr_name", operator: "LIKE", value: searchTerms, likeLeft: "%", likeRight: "%" },
-        { field: "cb.branch_mgr_mobile_num", operator: "LIKE", value: searchTerms, likeLeft: "%", likeRight: "%" },
-        { field: "cb.branch_mgr_office_num", operator: "LIKE", value: searchTerms, likeLeft: "%", likeRight: "%" },
-        { field: "cb.branch_mgr_email", operator: "LIKE", value: searchTerms, likeLeft: "%", likeRight: "%" },
+        { field: "cb.client_branch_name", operator: "LIKE", value: searchTerm, likeLeft: "%", likeRight: "%" },
+        { field: "cb.branch_mgr_name", operator: "LIKE", value: searchTerm, likeLeft: "%", likeRight: "%" },
+        { field: "cb.branch_mgr_mobile_num", operator: "LIKE", value: searchTerm, likeLeft: "%", likeRight: "%" },
+        { field: "cb.branch_mgr_office_num", operator: "LIKE", value: searchTerm, likeLeft: "%", likeRight: "%" },
+        { field: "cb.branch_mgr_email", operator: "LIKE", value: searchTerm, likeLeft: "%", likeRight: "%" },
+        { field: "c.is_active", operator: "=", value: isActive }
       ]
     };
 
@@ -25,10 +27,11 @@ const ClientBranchRepository = {
   },
 
   // 클라이언트 지점 검색
-  searchClientBranch: async (searchTerms, pagination) => {
+  searchClientBranch: async (condition, pagination) => {
+    const { searchTerm, isActive } = condition;
     const select = 'SELECT *';
     const selectFromJoin = select + ClientBranchRepository.fromJoin;
-    const where = ClientBranchRepository.searchCondition(searchTerms);
+    const where = ClientBranchRepository.searchCondition(searchTerm, isActive);
     const limit = pagination;
     try {
       return await DBHelper.search(selectFromJoin, where, null, limit);
@@ -39,11 +42,11 @@ const ClientBranchRepository = {
   },
 
   // 클라이언트 지점 카운트 검색
-  searchClientBranchCount: async (searchTerms) => {
+  searchClientBranchCount: async (condition) => {
+    const { searchTerm, isActive } = condition;
     const select = 'SELECT COUNT(*) as total';
     const selectFromJoin = select + ClientBranchRepository.fromJoin;
-    const where = ClientBranchRepository.searchCondition(searchTerms);
-    const rows = await DBHelper.search(selectFromJoin, where);
+    const where = ClientBranchRepository.searchCondition(searchTerm, isActive);
     try {
       const rows = await DBHelper.search(selectFromJoin, where);
       return rows[0].total; // 총 레코드 수 반환

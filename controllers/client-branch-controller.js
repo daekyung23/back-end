@@ -14,7 +14,7 @@ const { z } = require('zod');
  */
 const searchClientBranch = async (req, res) => {
   const schema = z.object({
-    searchTerms: z.string().optional().default(''),
+    searchTerm: z.string().optional().default(''),
     page: z.coerce.number().int().min(1).optional().default(1),
     isActive: z.coerce.number().int().min(0).max(1).optional()
   });
