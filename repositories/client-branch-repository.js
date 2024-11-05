@@ -25,11 +25,11 @@ const ClientBranchRepository = {
   },
 
   // 클라이언트 지점 검색
-  searchClientBranch: async (searchTerms, offset, pageSize) => {
+  searchClientBranch: async (searchTerms, pagination) => {
     const select = 'SELECT *';
     const selectFromJoin = select + ClientBranchRepository.fromJoin;
     const where = ClientBranchRepository.searchCondition(searchTerms);
-    const limit = { offset, pageSize };
+    const limit = pagination;
     try {
       return await DBHelper.search(selectFromJoin, where, null, limit);
     } catch (error) {
