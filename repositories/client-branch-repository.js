@@ -7,6 +7,7 @@ const ClientBranchRepository = {
     FROM client_branch cb
     LEFT JOIN client c ON cb.client_id = c.client_id
     LEFT JOIN sigungu sgg ON cb.sigungu_id = sgg.sigungu_id
+    LEFT JOIN sido sd ON sgg.sido_id = sd.sido_id
   `,
 
   // 검색 조건 생성

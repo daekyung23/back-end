@@ -8,9 +8,9 @@ const User = Schema({
   password: String.min(4).max(50), // 최소 6자, 최대 50자
   dept_id: Natural, // 필수 필드
   position_id: Natural, // 필수 필드
-  mobile_num: String.length(20).optional().nullable(), // 기본적으로 null 허용
-  office_num: String.length(20).optional().nullable(), // 기본적으로 null 허용
-  email: Email.length(100).optional().nullable(), // 기본적으로 null 허용
+  mobile_num: String.max(20).optional().nullable(), // 기본적으로 null 허용
+  office_num: String.max(20).optional().nullable(), // 기본적으로 null 허용
+  email: Email.max(100).optional().nullable(), // 기본적으로 null 허용
   approval_role_id: Natural.optional(), // 선택 사항, 기본적으로 null 허용
   permission: Enum(['user', 'manager', 'admin']).optional(), // 기본적으로 'user'로 설정
   is_active: Enum(['Y', 'N']).optional(), // 문자열로 'Y' 또는 'N'을 받음
