@@ -115,14 +115,31 @@ npm run docs:generate
 
 ## 환경변수 예시
 ```env
-# Database
-DATABASE_URL="mysql://user:password@localhost:3306/mydb"
+NODE_ENV = development
+PORT = 3001
 
-# Server
-PORT=3000
-NODE_ENV=development
+# LOGGING
+ENABLE_LOGGING=true
+ENABLE_REQUEST_LOGGING=true
+ENABLE_REQUEST_BODY_LOGGING=true
+ENABLE_RESPONSE_LOGGING=true
+ENABLE_RESPONSE_BODY_LOGGING=true
 
-# JWT
-JWT_SECRET=your-secret-key
-JWT_EXPIRES_IN=24h
+# DB development
+DB_HOST_DEV=localhost
+DB_PORT_DEV=3306
+DB_USER_DEV=root
+DB_PASSWORD_DEV=admin
+DB_NAME_DEV=mydb
+
+# DB production
+DB_HOST_PROD=localhost
+DB_PORT_PROD=3306
+DB_USER_PROD=root
+DB_PASSWORD_PROD=admin
+DB_NAME_PROD=mydb
+
+# PRISMA
+DATABASE_URL=mysql://${DB_USER_DEV}:${DB_PASSWORD_DEV}@${DB_HOST_DEV}:${DB_PORT_DEV}/${DB_NAME_DEV}
+
 ```
