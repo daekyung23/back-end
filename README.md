@@ -115,8 +115,8 @@ npm run docs:generate
 
 ## 환경변수 예시
 ```env
-NODE_ENV = development
-PORT = 3001
+# Database
+DATABASE_URL="mysql://user:password@localhost:3306/mydb"
 
 # LOGGING
 ENABLE_LOGGING=true
