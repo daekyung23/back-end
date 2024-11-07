@@ -1,4 +1,4 @@
-const DBHelper = require('../utils/DBHelper'); // DBHelper 불러오기
+const DBHelper = require('../../deleteNeeded/DBHelper'); // DBHelper 불러오기
 
 const ClientBranchRepository = {
   

@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "CommonJS",
+    "lib": ["ES2018"],
+    "moduleResolution": "node",
+    "outDir": "dist",
+    "rootDir": ".",
+    "strict": true,
+    "strictPropertyInitialization": false,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@src/*": ["src/*"],
+      "@config": ["src/config"],
+      "@config/*": ["src/config/*"],
+      "@views/*": ["src/views/*"],
+      "@utils/*": ["src/utils/*"],
+      "@backups/*": ["backups/*"],
+      "@scripts/*": ["scripts/*"],
+      "@routes/*": ["src/routers/*"],
+      "@controllers/*": ["src/controllers/*"],
+      "@models/*": ["src/models/*"],
+      "@services/*": ["src/services/*"],
+      "@middlewares/*": ["src/middlewares/*"],
+      "@entities/*": ["src/entities/*"],
+      "@migrations/*": ["src/migrations/*"],
+      "@subscribers/*": ["src/subscribers/*"],
+      "@lib/*": ["src/lib/*"]
+    },
+    "resolveJsonModule": true
+  },
+  "include": [
+    "src/**/*",
+    "config/**/*",
+    "scripts/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+} 

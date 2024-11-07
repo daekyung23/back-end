@@ -1,6 +1,6 @@
 const { updateClientBranch } = require('../controllers/client-branch-controller');
-const DBHelper = require('../utils/DBHelper'); // DBHelper 불러오기
-const db = require('../utils/database');
+const DBHelper = require('../../deleteNeeded/DBHelper'); // DBHelper 불러오기
+const db = require('../../deleteNeeded/database');
 
 const ClientRepository = {
 

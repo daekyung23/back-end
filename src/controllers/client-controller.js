@@ -1,6 +1,6 @@
 const ClientRepository = require('../repositories/client-repository');
 const ClientBranchRepository = require('../repositories/client-branch-repository');
-const { isValid, toValidate, validateFields } = require('../utils/validation');
+const { isValid, toValidate, validateFields } = require('../../deleteNeeded/validation');
 
 /**-------------------------------------------------------------------------
  * 고객사 검색 API 컨트롤러

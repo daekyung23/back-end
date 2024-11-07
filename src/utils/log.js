@@ -1,6 +1,6 @@
 require('dotenv').config();
 const chalk = require('chalk');
-const { HttpError } = require('./custom-error');
+const { HttpError } = require('../../deleteNeeded/custom-error');
 
 /**
  * 응답 본문에서 유효한 필드(값이 null 또는 undefined가 아닌 필드)의 갯수를 계산하는 함수
