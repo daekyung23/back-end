@@ -47,7 +47,6 @@ export class InternalServerError extends HttpError {
     this.errors = errors
   }
 }
-
 // class ValidationError extends HttpError {
 //   /**
 //    * @param {Array} errors - Zod에서 발생한 에러 배열
