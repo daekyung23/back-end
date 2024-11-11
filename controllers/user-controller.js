@@ -102,14 +102,20 @@ const updateUser = async (req, res) => {
   }
 };
 
-
-
-
 const deleteUser = async (req, res) => {
-  const input = User.pick({ login_id: true }).parse(req.query);
-  const result = await userRepository.deleteUser(input.login_id);
-  res.json(result);
-}
+  try {
+    const { user_id } = req.query;  // user_id 기반으로 삭제 처리
+    if (!user_id) {
+      return res.status(400).json({ message: 'user_id is required' });
+    }
+
+    const result = await userRepository.deleteUser(user_id); // login_id로 삭제 수행
+    res.json(result);
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ message: 'Error deleting user', error });
+  }
+};
 
 module.exports = {
   searchUser,
