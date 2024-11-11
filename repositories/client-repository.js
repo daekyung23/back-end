@@ -77,18 +77,8 @@ const ClientRepository = {
   },
 
   createClient: async (client) => {
-    const {
-      rate_type,
-      ...others
-    } = client;
-
-    // 필요한 데이터를 객체로 구성
     const postBody = {
-        ...others,
-        default_client_branch_rate_id: { 
-            subQuery: "SELECT client_rate_id FROM client_rate WHERE rate_type = ?", 
-            params: [rate_type] // 서브쿼리에 사용할 파라미터
-        },
+        ...client,
         is_active: 1
     };
 

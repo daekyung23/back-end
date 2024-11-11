@@ -59,24 +59,40 @@ const getSubClients = async (req, res) => {
  * @property {number|null} [parent_client_id] - 상위 클라이언트 ID
 */
 const createClient = async (req, res) => {
-  const {
-    client_name,
-    rate_type,
-    ...optionalFields
-  } = req.body;
-
-  const requiredFields = { client_name, rate_type };
-  const validationError = validateFields(requiredFields, res);
-  if (validationError) return validationError;
-  const client = { ...requiredFields, ...optionalFields };
-
   try {
-    const newClient = await ClientRepository.createClient(client);
-    res.json(newClient);
+    const {
+      client_name,
+      parent_client_id,
+      default_client_branch_rate_id
+    } = req.body;
+
+    // 필수 값 검증
+    if (!client_name) {
+      return res.status(400).json({ message: 'Client name is required' });
+    }
+
+    const clientData = {
+      client_name,
+      parent_client_id,
+      default_client_branch_rate_id
+    };
+
+    const newClient = await ClientRepository.createClient(clientData);
+    
+    // 응답에 생성된 데이터 포함
+    res.status(201).json({
+      message: 'Client created successfully',
+      client: newClient
+    });
+    
   } catch (error) {
-    res.status(500).json({ message: 'Error creating client', error });
+    console.error('Error in createClient:', error);
+    res.status(500).json({ 
+      message: 'Error creating client',
+      error: error.message 
+    });
   }
-}
+};
 
 /**-------------------------------------------------------------------------
  * 고객사 정보를 업데이트합니다.
