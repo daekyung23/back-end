@@ -10,7 +10,7 @@ const User = Schema({
   position_id: Natural, // 필수 필드
   mobile_num: String.max(20).optional().nullable(), // 기본적으로 null 허용
   office_num: String.max(20).optional().nullable(), // 기본적으로 null 허용
-  email: Email.max(100).optional().nullable(), // 기본적으로 null 허용
+  email: Email.max(100).optional().nullable().transform(value => (value === "" ? null : value)).or(Email), // 기본적으로 null 허용
   approval_role_id: Natural.optional(), // 선택 사항, 기본적으로 null 허용
   permission: Enum(['user', 'manager', 'admin']).optional(), // 기본적으로 'user'로 설정
   is_active: Enum(['Y', 'N']).optional(), // 문자열로 'Y' 또는 'N'을 받음
@@ -46,13 +46,28 @@ const checkDuplicateLoginId = async (req, res) => {
 };
 
 const createUser = async (req, res) => {
-  const input = User.parse(req.body);
-  if (await userRepository.checkDuplicateLoginId(input.login_id)) {
-    return res.status(400).json({ message: 'Duplicate login_id' });
+  try {
+    const input = User.parse(req.body);  // 'Y' 또는 'N'을 가진 상태로 유효성 검사 통과
+    console.log("Parsed input for user creation:", input); // 변환 전 로그
+
+    // 'Y', 'N' 값을 DB에 저장하기 전 1, 0으로 변환
+    input.is_active = input.is_active === 'Y' ? 1 : 0;
+
+    if (await userRepository.checkDuplicateLoginId(input.login_id)) {
+      return res.status(400).json({ message: 'Duplicate login_id' });
+    }
+
+    const result = await userRepository.createUser(input);
+    res.status(201).json(result);
+  } catch (error) {
+    console.error("Error in createUser:", error);
+    if (error instanceof ZodError) {
+      return res.status(400).json({ message: error.errors[0].message });
+    }
+    res.status(500).json({ message: 'Error creating user', error });
   }
-  const result = await userRepository.createUser(input);
-  res.status(201).json(result);
 };
+
 
 const updateUser = async (req, res) => {
   try {
