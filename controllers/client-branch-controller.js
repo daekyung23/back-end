@@ -94,19 +94,41 @@ const createClientBranch = async (req, res) => {
  * @property {number} [is_active]               - 활성 상태 (0: 비활성, 1: 활성)
  */
 const updateClientBranch = async (req, res) => {
-  const { client_branch_id, ...updateFields } = req.body;
-  if (!isValid(client_branch_id)) {
-    return res.status(400).json({ message: 'Missing client_branch_id' });
-  }
-
   try {
+    const { client_branch_id, ...updateFields } = req.body;
+    
+    // client_branch_id 유효성 검사 수정
+    if (!client_branch_id) {
+      return res.status(400).json({ message: 'Missing client_branch_id' });
+    }
+
+    // 업데이트할 필드가 있는지 확인
     if (Object.keys(updateFields).length === 0) {
       return res.status(400).json({ message: 'No fields to update' });
     }
+
+    // 콘솔에 받은 데이터 출력
+    console.log('Received update request:', {
+      client_branch_id,
+      updateFields
+    });
+
     const updatedBranch = await clientBranchRepository.patchClientBranch(client_branch_id, updateFields);
+    
+    // 업데이트 결과 확인
+    if (!updatedBranch) {
+      return res.status(404).json({ message: 'Branch not found or update failed' });
+    }
+
     res.json(updatedBranch);
   } catch (error) {
-    res.status(500).json({ message: 'Error updating client branch', error });
+    // 더 자세한 에러 로깅
+    console.error('Error in updateClientBranch:', error);
+    res.status(500).json({ 
+      message: 'Error updating client branch', 
+      error: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined 
+    });
   }
 };
 

@@ -8,6 +8,14 @@ const SigunguRepository = {
       params: [{ field: 'sido_id', operator: '=', value: sido_id }]
     };
     return await DBHelper.search('select * from sigungu', where);
+  },
+
+  getSigunguById: async (sigungu_id) => {
+    where = {
+      condition: '?',
+      params: [{ field: 'sigungu_id', operator: '=', value: sigungu_id }]
+    };
+    return await DBHelper.search('select * from sigungu', where);
   }
 };
 
