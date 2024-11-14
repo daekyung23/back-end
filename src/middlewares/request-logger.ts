@@ -1,4 +1,4 @@
-import '../../config/module-alias' 
+//import '../../config/module-alias' 
 import { Request, Response, NextFunction } from 'express'
 import { log } from '@utils/log'
 

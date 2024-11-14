@@ -1,13 +1,13 @@
 import 'module-alias/register'
-import 'dotenv/config'
+import config from '@config'
 import 'express-async-errors'
 import express from 'express'
 import cors from 'cors'
-import { AppDataSource } from '../config/data-source'
-import { log } from './utils/log'
-import requestLogger from './middlewares/request-logger'
-import responseLogger from './middlewares/response-logger'
-import errorHandler from './middlewares/error-handler'
+import { log } from '@utils/log'
+import { prisma } from '@lib/prisma'
+import requestLogger from '@middlewares/request-logger'
+import responseLogger from '@middlewares/response-logger'
+import errorHandler from '@middlewares/error-handler'
 
 const app = express()
 
@@ -17,23 +17,32 @@ app.use(cors())
 app.use(requestLogger)
 app.use(responseLogger)
 
-// TypeORM 데이터소스 초기화
-AppDataSource.initialize()
-  .then(() => {
-    log('Successfully connected to database via TypeORM')
+// 라우터 설정
+import routes from '@routes'
+app.use('/client', routes.client)
+app.use('/client-branch', routes.clientBranch)
+
+// Prisma 연결 테스트 및 서버 시작
+async function bootstrap() {
+  try {
+    // Prisma 연결 테스트
+    await prisma.$connect()
+    log('Successfully connected to database via Prisma')
     
     // 에러 처리 미들웨어
     app.use(errorHandler)
 
     // 서버 시작
-    const port = process.env.PORT || 3001
+    const port = config.port
     app.listen(port, () => {
       log(`Server is running on port ${port}`)
     })
-  })
-  .catch((error) => {
+  } catch (error) {
     log(error)
     process.exit(1)
-  })
+  }
+}
+
+bootstrap()
 
 export default app

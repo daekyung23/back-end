@@ -7,3 +7,4 @@ export const extensions = prismaExtensions
 
 // 타입 익스포트
 export type { PrismaClient } 
+export type PrismaModels = Omit<PrismaClient, `$${string}` | symbol>

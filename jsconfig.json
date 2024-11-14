@@ -1,19 +1,5 @@
 {
   "compilerOptions": {
-    "target": "ES2018",
-    "module": "CommonJS",
-    "lib": ["ES2018"],
-    "moduleResolution": "node",
-    "outDir": "dist",
-    "rootDir": ".",
-    "strict": true,
-    "strictNullChecks": true,
-    "strictPropertyInitialization": false,
-    "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"],
@@ -30,25 +16,14 @@
       "@backups/*": ["backups/*"],
       "@scripts/*": ["scripts/*"],
       "@routes/*": ["src/routes/*"],
+      "@routes": ["src/routes"],
       "@controllers/*": ["src/controllers/*"],
-      "@controllers": ["src/controllers"],
       "@repositories/*": ["src/repositories/*"],
-      "@repositories": ["src/repositories"],
       "@services/*": ["src/services/*"],
       "@services": ["src/services"],
       "@middlewares/*": ["src/middlewares/*"],
       "@lib/*": ["src/lib/*"],
-      "@base/*": ["src/base/*"],
-    },
-    "resolveJsonModule": true
-  },
-  "include": [
-    "src/**/*",
-    "config/**/*",
-    "scripts/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist"
-  ]
+      "@base/*": ["src/base/*"]
+    }
+  }
 } 

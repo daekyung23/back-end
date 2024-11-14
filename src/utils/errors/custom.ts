@@ -47,6 +47,15 @@ export class InternalServerError extends HttpError {
     this.errors = errors
   }
 }
+
+export class NotImplementedError extends HttpError {
+  errors: any[]
+  constructor(errors?: any[], message: string = "구현되지 않은 기능입니다.", statusCode: number = 501) {
+    super(message, statusCode)
+    this.errors = errors || []
+  }
+}
+
 // class ValidationError extends HttpError {
 //   /**
 //    * @param {Array} errors - Zod에서 발생한 에러 배열
