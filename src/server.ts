@@ -8,18 +8,9 @@ import requestLogger from '@middlewares/request-logger'
 import responseLogger from '@middlewares/response-logger'
 import errorHandler from '@middlewares/error-handler'
 import routes from '@routes'
+import { initBigIntJson } from '@config/bigint.config'
 
-declare global {
-  interface BigInt {
-    toJSON(): string;
-  }
-}
-
-// BigInt JSON 직렬화 처리
-BigInt.prototype.toJSON = function() {
-  return this.toString()
-}
-
+initBigIntJson()
 const app = express()
 
 // 미들웨어 설정
