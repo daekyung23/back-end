@@ -9,6 +9,13 @@ import responseLogger from '@middlewares/response-logger'
 import errorHandler from '@middlewares/error-handler'
 import routes from '@routes'
 
+declare global {
+  interface BigInt {
+    toJSON(): string;
+  }
+}
+
+// BigInt JSON 직렬화 처리
 BigInt.prototype.toJSON = function() {
   return this.toString()
 }
