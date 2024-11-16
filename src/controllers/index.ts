@@ -22,10 +22,10 @@ export const OverrideAtService = {
   warehouse: new Controller<'warehouse', 'v_warehouse'>(prisma.warehouse, prisma.v_warehouse).setService(services.warehouse),
   user: new Controller<'user', 'v_user'>(prisma.user, prisma.v_user).setService(services.user),
   device: new Controller<'device', 'v_device'>(prisma.device, prisma.v_device).setService(services.device),
+  consumableModel: new Controller<'consumable_model', 'v_consumable_model'>(prisma.consumable_model, prisma.v_consumable_model).setService(services.consumableModel),
 }
 
 export const OnlyCRUD = {
-  consumableModel: new Controller(prisma.consumable_model, prisma.v_consumable_model),
   sido: new Controller(prisma.sido, undefined),
 }
 
