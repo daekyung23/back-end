@@ -18,9 +18,12 @@ const controller = controllers.consumableModel
 
 // Defined At Controller & Service -------------------------------------------
 router.post('/create', 
-  validateInput({ body: z.intersection(createSchema, z.object({
-    device_model_ids: z.array(v_consumable_modelSchema.shape.device_model_id)
-  })) }), 
+  validateInput({ body: z.intersection(
+    createSchema, 
+    z.object({
+      device_model_ids: z.array(v_consumable_modelSchema.shape.device_model_id)
+    })
+  ) }), 
   controller.createWithDeviceModelIds
 )
 
