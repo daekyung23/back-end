@@ -1,6 +1,7 @@
 import { clientRouter } from './client'
 import { clientBranchRouter } from './client-branch'
 import { consumableModelRouter } from './consumable-model'
+import { deptRouter } from './dept'
 import { deviceRouter } from './device'
 import { deviceDriverRouter } from './device-driver'
 import { deviceModelRouter } from './device-model'
@@ -14,6 +15,7 @@ export default {
   client: clientRouter,
   clientBranch: clientBranchRouter,
   consumableModel: consumableModelRouter,
+  dept: deptRouter,
   device: deviceRouter,
   deviceDriver: deviceDriverRouter,
   deviceModel: deviceModelRouter,

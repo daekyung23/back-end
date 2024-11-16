@@ -29,7 +29,7 @@ router.get('/search',
   validateInput({ query: 
     searchSchema.extend({
       is_active: activationSchema.shape.is_active,
-      client_rate: v_clientSchema.shape.client_rate
+      client_rate: v_clientSchema.shape.client_rate.optional()
     })
   }), 
   controller.search

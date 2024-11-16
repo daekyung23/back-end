@@ -18,7 +18,7 @@ const controller = controllers.consumableModel
 // Override At Service -------------------------------------------------------
 router.get('/search', 
   validateInput({ query: searchSchema.extend({
-    consumable_type: consumable_modelSchema.shape.consumable_type
+    consumable_type: consumable_modelSchema.shape.consumable_type.optional()
   }) }), 
   controller.search
 )
