@@ -24,10 +24,9 @@
     "schema:push": "npm run schema:prisma:push && npm run view:prisma:push",
     "schema:prisma:push": "prisma db push",
     "view:prisma:push": "cross-env ts-node -r tsconfig-paths/register scripts/prisma/push-views.ts",
-    "prisma:generate": "prisma generate && npm run prisma:bugfix:convert-aggregate && npm run convert:zod:comments",
+    "prisma:generate": "prisma generate && npm run prisma:bugfix:convert-aggregate",
     "generate:zod": "ts-node scripts/zod-prisma-types/generate-schema.ts",
-    "prisma:bugfix:convert-aggregate": "cross-env ts-node -r tsconfig-paths/register scripts/zod-prisma-types/convert-aggregate-names.ts",
-    "convert:zod:comments": "cross-env ts-node scripts/zod-prisma-types/convert-zod-comments.ts"
+    "prisma:bugfix:convert-aggregate": "cross-env ts-node -r tsconfig-paths/register scripts/zod-prisma-types/convert-aggregate-names.ts"
   },
   "author": "",
   "license": "ISC",

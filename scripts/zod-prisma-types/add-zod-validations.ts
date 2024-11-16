@@ -50,4 +50,65 @@ function addZodValidations() {
   console.log('Zod validations updated!')
 }
 
+function alignSchema() {
+  const schemaPath = path.join(process.cwd(), 'prisma', 'schema.prisma')
+  let content = fs.readFileSync(schemaPath, 'utf8')
+  
+  // 모델 블록 단위로 분리
+  const blocks = content.split(/\n\n+/)
+  
+  const alignedBlocks = blocks.map(block => {
+    const lines = block.split('\n')
+    
+    if (lines[0].trim().startsWith('model') || lines[0].trim().startsWith('view')) {
+      const fieldLines = lines.slice(1, -1)
+      const propertyLines = fieldLines.filter(line => 
+        line.trim() && !line.trim().startsWith('@@'))
+      
+      let maxNameLength = 0
+      let maxTypeLength = 0
+      let maxAttrLength = 0
+      
+      propertyLines.forEach(line => {
+        // 수정된 정규식 패턴
+        const match = line.trim().match(/^([^\s]+)\s+([^\s]+(?:\?)?)\s*(.+)?$/)
+        if (match) {
+          const [_, name, type, attrs] = match
+          maxNameLength = Math.max(maxNameLength, name.length)
+          maxTypeLength = Math.max(maxTypeLength, type.length)
+          if (attrs) {
+            const attrPart = attrs.split('///')[0].trim()
+            maxAttrLength = Math.max(maxAttrLength, attrPart.length)
+          }
+        }
+      })
+      
+      // 각 라인 정렬
+      const alignedLines = fieldLines.map(line => {
+        if (!line.trim() || line.trim().startsWith('@@')) return line
+        
+        // 수정된 정규식 패턴
+        const match = line.trim().match(/^([^\s]+)\s+([^\s]+(?:\?)?)\s*(.+)?$/)
+        if (match) {
+          const [_, name, type, rest] = match
+          const parts = rest ? rest.split('///') : ['']
+          const attrs = parts[0].trim()
+          const comment = parts[1] ? `/// ${parts[1].trim()}` : ''
+          
+          return `  ${name.padEnd(maxNameLength)} ${type.padEnd(maxTypeLength)} ${attrs.padEnd(maxAttrLength)} ${comment}`.trimEnd()
+        }
+        return line
+      })
+      
+      return [lines[0], ...alignedLines, lines[lines.length - 1]].join('\n')
+    }
+    
+    return block
+  })
+  
+  fs.writeFileSync(schemaPath, alignedBlocks.join('\n\n'))
+  console.log('Schema aligned successfully!')
+}
+
 addZodValidations()
+alignSchema()

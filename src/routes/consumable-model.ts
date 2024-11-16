@@ -6,7 +6,8 @@ import {
   consumable_modelUncheckedCreateInputSchema as createSchema,
   consumable_modelUncheckedUpdateInputSchema as updateSchema,
   consumable_modelWhereUniqueInputSchema as uniqueKeySchema,
-  consumable_modelSchema
+  consumable_modelSchema,
+  v_consumable_modelSchema
 } from '@prisma/zod-schemas'
 import { 
   searchSchema,
@@ -17,7 +18,9 @@ const controller = controllers.consumableModel
 
 // Defined At Controller & Service -------------------------------------------
 router.post('/create', 
-  validateInput({ body: createSchema }), 
+  validateInput({ body: z.intersection(createSchema, z.object({
+    device_model_ids: z.array(v_consumable_modelSchema.shape.device_model_id)
+  })) }), 
   controller.createWithDeviceModelIds
 )
 

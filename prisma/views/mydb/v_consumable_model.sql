@@ -9,7 +9,8 @@ SELECT
   `cm`.`consumable_name` AS `consumable_name`,
   `cm`.`consumable_type` AS `consumable_type`,
   `dm`.`manufacturer` AS `model_manufacturer`,
-  `dm`.`model_name` AS `model_name`
+  `dm`.`model_name` AS `model_name`,
+  `dm`.`device_model_id` AS `device_model_id`
 FROM
   (
     (
