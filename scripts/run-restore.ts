@@ -72,7 +72,7 @@ const BackupManager = {
     const dirs = await readdir(backupsDir)
     
     return dirs
-      .filter(dir => /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(dir))
+      .filter(dir => /^\d{4}-\d{2}-\d{2}_\d{6}$/.test(dir))
       .sort((a, b) => b.localeCompare(a))
   },
 

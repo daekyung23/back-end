@@ -83,7 +83,10 @@ interface BackupMeta {
 const DATE = new Intl.DateTimeFormat('sv-SE', { 
   dateStyle: 'short',
   timeStyle: 'medium'
-}).format(new Date())
+})
+.format(new Date())
+.replace(/:/g, '')  // 콜론 제거
+.replace(/\s/g, '_')  // 공백을 언더스코어로 변경
 
 const BACKUP_ROOT = path.join(process.cwd(), 'backups', DATE)
 const MIGRATIONS_DIR = path.join(process.cwd(), 'src/migrations')
@@ -407,7 +410,7 @@ async function backupViews(): Promise<void> {
       JSON.stringify(viewDefinitions, null, 2)
     )
 
-    console.log(`VIEW 정의 ��업 완료: ${views.length}개`)
+    console.log(`VIEW 정의 업 완료: ${views.length}개`)
     await pool.end()
   } catch (error) {
     console.error('VIEW 백업 중 오류:', error)
