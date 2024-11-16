@@ -121,7 +121,7 @@ export type v_user_permissionType = `${z.infer<typeof v_user_permissionSchema>}`
 export const approval_roleSchema = z.object({
   role_id: z.coerce.number(),
   role_name: z.string().max(45),
-  upper_role_id: z.coerce.number().optional().nullable(),
+  upper_role_id: z.coerce.number().nullable().nullable(),
 })
 
 export type approval_role = z.infer<typeof approval_roleSchema>
@@ -137,14 +137,14 @@ export const callSchema = z.object({
   requester_name: z.string().max(50),
   requester_num: z.string().max(20),
   requester_black_consumer: z.coerce.number().default(0),
-  device_id: z.coerce.number().optional().nullable(),
+  device_id: z.coerce.number().nullable().nullable(),
   detail: z.string().max(200),
   state: z.string().max(45),
   received_at: z.coerce.date(),
   receiver_id: z.coerce.number(),
   transferred_at: z.coerce.date().nullable(),
-  transferred_dept_id: z.coerce.number().optional().nullable(),
-  assigner_id: z.coerce.number().optional().nullable(),
+  transferred_dept_id: z.coerce.number().nullable().nullable(),
+  assigner_id: z.coerce.number().nullable().nullable(),
   completed_at: z.coerce.date().nullable(),
 })
 
@@ -157,7 +157,7 @@ export type call = z.infer<typeof callSchema>
 export const call_typeSchema = z.object({
   call_type_id: z.coerce.number(),
   call_type_name: z.string().max(50),
-  parent_call_type_id: z.coerce.number().optional().nullable(),
+  parent_call_type_id: z.coerce.number().nullable().nullable(),
 })
 
 export type call_type = z.infer<typeof call_typeSchema>
@@ -168,7 +168,7 @@ export type call_type = z.infer<typeof call_typeSchema>
 
 export const clientSchema = z.object({
   client_id: z.coerce.number(),
-  parent_client_id: z.coerce.number().optional().nullable(),
+  parent_client_id: z.coerce.number().nullable().nullable(),
   default_client_branch_rate_id: z.coerce.number(),
   client_name: z.string().max(45),
   is_active: z.coerce.number().default(1),
@@ -187,10 +187,10 @@ export const client_branchSchema = z.object({
   client_id: z.coerce.number(),
   client_branch_name: z.string().max(100),
   client_branch_rate_id: z.coerce.number(),
-  branch_mgr_name: z.string().max(45).optional().nullable(),
-  branch_mgr_mobile_num: z.string().max(45).optional().nullable(),
-  branch_mgr_office_num: z.string().max(45).optional().nullable(),
-  branch_mgr_email: z.string().max(45).optional().nullable(),
+  branch_mgr_name: z.string().max(45).nullable().nullable(),
+  branch_mgr_mobile_num: z.string().max(45).nullable().nullable(),
+  branch_mgr_office_num: z.string().max(45).nullable().nullable(),
+  branch_mgr_email: z.string().max(45).nullable().nullable(),
   is_active: z.coerce.number().default(1),
   remote_support: z.coerce.number().default(0),
   push_alert: z.coerce.number().default(0),
@@ -205,7 +205,7 @@ export type client_branch = z.infer<typeof client_branchSchema>
 export const client_rateSchema = z.object({
   client_rate_id: z.coerce.number(),
   rate_type: z.string().max(10),
-  rate_detail: z.string().max(45).optional().nullable(),
+  rate_detail: z.string().max(45).nullable().nullable(),
 })
 
 export type client_rate = z.infer<typeof client_rateSchema>
@@ -229,7 +229,7 @@ export type consumable_model = z.infer<typeof consumable_modelSchema>
 
 export const deptSchema = z.object({
   dept_id: z.coerce.number(),
-  parent_dept_id: z.coerce.number().optional().nullable(),
+  parent_dept_id: z.coerce.number().nullable().nullable(),
   dept_name: z.string().max(100),
 })
 
@@ -247,8 +247,8 @@ export const deviceSchema = z.object({
   serial: z.string().max(50),
   regi_date: z.coerce.date(),
   mac: z.string().max(50),
-  last_inspection_log_id: z.coerce.number().optional().nullable(),
-  last_location_log_id: z.coerce.number().optional().nullable(),
+  last_inspection_log_id: z.coerce.number().nullable().nullable(),
+  last_location_log_id: z.coerce.number().nullable().nullable(),
   status_id: z.coerce.number().default(1),
 })
 
@@ -261,15 +261,15 @@ export type device = z.infer<typeof deviceSchema>
 export const device_approvalSchema = z.object({
   approval_id: z.coerce.number(),
   approval_type_id: z.coerce.number(),
-  sub_approval_id: z.coerce.number().optional().nullable(),
+  sub_approval_id: z.coerce.number().nullable().nullable(),
   requester_id: z.coerce.number(),
   request_at: z.coerce.date(),
   approver_role_id: z.coerce.number(),
-  origin_location_id: z.coerce.number().optional().nullable(),
-  destination_location_id: z.coerce.number().optional().nullable(),
-  approver_id: z.coerce.number().optional().nullable(),
+  origin_location_id: z.coerce.number().nullable().nullable(),
+  destination_location_id: z.coerce.number().nullable().nullable(),
+  approver_id: z.coerce.number().nullable().nullable(),
   approve_at: z.coerce.date().nullable(),
-  is_approved: z.coerce.number().optional().nullable(),
+  is_approved: z.coerce.number().nullable().nullable(),
 })
 
 export type device_approval = z.infer<typeof device_approvalSchema>
@@ -303,9 +303,9 @@ export type device_consumable_compatibility = z.infer<typeof device_consumable_c
 export const device_driverSchema = z.object({
   device_driver_id: z.coerce.number(),
   device_model_id: z.coerce.number(),
-  manufacturer: z.string().max(100).optional().nullable(),
-  printer_language: z.string().max(45).optional().nullable(),
-  install_file_address: z.string().max(200).optional().nullable(),
+  manufacturer: z.string().max(100).nullable().nullable(),
+  printer_language: z.string().max(45).nullable().nullable(),
+  install_file_address: z.string().max(200).nullable().nullable(),
 })
 
 export type device_driver = z.infer<typeof device_driverSchema>
@@ -321,28 +321,28 @@ export const device_inspection_logSchema = z.object({
   inspector_id: z.coerce.number(),
   inspection_date: z.coerce.date(),
   visit_type: z.string().max(45),
-  call_id: z.coerce.number().optional().nullable(),
-  FL: z.coerce.number().optional().nullable(),
-  FS: z.coerce.number().optional().nullable(),
-  BL: z.coerce.number().optional().nullable(),
-  BS: z.coerce.number().optional().nullable(),
-  toner_count_YE: z.coerce.number().optional().nullable(),
-  toner_count_MA: z.coerce.number().optional().nullable(),
-  toner_count_CY: z.coerce.number().optional().nullable(),
-  toner_count_BK: z.coerce.number().optional().nullable(),
-  toner_stock_YE: z.coerce.number().optional().nullable(),
-  toner_stock_MA: z.coerce.number().optional().nullable(),
-  toner_stock_CY: z.coerce.number().optional().nullable(),
-  toner_stock_BK: z.coerce.number().optional().nullable(),
-  toner_deliver_YE: z.coerce.number().optional().nullable(),
-  toner_deliver_CY: z.coerce.number().optional().nullable(),
-  toner_deliver_MA: z.coerce.number().optional().nullable(),
-  toner_deliver_BK: z.coerce.number().optional().nullable(),
-  drum_count_YE: z.coerce.number().optional().nullable(),
-  drum_count_MA: z.coerce.number().optional().nullable(),
-  drum_count_CY: z.coerce.number().optional().nullable(),
-  drum_count_BK: z.coerce.number().optional().nullable(),
-  drum_replacement_detail: z.string().max(50).optional().nullable(),
+  call_id: z.coerce.number().nullable().nullable(),
+  FL: z.coerce.number().nullable().nullable(),
+  FS: z.coerce.number().nullable().nullable(),
+  BL: z.coerce.number().nullable().nullable(),
+  BS: z.coerce.number().nullable().nullable(),
+  toner_count_YE: z.coerce.number().nullable().nullable(),
+  toner_count_MA: z.coerce.number().nullable().nullable(),
+  toner_count_CY: z.coerce.number().nullable().nullable(),
+  toner_count_BK: z.coerce.number().nullable().nullable(),
+  toner_stock_YE: z.coerce.number().nullable().nullable(),
+  toner_stock_MA: z.coerce.number().nullable().nullable(),
+  toner_stock_CY: z.coerce.number().nullable().nullable(),
+  toner_stock_BK: z.coerce.number().nullable().nullable(),
+  toner_deliver_YE: z.coerce.number().nullable().nullable(),
+  toner_deliver_CY: z.coerce.number().nullable().nullable(),
+  toner_deliver_MA: z.coerce.number().nullable().nullable(),
+  toner_deliver_BK: z.coerce.number().nullable().nullable(),
+  drum_count_YE: z.coerce.number().nullable().nullable(),
+  drum_count_MA: z.coerce.number().nullable().nullable(),
+  drum_count_CY: z.coerce.number().nullable().nullable(),
+  drum_count_BK: z.coerce.number().nullable().nullable(),
+  drum_replacement_detail: z.string().max(50).nullable().nullable(),
 })
 
 export type device_inspection_log = z.infer<typeof device_inspection_logSchema>
@@ -355,11 +355,11 @@ export const device_install_infoSchema = z.object({
   device_id: z.coerce.number(),
   installer_id: z.coerce.number(),
   mgmt_num: z.string().max(50),
-  ip_address: z.string().max(50).optional().nullable(),
-  subnet_mask: z.string().max(50).optional().nullable(),
-  gateway: z.string().max(50).optional().nullable(),
-  dns1: z.string().max(50).optional().nullable(),
-  dns2: z.string().max(50).optional().nullable(),
+  ip_address: z.string().max(50).nullable().nullable(),
+  subnet_mask: z.string().max(50).nullable().nullable(),
+  gateway: z.string().max(50).nullable().nullable(),
+  dns1: z.string().max(50).nullable().nullable(),
+  dns2: z.string().max(50).nullable().nullable(),
 })
 
 export type device_install_info = z.infer<typeof device_install_infoSchema>
@@ -373,7 +373,7 @@ export const device_location_logSchema = z.object({
   device_id: z.coerce.number(),
   location_date: z.coerce.date(),
   location_id: z.coerce.number(),
-  location_detail: z.string().max(200).optional().nullable(),
+  location_detail: z.string().max(200).nullable().nullable(),
 })
 
 export type device_location_log = z.infer<typeof device_location_logSchema>
@@ -399,10 +399,10 @@ export const device_optionSchema = z.object({
   location_type: device_option_location_typeSchema,
   device_option_id: z.coerce.number(),
   option_model_id: z.coerce.number(),
-  serial: z.string().max(50).optional().nullable(),
+  serial: z.string().max(50).nullable().nullable(),
   is_active: z.coerce.number().default(1),
-  location_warehouse_id: z.coerce.number().optional().nullable(),
-  location_device_id: z.coerce.number().optional().nullable(),
+  location_warehouse_id: z.coerce.number().nullable().nullable(),
+  location_device_id: z.coerce.number().nullable().nullable(),
 })
 
 export type device_option = z.infer<typeof device_optionSchema>
@@ -437,11 +437,11 @@ export const inspection_approvalSchema = z.object({
   approval_id: z.coerce.number(),
   requester_id: z.coerce.number(),
   request_at: z.coerce.date(),
-  approver_role_id: z.coerce.number().optional().nullable(),
+  approver_role_id: z.coerce.number().nullable().nullable(),
   device_inspection_log_id: z.coerce.number(),
-  approver_id: z.coerce.number().optional().nullable(),
+  approver_id: z.coerce.number().nullable().nullable(),
   approved_at: z.coerce.date().nullable(),
-  is_approved: z.coerce.number().optional().nullable(),
+  is_approved: z.coerce.number().nullable().nullable(),
 })
 
 export type inspection_approval = z.infer<typeof inspection_approvalSchema>
@@ -453,8 +453,8 @@ export type inspection_approval = z.infer<typeof inspection_approvalSchema>
 export const locationSchema = z.object({
   location_type: location_location_typeSchema,
   location_id: z.coerce.number(),
-  warehouse_id: z.coerce.number().optional().nullable(),
-  client_branch_id: z.coerce.number().optional().nullable(),
+  warehouse_id: z.coerce.number().nullable().nullable(),
+  client_branch_id: z.coerce.number().nullable().nullable(),
 })
 
 export type location = z.infer<typeof locationSchema>
@@ -478,7 +478,7 @@ export type option_model = z.infer<typeof option_modelSchema>
 
 export const sidoSchema = z.object({
   sido_id: z.coerce.number(),
-  sido_name: z.string().max(45).optional().nullable(),
+  sido_name: z.string().max(45).nullable().nullable(),
 })
 
 export type sido = z.infer<typeof sidoSchema>
@@ -505,12 +505,12 @@ export const userSchema = z.object({
   user_name: z.string().max(45),
   login_id: z.string().max(45),
   password: z.string().max(50),
-  mobile_num: z.string().max(20).optional().nullable(),
-  office_num: z.string().max(20).optional().nullable(),
-  email: z.string().max(100).optional().nullable(),
+  mobile_num: z.string().max(20).nullable().nullable(),
+  office_num: z.string().max(20).nullable().nullable(),
+  email: z.string().max(100).nullable().nullable(),
   modified_at: z.coerce.date().nullable(),
   dept_id: z.coerce.number(),
-  approval_role_id: z.coerce.number().optional().nullable(),
+  approval_role_id: z.coerce.number().nullable().nullable(),
   position_id: z.coerce.number(),
   created_at: z.coerce.date(),
   is_active: z.coerce.number().default(1),
@@ -562,12 +562,12 @@ export type warehouse = z.infer<typeof warehouseSchema>
 export const v_clientSchema = z.object({
   client_id: z.coerce.number(),
   client_name: z.string().max(45),
-  parent_client_id: z.coerce.number().optional().nullable(),
+  parent_client_id: z.coerce.number().nullable().nullable(),
   default_client_branch_rate_id: z.coerce.number().default(0),
   is_active: z.coerce.number().default(0),
-  parent_client_name: z.string().max(45).optional().nullable(),
-  client_rate: z.string().max(10).optional().nullable(),
-  rate_detail: z.string().max(45).optional().nullable(),
+  parent_client_name: z.string().max(45).nullable().nullable(),
+  client_rate: z.string().max(10).nullable().nullable(),
+  rate_detail: z.string().max(45).nullable().nullable(),
   branch_count: z.coerce.number().default(0),
 })
 
@@ -587,16 +587,16 @@ export const v_client_branchSchema = z.object({
   sigungu_id: z.coerce.number(),
   mgmt_dept_id: z.coerce.number(),
   client_branch_rate_id: z.coerce.number(),
-  branch_mgr_name: z.string().max(45).optional().nullable(),
-  branch_mgr_mobile_num: z.string().max(45).optional().nullable(),
-  branch_mgr_office_num: z.string().max(45).optional().nullable(),
-  branch_mgr_email: z.string().max(45).optional().nullable(),
+  branch_mgr_name: z.string().max(45).nullable().nullable(),
+  branch_mgr_mobile_num: z.string().max(45).nullable().nullable(),
+  branch_mgr_office_num: z.string().max(45).nullable().nullable(),
+  branch_mgr_email: z.string().max(45).nullable().nullable(),
   is_active: z.coerce.number().default(1),
   remote_support: z.coerce.number().default(0),
   push_alert: z.coerce.number().default(0),
-  client_name: z.string().max(45).optional().nullable(),
-  sigungu_name: z.string().max(45).optional().nullable(),
-  sido_name: z.string().max(45).optional().nullable(),
+  client_name: z.string().max(45).nullable().nullable(),
+  sigungu_name: z.string().max(45).nullable().nullable(),
+  sido_name: z.string().max(45).nullable().nullable(),
 })
 
 export type v_client_branch = z.infer<typeof v_client_branchSchema>
@@ -611,10 +611,10 @@ export type v_client_branch = z.infer<typeof v_client_branchSchema>
 export const v_consumable_modelSchema = z.object({
   compatibility_id: z.string().max(23),
   consumable_model_id: z.coerce.number().default(0).nullable(),
-  manufacturer: z.string().max(100).optional().nullable(),
-  consumable_name: z.string().max(100).optional().nullable(),
-  consumable_type: z.string().max(100).optional().nullable(),
-  model_manufacturer: z.string().max(100).optional().nullable(),
+  manufacturer: z.string().max(100).nullable().nullable(),
+  consumable_name: z.string().max(100).nullable().nullable(),
+  consumable_type: z.string().max(100).nullable().nullable(),
+  model_manufacturer: z.string().max(100).nullable().nullable(),
 })
 
 export type v_consumable_model = z.infer<typeof v_consumable_modelSchema>
@@ -630,10 +630,10 @@ export const v_deptSchema = z.object({
   dept_id: z.coerce.number(),
   dept_1_id: z.string().max(20),
   dept_1: z.string().max(100),
-  dept_2_id: z.string().max(20).optional().nullable(),
-  dept_2: z.string().max(100).optional().nullable(),
-  dept_3_id: z.string().max(20).optional().nullable(),
-  dept_3: z.string().max(100).optional().nullable(),
+  dept_2_id: z.string().max(20).nullable().nullable(),
+  dept_2: z.string().max(100).nullable().nullable(),
+  dept_3_id: z.string().max(20).nullable().nullable(),
+  dept_3: z.string().max(100).nullable().nullable(),
 })
 
 export type v_dept = z.infer<typeof v_deptSchema>
@@ -648,12 +648,12 @@ export type v_dept = z.infer<typeof v_deptSchema>
 export const v_device_driverSchema = z.object({
   device_driver_id: z.coerce.number(),
   device_model_id: z.coerce.number(),
-  driver_manufacturer: z.string().max(100).optional().nullable(),
-  printer_language: z.string().max(45).optional().nullable(),
-  install_file_address: z.string().max(200).optional().nullable(),
-  model_manufacturer: z.string().max(100).optional().nullable(),
-  model_name: z.string().max(100).optional().nullable(),
-  color_support: z.coerce.number().optional().nullable(),
+  driver_manufacturer: z.string().max(100).nullable().nullable(),
+  printer_language: z.string().max(45).nullable().nullable(),
+  install_file_address: z.string().max(200).nullable().nullable(),
+  model_manufacturer: z.string().max(100).nullable().nullable(),
+  model_name: z.string().max(100).nullable().nullable(),
+  color_support: z.coerce.number().nullable().nullable(),
 })
 
 export type v_device_driver = z.infer<typeof v_device_driverSchema>
@@ -670,17 +670,17 @@ export const v_userSchema = z.object({
   user_id: z.coerce.number(),
   user_name: z.string().max(45),
   login_id: z.string().max(45),
-  mobile_num: z.string().max(20).optional().nullable(),
-  office_num: z.string().max(20).optional().nullable(),
-  email: z.string().max(100).optional().nullable(),
+  mobile_num: z.string().max(20).nullable().nullable(),
+  office_num: z.string().max(20).nullable().nullable(),
+  email: z.string().max(100).nullable().nullable(),
   modified_at: z.coerce.date().nullable(),
   created_at: z.coerce.date(),
   is_active: z.coerce.number().default(1),
   dept_id: z.coerce.number(),
-  approval_role_id: z.coerce.number().optional().nullable(),
+  approval_role_id: z.coerce.number().nullable().nullable(),
   position_id: z.coerce.number(),
-  dept_name: z.string().max(100).optional().nullable(),
-  parent_dept_id: z.coerce.number().optional().nullable(),
+  dept_name: z.string().max(100).nullable().nullable(),
+  parent_dept_id: z.coerce.number().nullable().nullable(),
 })
 
 export type v_user = z.infer<typeof v_userSchema>
@@ -696,8 +696,8 @@ export const v_warehouseSchema = z.object({
   warehouse_id: z.coerce.number(),
   warehouse_name: z.string().max(100),
   mgmt_dept_id: z.coerce.number(),
-  mgmt_dept_name: z.string().max(100).optional().nullable(),
-  mgmt_parent_dept_id: z.coerce.number().optional().nullable(),
+  mgmt_dept_name: z.string().max(100).nullable().nullable(),
+  mgmt_parent_dept_id: z.coerce.number().nullable().nullable(),
 })
 
 export type v_warehouse = z.infer<typeof v_warehouseSchema>
@@ -717,22 +717,22 @@ export const v_deviceSchema = z.object({
   serial: z.string().max(50),
   regi_date: z.coerce.date(),
   mac: z.string().max(50),
-  last_inspection_log_id: z.coerce.number().optional().nullable(),
-  last_location_log_id: z.coerce.number().optional().nullable(),
+  last_inspection_log_id: z.coerce.number().nullable().nullable(),
+  last_location_log_id: z.coerce.number().nullable().nullable(),
   status_id: z.coerce.number().default(1),
-  model_name: z.string().max(100).optional().nullable(),
-  manufacturer: z.string().max(100).optional().nullable(),
-  owner_dept_name: z.string().max(100).optional().nullable(),
-  mgmt_dept_name: z.string().max(100).optional().nullable(),
+  model_name: z.string().max(100).nullable().nullable(),
+  manufacturer: z.string().max(100).nullable().nullable(),
+  owner_dept_name: z.string().max(100).nullable().nullable(),
+  mgmt_dept_name: z.string().max(100).nullable().nullable(),
   location_id: z.coerce.number().default(0).nullable(),
   warehouse_id: z.coerce.number().default(0).nullable(),
-  warehouse_name: z.string().max(100).optional().nullable(),
+  warehouse_name: z.string().max(100).nullable().nullable(),
   client_branch_id: z.coerce.number().default(0).nullable(),
-  client_branch_name: z.string().max(100).optional().nullable(),
-  status_name: z.string().max(45).optional().nullable(),
-  has_fax: z.coerce.number().optional().nullable(),
-  has_desk: z.coerce.number().optional().nullable(),
-  has_shelf: z.coerce.number().optional().nullable(),
+  client_branch_name: z.string().max(100).nullable().nullable(),
+  status_name: z.string().max(45).nullable().nullable(),
+  has_fax: z.coerce.number().nullable().nullable(),
+  has_desk: z.coerce.number().nullable().nullable(),
+  has_shelf: z.coerce.number().nullable().nullable(),
 })
 
 export type v_device = z.infer<typeof v_deviceSchema>
@@ -1258,7 +1258,7 @@ export const approval_roleWhereUniqueInputSchema: z.ZodType<Prisma.approval_role
   OR: z.lazy(() => approval_roleWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => approval_roleWhereInputSchema),z.lazy(() => approval_roleWhereInputSchema).array() ]).optional(),
   role_name: z.union([ z.lazy(() => StringFilterSchema),z.string().max(45) ]).optional(),
-  upper_role_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  upper_role_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
 }).strict());
 
 export const approval_roleOrderByWithAggregationInputSchema: z.ZodType<Prisma.approval_roleOrderByWithAggregationInput> = z.object({
@@ -1333,14 +1333,14 @@ export const callWhereUniqueInputSchema: z.ZodType<Prisma.callWhereUniqueInput> 
   requester_name: z.union([ z.lazy(() => StringFilterSchema),z.string().max(50) ]).optional(),
   requester_num: z.union([ z.lazy(() => StringFilterSchema),z.string().max(20) ]).optional(),
   requester_black_consumer: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number().default(0) ]).optional(),
-  device_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  device_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
   detail: z.union([ z.lazy(() => StringFilterSchema),z.string().max(200) ]).optional(),
   state: z.union([ z.lazy(() => StringFilterSchema),z.string().max(45) ]).optional(),
   received_at: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   receiver_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
   transferred_at: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
-  transferred_dept_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  assigner_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  transferred_dept_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  assigner_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
   completed_at: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
 }).strict());
 
@@ -1412,7 +1412,7 @@ export const call_typeWhereUniqueInputSchema: z.ZodType<Prisma.call_typeWhereUni
   OR: z.lazy(() => call_typeWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => call_typeWhereInputSchema),z.lazy(() => call_typeWhereInputSchema).array() ]).optional(),
   call_type_name: z.union([ z.lazy(() => StringFilterSchema),z.string().max(50) ]).optional(),
-  parent_call_type_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  parent_call_type_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
 }).strict());
 
 export const call_typeOrderByWithAggregationInputSchema: z.ZodType<Prisma.call_typeOrderByWithAggregationInput> = z.object({
@@ -1462,7 +1462,7 @@ export const clientWhereUniqueInputSchema: z.ZodType<Prisma.clientWhereUniqueInp
   AND: z.union([ z.lazy(() => clientWhereInputSchema),z.lazy(() => clientWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => clientWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => clientWhereInputSchema),z.lazy(() => clientWhereInputSchema).array() ]).optional(),
-  parent_client_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  parent_client_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
   default_client_branch_rate_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
   client_name: z.union([ z.lazy(() => StringFilterSchema),z.string().max(45) ]).optional(),
   is_active: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number().default(1) ]).optional(),
@@ -1540,10 +1540,10 @@ export const client_branchWhereUniqueInputSchema: z.ZodType<Prisma.client_branch
   client_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
   client_branch_name: z.union([ z.lazy(() => StringFilterSchema),z.string().max(100) ]).optional(),
   client_branch_rate_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
-  branch_mgr_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).optional() ]).optional().nullable(),
-  branch_mgr_mobile_num: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).optional() ]).optional().nullable(),
-  branch_mgr_office_num: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).optional() ]).optional().nullable(),
-  branch_mgr_email: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).optional() ]).optional().nullable(),
+  branch_mgr_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).nullable() ]).optional().nullable(),
+  branch_mgr_mobile_num: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).nullable() ]).optional().nullable(),
+  branch_mgr_office_num: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).nullable() ]).optional().nullable(),
+  branch_mgr_email: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).nullable() ]).optional().nullable(),
   is_active: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number().default(1) ]).optional(),
   remote_support: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number().default(0) ]).optional(),
   push_alert: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number().default(0) ]).optional(),
@@ -1613,7 +1613,7 @@ export const client_rateWhereUniqueInputSchema: z.ZodType<Prisma.client_rateWher
   OR: z.lazy(() => client_rateWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => client_rateWhereInputSchema),z.lazy(() => client_rateWhereInputSchema).array() ]).optional(),
   rate_type: z.union([ z.lazy(() => StringFilterSchema),z.string().max(10) ]).optional(),
-  rate_detail: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).optional() ]).optional().nullable(),
+  rate_detail: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).nullable() ]).optional().nullable(),
 }).strict());
 
 export const client_rateOrderByWithAggregationInputSchema: z.ZodType<Prisma.client_rateOrderByWithAggregationInput> = z.object({
@@ -1711,7 +1711,7 @@ export const deptWhereUniqueInputSchema: z.ZodType<Prisma.deptWhereUniqueInput> 
   AND: z.union([ z.lazy(() => deptWhereInputSchema),z.lazy(() => deptWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => deptWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => deptWhereInputSchema),z.lazy(() => deptWhereInputSchema).array() ]).optional(),
-  parent_dept_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  parent_dept_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
   dept_name: z.union([ z.lazy(() => StringFilterSchema),z.string().max(100) ]).optional(),
 }).strict());
 
@@ -1778,8 +1778,8 @@ export const deviceWhereUniqueInputSchema: z.ZodType<Prisma.deviceWhereUniqueInp
   serial: z.union([ z.lazy(() => StringFilterSchema),z.string().max(50) ]).optional(),
   regi_date: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   mac: z.union([ z.lazy(() => StringFilterSchema),z.string().max(50) ]).optional(),
-  last_inspection_log_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  last_location_log_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  last_inspection_log_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  last_location_log_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
   status_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number().default(1) ]).optional(),
 }).strict());
 
@@ -1857,15 +1857,15 @@ export const device_approvalWhereUniqueInputSchema: z.ZodType<Prisma.device_appr
   OR: z.lazy(() => device_approvalWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => device_approvalWhereInputSchema),z.lazy(() => device_approvalWhereInputSchema).array() ]).optional(),
   approval_type_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
-  sub_approval_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  sub_approval_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
   requester_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
   request_at: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   approver_role_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
-  origin_location_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  destination_location_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  approver_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  origin_location_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  destination_location_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  approver_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
   approve_at: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
-  is_approved: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  is_approved: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
 }).strict());
 
 export const device_approvalOrderByWithAggregationInputSchema: z.ZodType<Prisma.device_approvalOrderByWithAggregationInput> = z.object({
@@ -2017,9 +2017,9 @@ export const device_driverWhereUniqueInputSchema: z.ZodType<Prisma.device_driver
   OR: z.lazy(() => device_driverWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => device_driverWhereInputSchema),z.lazy(() => device_driverWhereInputSchema).array() ]).optional(),
   device_model_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
-  manufacturer: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
-  printer_language: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).optional() ]).optional().nullable(),
-  install_file_address: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(200).optional() ]).optional().nullable(),
+  manufacturer: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
+  printer_language: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).nullable() ]).optional().nullable(),
+  install_file_address: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(200).nullable() ]).optional().nullable(),
 }).strict());
 
 export const device_driverOrderByWithAggregationInputSchema: z.ZodType<Prisma.device_driverOrderByWithAggregationInput> = z.object({
@@ -2123,28 +2123,28 @@ export const device_inspection_logWhereUniqueInputSchema: z.ZodType<Prisma.devic
   inspector_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
   inspection_date: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   visit_type: z.union([ z.lazy(() => StringFilterSchema),z.string().max(45) ]).optional(),
-  call_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  FL: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  FS: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  BL: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  BS: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  toner_count_YE: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  toner_count_MA: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  toner_count_CY: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  toner_count_BK: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  toner_stock_YE: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  toner_stock_MA: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  toner_stock_CY: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  toner_stock_BK: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  toner_deliver_YE: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  toner_deliver_CY: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  toner_deliver_MA: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  toner_deliver_BK: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  drum_count_YE: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  drum_count_MA: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  drum_count_CY: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  drum_count_BK: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  drum_replacement_detail: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(50).optional() ]).optional().nullable(),
+  call_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  FL: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  FS: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  BL: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  BS: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  toner_count_YE: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  toner_count_MA: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  toner_count_CY: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  toner_count_BK: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  toner_stock_YE: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  toner_stock_MA: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  toner_stock_CY: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  toner_stock_BK: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  toner_deliver_YE: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  toner_deliver_CY: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  toner_deliver_MA: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  toner_deliver_BK: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  drum_count_YE: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  drum_count_MA: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  drum_count_CY: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  drum_count_BK: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  drum_replacement_detail: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(50).nullable() ]).optional().nullable(),
   status: z.union([ z.lazy(() => Enumdevice_inspection_log_statusNullableFilterSchema),z.lazy(() => device_inspection_log_statusSchema) ]).optional().nullable(),
 }).strict());
 
@@ -2253,11 +2253,11 @@ export const device_install_infoWhereUniqueInputSchema: z.ZodType<Prisma.device_
   NOT: z.union([ z.lazy(() => device_install_infoWhereInputSchema),z.lazy(() => device_install_infoWhereInputSchema).array() ]).optional(),
   installer_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
   mgmt_num: z.union([ z.lazy(() => StringFilterSchema),z.string().max(50) ]).optional(),
-  ip_address: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(50).optional() ]).optional().nullable(),
-  subnet_mask: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(50).optional() ]).optional().nullable(),
-  gateway: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(50).optional() ]).optional().nullable(),
-  dns1: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(50).optional() ]).optional().nullable(),
-  dns2: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(50).optional() ]).optional().nullable(),
+  ip_address: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(50).nullable() ]).optional().nullable(),
+  subnet_mask: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(50).nullable() ]).optional().nullable(),
+  gateway: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(50).nullable() ]).optional().nullable(),
+  dns1: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(50).nullable() ]).optional().nullable(),
+  dns2: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(50).nullable() ]).optional().nullable(),
 }).strict());
 
 export const device_install_infoOrderByWithAggregationInputSchema: z.ZodType<Prisma.device_install_infoOrderByWithAggregationInput> = z.object({
@@ -2320,7 +2320,7 @@ export const device_location_logWhereUniqueInputSchema: z.ZodType<Prisma.device_
   device_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
   location_date: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   location_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
-  location_detail: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(200).optional() ]).optional().nullable(),
+  location_detail: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(200).nullable() ]).optional().nullable(),
 }).strict());
 
 export const device_location_logOrderByWithAggregationInputSchema: z.ZodType<Prisma.device_location_logOrderByWithAggregationInput> = z.object({
@@ -2431,11 +2431,11 @@ export const device_optionWhereUniqueInputSchema: z.ZodType<Prisma.device_option
   OR: z.lazy(() => device_optionWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => device_optionWhereInputSchema),z.lazy(() => device_optionWhereInputSchema).array() ]).optional(),
   option_model_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
-  serial: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(50).optional() ]).optional().nullable(),
+  serial: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(50).nullable() ]).optional().nullable(),
   is_active: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number().default(1) ]).optional(),
   location_type: z.union([ z.lazy(() => Enumdevice_option_location_typeFilterSchema),z.lazy(() => device_option_location_typeSchema) ]).optional(),
-  location_warehouse_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  location_device_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  location_warehouse_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  location_device_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
 }).strict());
 
 export const device_optionOrderByWithAggregationInputSchema: z.ZodType<Prisma.device_optionOrderByWithAggregationInput> = z.object({
@@ -2586,11 +2586,11 @@ export const inspection_approvalWhereUniqueInputSchema: z.ZodType<Prisma.inspect
   NOT: z.union([ z.lazy(() => inspection_approvalWhereInputSchema),z.lazy(() => inspection_approvalWhereInputSchema).array() ]).optional(),
   requester_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
   request_at: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
-  approver_role_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  approver_role_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
   device_inspection_log_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
-  approver_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  approver_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
   approved_at: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
-  is_approved: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  is_approved: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
 }).strict());
 
 export const inspection_approvalOrderByWithAggregationInputSchema: z.ZodType<Prisma.inspection_approvalOrderByWithAggregationInput> = z.object({
@@ -2649,8 +2649,8 @@ export const locationWhereUniqueInputSchema: z.ZodType<Prisma.locationWhereUniqu
   OR: z.lazy(() => locationWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => locationWhereInputSchema),z.lazy(() => locationWhereInputSchema).array() ]).optional(),
   location_type: z.union([ z.lazy(() => Enumlocation_location_typeFilterSchema),z.lazy(() => location_location_typeSchema) ]).optional(),
-  warehouse_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  client_branch_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  warehouse_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  client_branch_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
 }).strict());
 
 export const locationOrderByWithAggregationInputSchema: z.ZodType<Prisma.locationOrderByWithAggregationInput> = z.object({
@@ -2748,7 +2748,7 @@ export const sidoWhereUniqueInputSchema: z.ZodType<Prisma.sidoWhereUniqueInput> 
   AND: z.union([ z.lazy(() => sidoWhereInputSchema),z.lazy(() => sidoWhereInputSchema).array() ]).optional(),
   OR: z.lazy(() => sidoWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => sidoWhereInputSchema),z.lazy(() => sidoWhereInputSchema).array() ]).optional(),
-  sido_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).optional() ]).optional().nullable(),
+  sido_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).nullable() ]).optional().nullable(),
 }).strict());
 
 export const sidoOrderByWithAggregationInputSchema: z.ZodType<Prisma.sidoOrderByWithAggregationInput> = z.object({
@@ -2873,12 +2873,12 @@ export const userWhereUniqueInputSchema: z.ZodType<Prisma.userWhereUniqueInput> 
   NOT: z.union([ z.lazy(() => userWhereInputSchema),z.lazy(() => userWhereInputSchema).array() ]).optional(),
   user_name: z.union([ z.lazy(() => StringFilterSchema),z.string().max(45) ]).optional(),
   password: z.union([ z.lazy(() => StringFilterSchema),z.string().max(50) ]).optional(),
-  mobile_num: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(20).optional() ]).optional().nullable(),
-  office_num: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(20).optional() ]).optional().nullable(),
-  email: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
+  mobile_num: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(20).nullable() ]).optional().nullable(),
+  office_num: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(20).nullable() ]).optional().nullable(),
+  email: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
   modified_at: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
   dept_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
-  approval_role_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  approval_role_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
   position_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
   created_at: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   is_active: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number().default(1) ]).optional(),
@@ -3095,12 +3095,12 @@ export const v_clientWhereUniqueInputSchema: z.ZodType<Prisma.v_clientWhereUniqu
   OR: z.lazy(() => v_clientWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => v_clientWhereInputSchema),z.lazy(() => v_clientWhereInputSchema).array() ]).optional(),
   client_name: z.union([ z.lazy(() => StringFilterSchema),z.string().max(45) ]).optional(),
-  parent_client_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  parent_client_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
   default_client_branch_rate_id: z.union([ z.lazy(() => BigIntFilterSchema),z.coerce.number().default(0) ]).optional(),
   is_active: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number().default(0) ]).optional(),
-  parent_client_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).optional() ]).optional().nullable(),
-  client_rate: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(10).optional() ]).optional().nullable(),
-  rate_detail: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).optional() ]).optional().nullable(),
+  parent_client_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).nullable() ]).optional().nullable(),
+  client_rate: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(10).nullable() ]).optional().nullable(),
+  rate_detail: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).nullable() ]).optional().nullable(),
   branch_count: z.union([ z.lazy(() => BigIntFilterSchema),z.coerce.number().default(0) ]).optional(),
 }).strict());
 
@@ -3190,16 +3190,16 @@ export const v_client_branchWhereUniqueInputSchema: z.ZodType<Prisma.v_client_br
   sigungu_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
   mgmt_dept_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
   client_branch_rate_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
-  branch_mgr_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).optional() ]).optional().nullable(),
-  branch_mgr_mobile_num: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).optional() ]).optional().nullable(),
-  branch_mgr_office_num: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).optional() ]).optional().nullable(),
-  branch_mgr_email: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).optional() ]).optional().nullable(),
+  branch_mgr_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).nullable() ]).optional().nullable(),
+  branch_mgr_mobile_num: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).nullable() ]).optional().nullable(),
+  branch_mgr_office_num: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).nullable() ]).optional().nullable(),
+  branch_mgr_email: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).nullable() ]).optional().nullable(),
   is_active: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number().default(1) ]).optional(),
   remote_support: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number().default(0) ]).optional(),
   push_alert: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number().default(0) ]).optional(),
-  client_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).optional() ]).optional().nullable(),
-  sigungu_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).optional() ]).optional().nullable(),
-  sido_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).optional() ]).optional().nullable(),
+  client_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).nullable() ]).optional().nullable(),
+  sigungu_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).nullable() ]).optional().nullable(),
+  sido_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).nullable() ]).optional().nullable(),
 }).strict());
 
 export const v_client_branchOrderByWithAggregationInputSchema: z.ZodType<Prisma.v_client_branchOrderByWithAggregationInput> = z.object({
@@ -3278,10 +3278,10 @@ export const v_consumable_modelWhereUniqueInputSchema: z.ZodType<Prisma.v_consum
   OR: z.lazy(() => v_consumable_modelWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => v_consumable_modelWhereInputSchema),z.lazy(() => v_consumable_modelWhereInputSchema).array() ]).optional(),
   consumable_model_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().default(0) ]).optional().nullable(),
-  manufacturer: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
-  consumable_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
-  consumable_type: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
-  model_manufacturer: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
+  manufacturer: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
+  consumable_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
+  consumable_type: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
+  model_manufacturer: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
 }).strict());
 
 export const v_consumable_modelOrderByWithAggregationInputSchema: z.ZodType<Prisma.v_consumable_modelOrderByWithAggregationInput> = z.object({
@@ -3343,10 +3343,10 @@ export const v_deptWhereUniqueInputSchema: z.ZodType<Prisma.v_deptWhereUniqueInp
   NOT: z.union([ z.lazy(() => v_deptWhereInputSchema),z.lazy(() => v_deptWhereInputSchema).array() ]).optional(),
   dept_1_id: z.union([ z.lazy(() => StringFilterSchema),z.string().max(20) ]).optional(),
   dept_1: z.union([ z.lazy(() => StringFilterSchema),z.string().max(100) ]).optional(),
-  dept_2_id: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(20).optional() ]).optional().nullable(),
-  dept_2: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
-  dept_3_id: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(20).optional() ]).optional().nullable(),
-  dept_3: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
+  dept_2_id: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(20).nullable() ]).optional().nullable(),
+  dept_2: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
+  dept_3_id: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(20).nullable() ]).optional().nullable(),
+  dept_3: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
 }).strict());
 
 export const v_deptOrderByWithAggregationInputSchema: z.ZodType<Prisma.v_deptOrderByWithAggregationInput> = z.object({
@@ -3411,12 +3411,12 @@ export const v_device_driverWhereUniqueInputSchema: z.ZodType<Prisma.v_device_dr
   OR: z.lazy(() => v_device_driverWhereInputSchema).array().optional(),
   NOT: z.union([ z.lazy(() => v_device_driverWhereInputSchema),z.lazy(() => v_device_driverWhereInputSchema).array() ]).optional(),
   device_model_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
-  driver_manufacturer: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
-  printer_language: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).optional() ]).optional().nullable(),
-  install_file_address: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(200).optional() ]).optional().nullable(),
-  model_manufacturer: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
-  model_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
-  color_support: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  driver_manufacturer: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
+  printer_language: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).nullable() ]).optional().nullable(),
+  install_file_address: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(200).nullable() ]).optional().nullable(),
+  model_manufacturer: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
+  model_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
+  color_support: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
 }).strict());
 
 export const v_device_driverOrderByWithAggregationInputSchema: z.ZodType<Prisma.v_device_driverOrderByWithAggregationInput> = z.object({
@@ -3498,18 +3498,18 @@ export const v_userWhereUniqueInputSchema: z.ZodType<Prisma.v_userWhereUniqueInp
   NOT: z.union([ z.lazy(() => v_userWhereInputSchema),z.lazy(() => v_userWhereInputSchema).array() ]).optional(),
   user_name: z.union([ z.lazy(() => StringFilterSchema),z.string().max(45) ]).optional(),
   login_id: z.union([ z.lazy(() => StringFilterSchema),z.string().max(45) ]).optional(),
-  mobile_num: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(20).optional() ]).optional().nullable(),
-  office_num: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(20).optional() ]).optional().nullable(),
-  email: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
+  mobile_num: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(20).nullable() ]).optional().nullable(),
+  office_num: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(20).nullable() ]).optional().nullable(),
+  email: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
   modified_at: z.union([ z.lazy(() => DateTimeNullableFilterSchema),z.coerce.date() ]).optional().nullable(),
   created_at: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   is_active: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number().default(1) ]).optional(),
   permission: z.union([ z.lazy(() => Enumv_user_permissionFilterSchema),z.lazy(() => v_user_permissionSchema) ]).optional(),
   dept_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
-  approval_role_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  approval_role_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
   position_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
-  dept_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
-  parent_dept_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  dept_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
+  parent_dept_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
 }).strict());
 
 export const v_userOrderByWithAggregationInputSchema: z.ZodType<Prisma.v_userOrderByWithAggregationInput> = z.object({
@@ -3585,8 +3585,8 @@ export const v_warehouseWhereUniqueInputSchema: z.ZodType<Prisma.v_warehouseWher
   NOT: z.union([ z.lazy(() => v_warehouseWhereInputSchema),z.lazy(() => v_warehouseWhereInputSchema).array() ]).optional(),
   warehouse_name: z.union([ z.lazy(() => StringFilterSchema),z.string().max(100) ]).optional(),
   mgmt_dept_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number() ]).optional(),
-  mgmt_dept_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
-  mgmt_parent_dept_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  mgmt_dept_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
+  mgmt_parent_dept_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
 }).strict());
 
 export const v_warehouseOrderByWithAggregationInputSchema: z.ZodType<Prisma.v_warehouseOrderByWithAggregationInput> = z.object({
@@ -3682,22 +3682,22 @@ export const v_deviceWhereUniqueInputSchema: z.ZodType<Prisma.v_deviceWhereUniqu
   serial: z.union([ z.lazy(() => StringFilterSchema),z.string().max(50) ]).optional(),
   regi_date: z.union([ z.lazy(() => DateTimeFilterSchema),z.coerce.date() ]).optional(),
   mac: z.union([ z.lazy(() => StringFilterSchema),z.string().max(50) ]).optional(),
-  last_inspection_log_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  last_location_log_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  last_inspection_log_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  last_location_log_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
   status_id: z.union([ z.lazy(() => IntFilterSchema),z.coerce.number().default(1) ]).optional(),
-  model_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
-  manufacturer: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
-  owner_dept_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
-  mgmt_dept_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
+  model_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
+  manufacturer: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
+  owner_dept_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
+  mgmt_dept_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
   location_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().default(0) ]).optional().nullable(),
   warehouse_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().default(0) ]).optional().nullable(),
-  warehouse_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
+  warehouse_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
   client_branch_id: z.union([ z.lazy(() => IntNullableFilterSchema),z.coerce.number().default(0) ]).optional().nullable(),
-  client_branch_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).optional() ]).optional().nullable(),
-  status_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).optional() ]).optional().nullable(),
-  has_fax: z.union([ z.lazy(() => BigIntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  has_desk: z.union([ z.lazy(() => BigIntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
-  has_shelf: z.union([ z.lazy(() => BigIntNullableFilterSchema),z.coerce.number().optional() ]).optional().nullable(),
+  client_branch_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
+  status_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(45).nullable() ]).optional().nullable(),
+  has_fax: z.union([ z.lazy(() => BigIntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  has_desk: z.union([ z.lazy(() => BigIntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
+  has_shelf: z.union([ z.lazy(() => BigIntNullableFilterSchema),z.coerce.number().nullable() ]).optional().nullable(),
 }).strict());
 
 export const v_deviceOrderByWithAggregationInputSchema: z.ZodType<Prisma.v_deviceOrderByWithAggregationInput> = z.object({
@@ -3762,41 +3762,41 @@ export const v_deviceScalarWhereWithAggregatesInputSchema: z.ZodType<Prisma.v_de
 
 export const approval_roleCreateInputSchema: z.ZodType<Prisma.approval_roleCreateInput> = z.object({
   role_name: z.string().max(45),
-  upper_role_id: z.coerce.number().optional().optional().nullable()
+  upper_role_id: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const approval_roleUncheckedCreateInputSchema: z.ZodType<Prisma.approval_roleUncheckedCreateInput> = z.object({
   role_id: z.coerce.number().optional(),
   role_name: z.string().max(45),
-  upper_role_id: z.coerce.number().optional().optional().nullable()
+  upper_role_id: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const approval_roleUpdateInputSchema: z.ZodType<Prisma.approval_roleUpdateInput> = z.object({
   role_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  upper_role_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  upper_role_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const approval_roleUncheckedUpdateInputSchema: z.ZodType<Prisma.approval_roleUncheckedUpdateInput> = z.object({
   role_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   role_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  upper_role_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  upper_role_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const approval_roleCreateManyInputSchema: z.ZodType<Prisma.approval_roleCreateManyInput> = z.object({
   role_id: z.coerce.number().optional(),
   role_name: z.string().max(45),
-  upper_role_id: z.coerce.number().optional().optional().nullable()
+  upper_role_id: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const approval_roleUpdateManyMutationInputSchema: z.ZodType<Prisma.approval_roleUpdateManyMutationInput> = z.object({
   role_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  upper_role_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  upper_role_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const approval_roleUncheckedUpdateManyInputSchema: z.ZodType<Prisma.approval_roleUncheckedUpdateManyInput> = z.object({
   role_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   role_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  upper_role_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  upper_role_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const callCreateInputSchema: z.ZodType<Prisma.callCreateInput> = z.object({
@@ -3805,14 +3805,14 @@ export const callCreateInputSchema: z.ZodType<Prisma.callCreateInput> = z.object
   requester_name: z.string().max(50),
   requester_num: z.string().max(20),
   requester_black_consumer: z.coerce.number().default(0).optional(),
-  device_id: z.coerce.number().optional().optional().nullable(),
+  device_id: z.coerce.number().nullable().optional().nullable(),
   detail: z.string().max(200),
   state: z.string().max(45),
   received_at: z.coerce.date(),
   receiver_id: z.coerce.number(),
   transferred_at: z.coerce.date().optional().nullable(),
-  transferred_dept_id: z.coerce.number().optional().optional().nullable(),
-  assigner_id: z.coerce.number().optional().optional().nullable(),
+  transferred_dept_id: z.coerce.number().nullable().optional().nullable(),
+  assigner_id: z.coerce.number().nullable().optional().nullable(),
   completed_at: z.coerce.date().optional().nullable()
 }).strict();
 
@@ -3823,14 +3823,14 @@ export const callUncheckedCreateInputSchema: z.ZodType<Prisma.callUncheckedCreat
   requester_name: z.string().max(50),
   requester_num: z.string().max(20),
   requester_black_consumer: z.coerce.number().default(0).optional(),
-  device_id: z.coerce.number().optional().optional().nullable(),
+  device_id: z.coerce.number().nullable().optional().nullable(),
   detail: z.string().max(200),
   state: z.string().max(45),
   received_at: z.coerce.date(),
   receiver_id: z.coerce.number(),
   transferred_at: z.coerce.date().optional().nullable(),
-  transferred_dept_id: z.coerce.number().optional().optional().nullable(),
-  assigner_id: z.coerce.number().optional().optional().nullable(),
+  transferred_dept_id: z.coerce.number().nullable().optional().nullable(),
+  assigner_id: z.coerce.number().nullable().optional().nullable(),
   completed_at: z.coerce.date().optional().nullable()
 }).strict();
 
@@ -3840,14 +3840,14 @@ export const callUpdateInputSchema: z.ZodType<Prisma.callUpdateInput> = z.object
   requester_name: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   requester_num: z.union([ z.string().max(20),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   requester_black_consumer: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  device_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  device_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   detail: z.union([ z.string().max(200),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   state: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   received_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   receiver_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   transferred_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  transferred_dept_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  assigner_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  transferred_dept_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  assigner_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   completed_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
@@ -3858,14 +3858,14 @@ export const callUncheckedUpdateInputSchema: z.ZodType<Prisma.callUncheckedUpdat
   requester_name: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   requester_num: z.union([ z.string().max(20),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   requester_black_consumer: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  device_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  device_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   detail: z.union([ z.string().max(200),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   state: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   received_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   receiver_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   transferred_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  transferred_dept_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  assigner_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  transferred_dept_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  assigner_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   completed_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
@@ -3876,14 +3876,14 @@ export const callCreateManyInputSchema: z.ZodType<Prisma.callCreateManyInput> = 
   requester_name: z.string().max(50),
   requester_num: z.string().max(20),
   requester_black_consumer: z.coerce.number().default(0).optional(),
-  device_id: z.coerce.number().optional().optional().nullable(),
+  device_id: z.coerce.number().nullable().optional().nullable(),
   detail: z.string().max(200),
   state: z.string().max(45),
   received_at: z.coerce.date(),
   receiver_id: z.coerce.number(),
   transferred_at: z.coerce.date().optional().nullable(),
-  transferred_dept_id: z.coerce.number().optional().optional().nullable(),
-  assigner_id: z.coerce.number().optional().optional().nullable(),
+  transferred_dept_id: z.coerce.number().nullable().optional().nullable(),
+  assigner_id: z.coerce.number().nullable().optional().nullable(),
   completed_at: z.coerce.date().optional().nullable()
 }).strict();
 
@@ -3893,14 +3893,14 @@ export const callUpdateManyMutationInputSchema: z.ZodType<Prisma.callUpdateManyM
   requester_name: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   requester_num: z.union([ z.string().max(20),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   requester_black_consumer: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  device_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  device_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   detail: z.union([ z.string().max(200),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   state: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   received_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   receiver_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   transferred_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  transferred_dept_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  assigner_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  transferred_dept_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  assigner_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   completed_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
@@ -3911,58 +3911,58 @@ export const callUncheckedUpdateManyInputSchema: z.ZodType<Prisma.callUncheckedU
   requester_name: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   requester_num: z.union([ z.string().max(20),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   requester_black_consumer: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  device_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  device_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   detail: z.union([ z.string().max(200),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   state: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   received_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   receiver_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   transferred_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  transferred_dept_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  assigner_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  transferred_dept_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  assigner_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   completed_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const call_typeCreateInputSchema: z.ZodType<Prisma.call_typeCreateInput> = z.object({
   call_type_name: z.string().max(50),
-  parent_call_type_id: z.coerce.number().optional().optional().nullable()
+  parent_call_type_id: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const call_typeUncheckedCreateInputSchema: z.ZodType<Prisma.call_typeUncheckedCreateInput> = z.object({
   call_type_id: z.coerce.number().optional(),
   call_type_name: z.string().max(50),
-  parent_call_type_id: z.coerce.number().optional().optional().nullable()
+  parent_call_type_id: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const call_typeUpdateInputSchema: z.ZodType<Prisma.call_typeUpdateInput> = z.object({
   call_type_name: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  parent_call_type_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_call_type_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const call_typeUncheckedUpdateInputSchema: z.ZodType<Prisma.call_typeUncheckedUpdateInput> = z.object({
   call_type_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   call_type_name: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  parent_call_type_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_call_type_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const call_typeCreateManyInputSchema: z.ZodType<Prisma.call_typeCreateManyInput> = z.object({
   call_type_id: z.coerce.number().optional(),
   call_type_name: z.string().max(50),
-  parent_call_type_id: z.coerce.number().optional().optional().nullable()
+  parent_call_type_id: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const call_typeUpdateManyMutationInputSchema: z.ZodType<Prisma.call_typeUpdateManyMutationInput> = z.object({
   call_type_name: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  parent_call_type_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_call_type_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const call_typeUncheckedUpdateManyInputSchema: z.ZodType<Prisma.call_typeUncheckedUpdateManyInput> = z.object({
   call_type_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   call_type_name: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  parent_call_type_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_call_type_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const clientCreateInputSchema: z.ZodType<Prisma.clientCreateInput> = z.object({
-  parent_client_id: z.coerce.number().optional().optional().nullable(),
+  parent_client_id: z.coerce.number().nullable().optional().nullable(),
   default_client_branch_rate_id: z.coerce.number(),
   client_name: z.string().max(45),
   is_active: z.coerce.number().default(1).optional()
@@ -3970,14 +3970,14 @@ export const clientCreateInputSchema: z.ZodType<Prisma.clientCreateInput> = z.ob
 
 export const clientUncheckedCreateInputSchema: z.ZodType<Prisma.clientUncheckedCreateInput> = z.object({
   client_id: z.coerce.number().optional(),
-  parent_client_id: z.coerce.number().optional().optional().nullable(),
+  parent_client_id: z.coerce.number().nullable().optional().nullable(),
   default_client_branch_rate_id: z.coerce.number(),
   client_name: z.string().max(45),
   is_active: z.coerce.number().default(1).optional()
 }).strict();
 
 export const clientUpdateInputSchema: z.ZodType<Prisma.clientUpdateInput> = z.object({
-  parent_client_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_client_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   default_client_branch_rate_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   client_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3985,7 +3985,7 @@ export const clientUpdateInputSchema: z.ZodType<Prisma.clientUpdateInput> = z.ob
 
 export const clientUncheckedUpdateInputSchema: z.ZodType<Prisma.clientUncheckedUpdateInput> = z.object({
   client_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  parent_client_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_client_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   default_client_branch_rate_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   client_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -3993,14 +3993,14 @@ export const clientUncheckedUpdateInputSchema: z.ZodType<Prisma.clientUncheckedU
 
 export const clientCreateManyInputSchema: z.ZodType<Prisma.clientCreateManyInput> = z.object({
   client_id: z.coerce.number().optional(),
-  parent_client_id: z.coerce.number().optional().optional().nullable(),
+  parent_client_id: z.coerce.number().nullable().optional().nullable(),
   default_client_branch_rate_id: z.coerce.number(),
   client_name: z.string().max(45),
   is_active: z.coerce.number().default(1).optional()
 }).strict();
 
 export const clientUpdateManyMutationInputSchema: z.ZodType<Prisma.clientUpdateManyMutationInput> = z.object({
-  parent_client_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_client_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   default_client_branch_rate_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   client_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -4008,7 +4008,7 @@ export const clientUpdateManyMutationInputSchema: z.ZodType<Prisma.clientUpdateM
 
 export const clientUncheckedUpdateManyInputSchema: z.ZodType<Prisma.clientUncheckedUpdateManyInput> = z.object({
   client_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  parent_client_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_client_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   default_client_branch_rate_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   client_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -4020,10 +4020,10 @@ export const client_branchCreateInputSchema: z.ZodType<Prisma.client_branchCreat
   client_id: z.coerce.number(),
   client_branch_name: z.string().max(100),
   client_branch_rate_id: z.coerce.number(),
-  branch_mgr_name: z.string().max(45).optional().optional().nullable(),
-  branch_mgr_mobile_num: z.string().max(45).optional().optional().nullable(),
-  branch_mgr_office_num: z.string().max(45).optional().optional().nullable(),
-  branch_mgr_email: z.string().max(45).optional().optional().nullable(),
+  branch_mgr_name: z.string().max(45).nullable().optional().nullable(),
+  branch_mgr_mobile_num: z.string().max(45).nullable().optional().nullable(),
+  branch_mgr_office_num: z.string().max(45).nullable().optional().nullable(),
+  branch_mgr_email: z.string().max(45).nullable().optional().nullable(),
   is_active: z.coerce.number().default(1).optional(),
   remote_support: z.coerce.number().default(0).optional(),
   push_alert: z.coerce.number().default(0).optional()
@@ -4036,10 +4036,10 @@ export const client_branchUncheckedCreateInputSchema: z.ZodType<Prisma.client_br
   client_id: z.coerce.number(),
   client_branch_name: z.string().max(100),
   client_branch_rate_id: z.coerce.number(),
-  branch_mgr_name: z.string().max(45).optional().optional().nullable(),
-  branch_mgr_mobile_num: z.string().max(45).optional().optional().nullable(),
-  branch_mgr_office_num: z.string().max(45).optional().optional().nullable(),
-  branch_mgr_email: z.string().max(45).optional().optional().nullable(),
+  branch_mgr_name: z.string().max(45).nullable().optional().nullable(),
+  branch_mgr_mobile_num: z.string().max(45).nullable().optional().nullable(),
+  branch_mgr_office_num: z.string().max(45).nullable().optional().nullable(),
+  branch_mgr_email: z.string().max(45).nullable().optional().nullable(),
   is_active: z.coerce.number().default(1).optional(),
   remote_support: z.coerce.number().default(0).optional(),
   push_alert: z.coerce.number().default(0).optional()
@@ -4051,10 +4051,10 @@ export const client_branchUpdateInputSchema: z.ZodType<Prisma.client_branchUpdat
   client_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   client_branch_name: z.union([ z.string().max(100),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   client_branch_rate_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  branch_mgr_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_mobile_num: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_office_num: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_email: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_mobile_num: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_office_num: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_email: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   remote_support: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   push_alert: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -4067,10 +4067,10 @@ export const client_branchUncheckedUpdateInputSchema: z.ZodType<Prisma.client_br
   client_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   client_branch_name: z.union([ z.string().max(100),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   client_branch_rate_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  branch_mgr_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_mobile_num: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_office_num: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_email: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_mobile_num: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_office_num: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_email: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   remote_support: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   push_alert: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -4083,10 +4083,10 @@ export const client_branchCreateManyInputSchema: z.ZodType<Prisma.client_branchC
   client_id: z.coerce.number(),
   client_branch_name: z.string().max(100),
   client_branch_rate_id: z.coerce.number(),
-  branch_mgr_name: z.string().max(45).optional().optional().nullable(),
-  branch_mgr_mobile_num: z.string().max(45).optional().optional().nullable(),
-  branch_mgr_office_num: z.string().max(45).optional().optional().nullable(),
-  branch_mgr_email: z.string().max(45).optional().optional().nullable(),
+  branch_mgr_name: z.string().max(45).nullable().optional().nullable(),
+  branch_mgr_mobile_num: z.string().max(45).nullable().optional().nullable(),
+  branch_mgr_office_num: z.string().max(45).nullable().optional().nullable(),
+  branch_mgr_email: z.string().max(45).nullable().optional().nullable(),
   is_active: z.coerce.number().default(1).optional(),
   remote_support: z.coerce.number().default(0).optional(),
   push_alert: z.coerce.number().default(0).optional()
@@ -4098,10 +4098,10 @@ export const client_branchUpdateManyMutationInputSchema: z.ZodType<Prisma.client
   client_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   client_branch_name: z.union([ z.string().max(100),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   client_branch_rate_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  branch_mgr_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_mobile_num: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_office_num: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_email: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_mobile_num: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_office_num: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_email: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   remote_support: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   push_alert: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -4114,10 +4114,10 @@ export const client_branchUncheckedUpdateManyInputSchema: z.ZodType<Prisma.clien
   client_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   client_branch_name: z.union([ z.string().max(100),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   client_branch_rate_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  branch_mgr_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_mobile_num: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_office_num: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_email: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_mobile_num: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_office_num: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_email: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   remote_support: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   push_alert: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -4125,41 +4125,41 @@ export const client_branchUncheckedUpdateManyInputSchema: z.ZodType<Prisma.clien
 
 export const client_rateCreateInputSchema: z.ZodType<Prisma.client_rateCreateInput> = z.object({
   rate_type: z.string().max(10),
-  rate_detail: z.string().max(45).optional().optional().nullable()
+  rate_detail: z.string().max(45).nullable().optional().nullable()
 }).strict();
 
 export const client_rateUncheckedCreateInputSchema: z.ZodType<Prisma.client_rateUncheckedCreateInput> = z.object({
   client_rate_id: z.coerce.number().optional(),
   rate_type: z.string().max(10),
-  rate_detail: z.string().max(45).optional().optional().nullable()
+  rate_detail: z.string().max(45).nullable().optional().nullable()
 }).strict();
 
 export const client_rateUpdateInputSchema: z.ZodType<Prisma.client_rateUpdateInput> = z.object({
   rate_type: z.union([ z.string().max(10),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  rate_detail: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  rate_detail: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const client_rateUncheckedUpdateInputSchema: z.ZodType<Prisma.client_rateUncheckedUpdateInput> = z.object({
   client_rate_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   rate_type: z.union([ z.string().max(10),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  rate_detail: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  rate_detail: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const client_rateCreateManyInputSchema: z.ZodType<Prisma.client_rateCreateManyInput> = z.object({
   client_rate_id: z.coerce.number().optional(),
   rate_type: z.string().max(10),
-  rate_detail: z.string().max(45).optional().optional().nullable()
+  rate_detail: z.string().max(45).nullable().optional().nullable()
 }).strict();
 
 export const client_rateUpdateManyMutationInputSchema: z.ZodType<Prisma.client_rateUpdateManyMutationInput> = z.object({
   rate_type: z.union([ z.string().max(10),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  rate_detail: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  rate_detail: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const client_rateUncheckedUpdateManyInputSchema: z.ZodType<Prisma.client_rateUncheckedUpdateManyInput> = z.object({
   client_rate_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   rate_type: z.union([ z.string().max(10),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  rate_detail: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  rate_detail: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const consumable_modelCreateInputSchema: z.ZodType<Prisma.consumable_modelCreateInput> = z.object({
@@ -4209,41 +4209,41 @@ export const consumable_modelUncheckedUpdateManyInputSchema: z.ZodType<Prisma.co
 }).strict();
 
 export const deptCreateInputSchema: z.ZodType<Prisma.deptCreateInput> = z.object({
-  parent_dept_id: z.coerce.number().optional().optional().nullable(),
+  parent_dept_id: z.coerce.number().nullable().optional().nullable(),
   dept_name: z.string().max(100)
 }).strict();
 
 export const deptUncheckedCreateInputSchema: z.ZodType<Prisma.deptUncheckedCreateInput> = z.object({
   dept_id: z.coerce.number().optional(),
-  parent_dept_id: z.coerce.number().optional().optional().nullable(),
+  parent_dept_id: z.coerce.number().nullable().optional().nullable(),
   dept_name: z.string().max(100)
 }).strict();
 
 export const deptUpdateInputSchema: z.ZodType<Prisma.deptUpdateInput> = z.object({
-  parent_dept_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_dept_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   dept_name: z.union([ z.string().max(100),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const deptUncheckedUpdateInputSchema: z.ZodType<Prisma.deptUncheckedUpdateInput> = z.object({
   dept_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  parent_dept_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_dept_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   dept_name: z.union([ z.string().max(100),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const deptCreateManyInputSchema: z.ZodType<Prisma.deptCreateManyInput> = z.object({
   dept_id: z.coerce.number().optional(),
-  parent_dept_id: z.coerce.number().optional().optional().nullable(),
+  parent_dept_id: z.coerce.number().nullable().optional().nullable(),
   dept_name: z.string().max(100)
 }).strict();
 
 export const deptUpdateManyMutationInputSchema: z.ZodType<Prisma.deptUpdateManyMutationInput> = z.object({
-  parent_dept_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_dept_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   dept_name: z.union([ z.string().max(100),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const deptUncheckedUpdateManyInputSchema: z.ZodType<Prisma.deptUncheckedUpdateManyInput> = z.object({
   dept_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  parent_dept_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_dept_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   dept_name: z.union([ z.string().max(100),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
@@ -4254,8 +4254,8 @@ export const deviceCreateInputSchema: z.ZodType<Prisma.deviceCreateInput> = z.ob
   serial: z.string().max(50),
   regi_date: z.coerce.date(),
   mac: z.string().max(50),
-  last_inspection_log_id: z.coerce.number().optional().optional().nullable(),
-  last_location_log_id: z.coerce.number().optional().optional().nullable(),
+  last_inspection_log_id: z.coerce.number().nullable().optional().nullable(),
+  last_location_log_id: z.coerce.number().nullable().optional().nullable(),
   status_id: z.coerce.number().default(1).optional()
 }).strict();
 
@@ -4267,8 +4267,8 @@ export const deviceUncheckedCreateInputSchema: z.ZodType<Prisma.deviceUncheckedC
   serial: z.string().max(50),
   regi_date: z.coerce.date(),
   mac: z.string().max(50),
-  last_inspection_log_id: z.coerce.number().optional().optional().nullable(),
-  last_location_log_id: z.coerce.number().optional().optional().nullable(),
+  last_inspection_log_id: z.coerce.number().nullable().optional().nullable(),
+  last_location_log_id: z.coerce.number().nullable().optional().nullable(),
   status_id: z.coerce.number().default(1).optional()
 }).strict();
 
@@ -4279,8 +4279,8 @@ export const deviceUpdateInputSchema: z.ZodType<Prisma.deviceUpdateInput> = z.ob
   serial: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   regi_date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   mac: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  last_inspection_log_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  last_location_log_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  last_inspection_log_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  last_location_log_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status_id: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
@@ -4292,8 +4292,8 @@ export const deviceUncheckedUpdateInputSchema: z.ZodType<Prisma.deviceUncheckedU
   serial: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   regi_date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   mac: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  last_inspection_log_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  last_location_log_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  last_inspection_log_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  last_location_log_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status_id: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
@@ -4305,8 +4305,8 @@ export const deviceCreateManyInputSchema: z.ZodType<Prisma.deviceCreateManyInput
   serial: z.string().max(50),
   regi_date: z.coerce.date(),
   mac: z.string().max(50),
-  last_inspection_log_id: z.coerce.number().optional().optional().nullable(),
-  last_location_log_id: z.coerce.number().optional().optional().nullable(),
+  last_inspection_log_id: z.coerce.number().nullable().optional().nullable(),
+  last_location_log_id: z.coerce.number().nullable().optional().nullable(),
   status_id: z.coerce.number().default(1).optional()
 }).strict();
 
@@ -4317,8 +4317,8 @@ export const deviceUpdateManyMutationInputSchema: z.ZodType<Prisma.deviceUpdateM
   serial: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   regi_date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   mac: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  last_inspection_log_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  last_location_log_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  last_inspection_log_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  last_location_log_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status_id: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
@@ -4330,104 +4330,104 @@ export const deviceUncheckedUpdateManyInputSchema: z.ZodType<Prisma.deviceUnchec
   serial: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   regi_date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   mac: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  last_inspection_log_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  last_location_log_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  last_inspection_log_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  last_location_log_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status_id: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const device_approvalCreateInputSchema: z.ZodType<Prisma.device_approvalCreateInput> = z.object({
   approval_type_id: z.coerce.number(),
-  sub_approval_id: z.coerce.number().optional().optional().nullable(),
+  sub_approval_id: z.coerce.number().nullable().optional().nullable(),
   requester_id: z.coerce.number(),
   request_at: z.coerce.date(),
   approver_role_id: z.coerce.number(),
-  origin_location_id: z.coerce.number().optional().optional().nullable(),
-  destination_location_id: z.coerce.number().optional().optional().nullable(),
-  approver_id: z.coerce.number().optional().optional().nullable(),
+  origin_location_id: z.coerce.number().nullable().optional().nullable(),
+  destination_location_id: z.coerce.number().nullable().optional().nullable(),
+  approver_id: z.coerce.number().nullable().optional().nullable(),
   approve_at: z.coerce.date().optional().nullable(),
-  is_approved: z.coerce.number().optional().optional().nullable()
+  is_approved: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const device_approvalUncheckedCreateInputSchema: z.ZodType<Prisma.device_approvalUncheckedCreateInput> = z.object({
   approval_id: z.coerce.number().optional(),
   approval_type_id: z.coerce.number(),
-  sub_approval_id: z.coerce.number().optional().optional().nullable(),
+  sub_approval_id: z.coerce.number().nullable().optional().nullable(),
   requester_id: z.coerce.number(),
   request_at: z.coerce.date(),
   approver_role_id: z.coerce.number(),
-  origin_location_id: z.coerce.number().optional().optional().nullable(),
-  destination_location_id: z.coerce.number().optional().optional().nullable(),
-  approver_id: z.coerce.number().optional().optional().nullable(),
+  origin_location_id: z.coerce.number().nullable().optional().nullable(),
+  destination_location_id: z.coerce.number().nullable().optional().nullable(),
+  approver_id: z.coerce.number().nullable().optional().nullable(),
   approve_at: z.coerce.date().optional().nullable(),
-  is_approved: z.coerce.number().optional().optional().nullable()
+  is_approved: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const device_approvalUpdateInputSchema: z.ZodType<Prisma.device_approvalUpdateInput> = z.object({
   approval_type_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  sub_approval_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  sub_approval_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   requester_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   request_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   approver_role_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  origin_location_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  destination_location_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  approver_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  origin_location_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  destination_location_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approver_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   approve_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  is_approved: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  is_approved: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_approvalUncheckedUpdateInputSchema: z.ZodType<Prisma.device_approvalUncheckedUpdateInput> = z.object({
   approval_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   approval_type_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  sub_approval_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  sub_approval_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   requester_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   request_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   approver_role_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  origin_location_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  destination_location_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  approver_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  origin_location_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  destination_location_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approver_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   approve_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  is_approved: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  is_approved: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_approvalCreateManyInputSchema: z.ZodType<Prisma.device_approvalCreateManyInput> = z.object({
   approval_id: z.coerce.number().optional(),
   approval_type_id: z.coerce.number(),
-  sub_approval_id: z.coerce.number().optional().optional().nullable(),
+  sub_approval_id: z.coerce.number().nullable().optional().nullable(),
   requester_id: z.coerce.number(),
   request_at: z.coerce.date(),
   approver_role_id: z.coerce.number(),
-  origin_location_id: z.coerce.number().optional().optional().nullable(),
-  destination_location_id: z.coerce.number().optional().optional().nullable(),
-  approver_id: z.coerce.number().optional().optional().nullable(),
+  origin_location_id: z.coerce.number().nullable().optional().nullable(),
+  destination_location_id: z.coerce.number().nullable().optional().nullable(),
+  approver_id: z.coerce.number().nullable().optional().nullable(),
   approve_at: z.coerce.date().optional().nullable(),
-  is_approved: z.coerce.number().optional().optional().nullable()
+  is_approved: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const device_approvalUpdateManyMutationInputSchema: z.ZodType<Prisma.device_approvalUpdateManyMutationInput> = z.object({
   approval_type_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  sub_approval_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  sub_approval_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   requester_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   request_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   approver_role_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  origin_location_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  destination_location_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  approver_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  origin_location_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  destination_location_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approver_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   approve_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  is_approved: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  is_approved: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_approvalUncheckedUpdateManyInputSchema: z.ZodType<Prisma.device_approvalUncheckedUpdateManyInput> = z.object({
   approval_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   approval_type_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  sub_approval_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  sub_approval_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   requester_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   request_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   approver_role_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  origin_location_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  destination_location_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  approver_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  origin_location_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  destination_location_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approver_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   approve_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  is_approved: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  is_approved: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_approval_typeCreateInputSchema: z.ZodType<Prisma.device_approval_typeCreateInput> = z.object({
@@ -4499,55 +4499,55 @@ export const device_consumable_compatibilityUncheckedUpdateManyInputSchema: z.Zo
 
 export const device_driverCreateInputSchema: z.ZodType<Prisma.device_driverCreateInput> = z.object({
   device_model_id: z.coerce.number(),
-  manufacturer: z.string().max(100).optional().optional().nullable(),
-  printer_language: z.string().max(45).optional().optional().nullable(),
-  install_file_address: z.string().max(200).optional().optional().nullable()
+  manufacturer: z.string().max(100).nullable().optional().nullable(),
+  printer_language: z.string().max(45).nullable().optional().nullable(),
+  install_file_address: z.string().max(200).nullable().optional().nullable()
 }).strict();
 
 export const device_driverUncheckedCreateInputSchema: z.ZodType<Prisma.device_driverUncheckedCreateInput> = z.object({
   device_driver_id: z.coerce.number().optional(),
   device_model_id: z.coerce.number(),
-  manufacturer: z.string().max(100).optional().optional().nullable(),
-  printer_language: z.string().max(45).optional().optional().nullable(),
-  install_file_address: z.string().max(200).optional().optional().nullable()
+  manufacturer: z.string().max(100).nullable().optional().nullable(),
+  printer_language: z.string().max(45).nullable().optional().nullable(),
+  install_file_address: z.string().max(200).nullable().optional().nullable()
 }).strict();
 
 export const device_driverUpdateInputSchema: z.ZodType<Prisma.device_driverUpdateInput> = z.object({
   device_model_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  printer_language: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  install_file_address: z.union([ z.string().max(200).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  printer_language: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  install_file_address: z.union([ z.string().max(200).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_driverUncheckedUpdateInputSchema: z.ZodType<Prisma.device_driverUncheckedUpdateInput> = z.object({
   device_driver_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   device_model_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  printer_language: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  install_file_address: z.union([ z.string().max(200).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  printer_language: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  install_file_address: z.union([ z.string().max(200).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_driverCreateManyInputSchema: z.ZodType<Prisma.device_driverCreateManyInput> = z.object({
   device_driver_id: z.coerce.number().optional(),
   device_model_id: z.coerce.number(),
-  manufacturer: z.string().max(100).optional().optional().nullable(),
-  printer_language: z.string().max(45).optional().optional().nullable(),
-  install_file_address: z.string().max(200).optional().optional().nullable()
+  manufacturer: z.string().max(100).nullable().optional().nullable(),
+  printer_language: z.string().max(45).nullable().optional().nullable(),
+  install_file_address: z.string().max(200).nullable().optional().nullable()
 }).strict();
 
 export const device_driverUpdateManyMutationInputSchema: z.ZodType<Prisma.device_driverUpdateManyMutationInput> = z.object({
   device_model_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  printer_language: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  install_file_address: z.union([ z.string().max(200).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  printer_language: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  install_file_address: z.union([ z.string().max(200).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_driverUncheckedUpdateManyInputSchema: z.ZodType<Prisma.device_driverUncheckedUpdateManyInput> = z.object({
   device_driver_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   device_model_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  printer_language: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  install_file_address: z.union([ z.string().max(200).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  printer_language: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  install_file_address: z.union([ z.string().max(200).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_inspection_logCreateInputSchema: z.ZodType<Prisma.device_inspection_logCreateInput> = z.object({
@@ -4555,28 +4555,28 @@ export const device_inspection_logCreateInputSchema: z.ZodType<Prisma.device_ins
   inspector_id: z.coerce.number(),
   inspection_date: z.coerce.date(),
   visit_type: z.string().max(45),
-  call_id: z.coerce.number().optional().optional().nullable(),
-  FL: z.coerce.number().optional().optional().nullable(),
-  FS: z.coerce.number().optional().optional().nullable(),
-  BL: z.coerce.number().optional().optional().nullable(),
-  BS: z.coerce.number().optional().optional().nullable(),
-  toner_count_YE: z.coerce.number().optional().optional().nullable(),
-  toner_count_MA: z.coerce.number().optional().optional().nullable(),
-  toner_count_CY: z.coerce.number().optional().optional().nullable(),
-  toner_count_BK: z.coerce.number().optional().optional().nullable(),
-  toner_stock_YE: z.coerce.number().optional().optional().nullable(),
-  toner_stock_MA: z.coerce.number().optional().optional().nullable(),
-  toner_stock_CY: z.coerce.number().optional().optional().nullable(),
-  toner_stock_BK: z.coerce.number().optional().optional().nullable(),
-  toner_deliver_YE: z.coerce.number().optional().optional().nullable(),
-  toner_deliver_CY: z.coerce.number().optional().optional().nullable(),
-  toner_deliver_MA: z.coerce.number().optional().optional().nullable(),
-  toner_deliver_BK: z.coerce.number().optional().optional().nullable(),
-  drum_count_YE: z.coerce.number().optional().optional().nullable(),
-  drum_count_MA: z.coerce.number().optional().optional().nullable(),
-  drum_count_CY: z.coerce.number().optional().optional().nullable(),
-  drum_count_BK: z.coerce.number().optional().optional().nullable(),
-  drum_replacement_detail: z.string().max(50).optional().optional().nullable(),
+  call_id: z.coerce.number().nullable().optional().nullable(),
+  FL: z.coerce.number().nullable().optional().nullable(),
+  FS: z.coerce.number().nullable().optional().nullable(),
+  BL: z.coerce.number().nullable().optional().nullable(),
+  BS: z.coerce.number().nullable().optional().nullable(),
+  toner_count_YE: z.coerce.number().nullable().optional().nullable(),
+  toner_count_MA: z.coerce.number().nullable().optional().nullable(),
+  toner_count_CY: z.coerce.number().nullable().optional().nullable(),
+  toner_count_BK: z.coerce.number().nullable().optional().nullable(),
+  toner_stock_YE: z.coerce.number().nullable().optional().nullable(),
+  toner_stock_MA: z.coerce.number().nullable().optional().nullable(),
+  toner_stock_CY: z.coerce.number().nullable().optional().nullable(),
+  toner_stock_BK: z.coerce.number().nullable().optional().nullable(),
+  toner_deliver_YE: z.coerce.number().nullable().optional().nullable(),
+  toner_deliver_CY: z.coerce.number().nullable().optional().nullable(),
+  toner_deliver_MA: z.coerce.number().nullable().optional().nullable(),
+  toner_deliver_BK: z.coerce.number().nullable().optional().nullable(),
+  drum_count_YE: z.coerce.number().nullable().optional().nullable(),
+  drum_count_MA: z.coerce.number().nullable().optional().nullable(),
+  drum_count_CY: z.coerce.number().nullable().optional().nullable(),
+  drum_count_BK: z.coerce.number().nullable().optional().nullable(),
+  drum_replacement_detail: z.string().max(50).nullable().optional().nullable(),
   status: z.lazy(() => device_inspection_log_statusSchema).optional().nullable()
 }).strict();
 
@@ -4586,28 +4586,28 @@ export const device_inspection_logUncheckedCreateInputSchema: z.ZodType<Prisma.d
   inspector_id: z.coerce.number(),
   inspection_date: z.coerce.date(),
   visit_type: z.string().max(45),
-  call_id: z.coerce.number().optional().optional().nullable(),
-  FL: z.coerce.number().optional().optional().nullable(),
-  FS: z.coerce.number().optional().optional().nullable(),
-  BL: z.coerce.number().optional().optional().nullable(),
-  BS: z.coerce.number().optional().optional().nullable(),
-  toner_count_YE: z.coerce.number().optional().optional().nullable(),
-  toner_count_MA: z.coerce.number().optional().optional().nullable(),
-  toner_count_CY: z.coerce.number().optional().optional().nullable(),
-  toner_count_BK: z.coerce.number().optional().optional().nullable(),
-  toner_stock_YE: z.coerce.number().optional().optional().nullable(),
-  toner_stock_MA: z.coerce.number().optional().optional().nullable(),
-  toner_stock_CY: z.coerce.number().optional().optional().nullable(),
-  toner_stock_BK: z.coerce.number().optional().optional().nullable(),
-  toner_deliver_YE: z.coerce.number().optional().optional().nullable(),
-  toner_deliver_CY: z.coerce.number().optional().optional().nullable(),
-  toner_deliver_MA: z.coerce.number().optional().optional().nullable(),
-  toner_deliver_BK: z.coerce.number().optional().optional().nullable(),
-  drum_count_YE: z.coerce.number().optional().optional().nullable(),
-  drum_count_MA: z.coerce.number().optional().optional().nullable(),
-  drum_count_CY: z.coerce.number().optional().optional().nullable(),
-  drum_count_BK: z.coerce.number().optional().optional().nullable(),
-  drum_replacement_detail: z.string().max(50).optional().optional().nullable(),
+  call_id: z.coerce.number().nullable().optional().nullable(),
+  FL: z.coerce.number().nullable().optional().nullable(),
+  FS: z.coerce.number().nullable().optional().nullable(),
+  BL: z.coerce.number().nullable().optional().nullable(),
+  BS: z.coerce.number().nullable().optional().nullable(),
+  toner_count_YE: z.coerce.number().nullable().optional().nullable(),
+  toner_count_MA: z.coerce.number().nullable().optional().nullable(),
+  toner_count_CY: z.coerce.number().nullable().optional().nullable(),
+  toner_count_BK: z.coerce.number().nullable().optional().nullable(),
+  toner_stock_YE: z.coerce.number().nullable().optional().nullable(),
+  toner_stock_MA: z.coerce.number().nullable().optional().nullable(),
+  toner_stock_CY: z.coerce.number().nullable().optional().nullable(),
+  toner_stock_BK: z.coerce.number().nullable().optional().nullable(),
+  toner_deliver_YE: z.coerce.number().nullable().optional().nullable(),
+  toner_deliver_CY: z.coerce.number().nullable().optional().nullable(),
+  toner_deliver_MA: z.coerce.number().nullable().optional().nullable(),
+  toner_deliver_BK: z.coerce.number().nullable().optional().nullable(),
+  drum_count_YE: z.coerce.number().nullable().optional().nullable(),
+  drum_count_MA: z.coerce.number().nullable().optional().nullable(),
+  drum_count_CY: z.coerce.number().nullable().optional().nullable(),
+  drum_count_BK: z.coerce.number().nullable().optional().nullable(),
+  drum_replacement_detail: z.string().max(50).nullable().optional().nullable(),
   status: z.lazy(() => device_inspection_log_statusSchema).optional().nullable()
 }).strict();
 
@@ -4616,28 +4616,28 @@ export const device_inspection_logUpdateInputSchema: z.ZodType<Prisma.device_ins
   inspector_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   inspection_date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   visit_type: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  call_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  FL: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  FS: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  BL: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  BS: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_count_YE: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_count_MA: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_count_CY: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_count_BK: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_stock_YE: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_stock_MA: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_stock_CY: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_stock_BK: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_deliver_YE: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_deliver_CY: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_deliver_MA: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_deliver_BK: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_count_YE: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_count_MA: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_count_CY: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_count_BK: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_replacement_detail: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  call_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  FL: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  FS: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  BL: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  BS: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_count_YE: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_count_MA: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_count_CY: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_count_BK: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_stock_YE: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_stock_MA: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_stock_CY: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_stock_BK: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_deliver_YE: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_deliver_CY: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_deliver_MA: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_deliver_BK: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_count_YE: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_count_MA: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_count_CY: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_count_BK: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_replacement_detail: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => device_inspection_log_statusSchema),z.lazy(() => NullableEnumdevice_inspection_log_statusFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
@@ -4647,28 +4647,28 @@ export const device_inspection_logUncheckedUpdateInputSchema: z.ZodType<Prisma.d
   inspector_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   inspection_date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   visit_type: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  call_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  FL: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  FS: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  BL: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  BS: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_count_YE: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_count_MA: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_count_CY: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_count_BK: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_stock_YE: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_stock_MA: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_stock_CY: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_stock_BK: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_deliver_YE: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_deliver_CY: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_deliver_MA: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_deliver_BK: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_count_YE: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_count_MA: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_count_CY: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_count_BK: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_replacement_detail: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  call_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  FL: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  FS: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  BL: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  BS: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_count_YE: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_count_MA: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_count_CY: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_count_BK: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_stock_YE: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_stock_MA: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_stock_CY: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_stock_BK: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_deliver_YE: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_deliver_CY: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_deliver_MA: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_deliver_BK: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_count_YE: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_count_MA: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_count_CY: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_count_BK: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_replacement_detail: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => device_inspection_log_statusSchema),z.lazy(() => NullableEnumdevice_inspection_log_statusFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
@@ -4678,28 +4678,28 @@ export const device_inspection_logCreateManyInputSchema: z.ZodType<Prisma.device
   inspector_id: z.coerce.number(),
   inspection_date: z.coerce.date(),
   visit_type: z.string().max(45),
-  call_id: z.coerce.number().optional().optional().nullable(),
-  FL: z.coerce.number().optional().optional().nullable(),
-  FS: z.coerce.number().optional().optional().nullable(),
-  BL: z.coerce.number().optional().optional().nullable(),
-  BS: z.coerce.number().optional().optional().nullable(),
-  toner_count_YE: z.coerce.number().optional().optional().nullable(),
-  toner_count_MA: z.coerce.number().optional().optional().nullable(),
-  toner_count_CY: z.coerce.number().optional().optional().nullable(),
-  toner_count_BK: z.coerce.number().optional().optional().nullable(),
-  toner_stock_YE: z.coerce.number().optional().optional().nullable(),
-  toner_stock_MA: z.coerce.number().optional().optional().nullable(),
-  toner_stock_CY: z.coerce.number().optional().optional().nullable(),
-  toner_stock_BK: z.coerce.number().optional().optional().nullable(),
-  toner_deliver_YE: z.coerce.number().optional().optional().nullable(),
-  toner_deliver_CY: z.coerce.number().optional().optional().nullable(),
-  toner_deliver_MA: z.coerce.number().optional().optional().nullable(),
-  toner_deliver_BK: z.coerce.number().optional().optional().nullable(),
-  drum_count_YE: z.coerce.number().optional().optional().nullable(),
-  drum_count_MA: z.coerce.number().optional().optional().nullable(),
-  drum_count_CY: z.coerce.number().optional().optional().nullable(),
-  drum_count_BK: z.coerce.number().optional().optional().nullable(),
-  drum_replacement_detail: z.string().max(50).optional().optional().nullable(),
+  call_id: z.coerce.number().nullable().optional().nullable(),
+  FL: z.coerce.number().nullable().optional().nullable(),
+  FS: z.coerce.number().nullable().optional().nullable(),
+  BL: z.coerce.number().nullable().optional().nullable(),
+  BS: z.coerce.number().nullable().optional().nullable(),
+  toner_count_YE: z.coerce.number().nullable().optional().nullable(),
+  toner_count_MA: z.coerce.number().nullable().optional().nullable(),
+  toner_count_CY: z.coerce.number().nullable().optional().nullable(),
+  toner_count_BK: z.coerce.number().nullable().optional().nullable(),
+  toner_stock_YE: z.coerce.number().nullable().optional().nullable(),
+  toner_stock_MA: z.coerce.number().nullable().optional().nullable(),
+  toner_stock_CY: z.coerce.number().nullable().optional().nullable(),
+  toner_stock_BK: z.coerce.number().nullable().optional().nullable(),
+  toner_deliver_YE: z.coerce.number().nullable().optional().nullable(),
+  toner_deliver_CY: z.coerce.number().nullable().optional().nullable(),
+  toner_deliver_MA: z.coerce.number().nullable().optional().nullable(),
+  toner_deliver_BK: z.coerce.number().nullable().optional().nullable(),
+  drum_count_YE: z.coerce.number().nullable().optional().nullable(),
+  drum_count_MA: z.coerce.number().nullable().optional().nullable(),
+  drum_count_CY: z.coerce.number().nullable().optional().nullable(),
+  drum_count_BK: z.coerce.number().nullable().optional().nullable(),
+  drum_replacement_detail: z.string().max(50).nullable().optional().nullable(),
   status: z.lazy(() => device_inspection_log_statusSchema).optional().nullable()
 }).strict();
 
@@ -4708,28 +4708,28 @@ export const device_inspection_logUpdateManyMutationInputSchema: z.ZodType<Prism
   inspector_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   inspection_date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   visit_type: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  call_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  FL: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  FS: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  BL: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  BS: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_count_YE: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_count_MA: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_count_CY: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_count_BK: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_stock_YE: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_stock_MA: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_stock_CY: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_stock_BK: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_deliver_YE: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_deliver_CY: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_deliver_MA: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_deliver_BK: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_count_YE: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_count_MA: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_count_CY: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_count_BK: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_replacement_detail: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  call_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  FL: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  FS: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  BL: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  BS: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_count_YE: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_count_MA: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_count_CY: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_count_BK: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_stock_YE: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_stock_MA: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_stock_CY: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_stock_BK: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_deliver_YE: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_deliver_CY: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_deliver_MA: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_deliver_BK: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_count_YE: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_count_MA: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_count_CY: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_count_BK: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_replacement_detail: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => device_inspection_log_statusSchema),z.lazy(() => NullableEnumdevice_inspection_log_statusFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
@@ -4739,28 +4739,28 @@ export const device_inspection_logUncheckedUpdateManyInputSchema: z.ZodType<Pris
   inspector_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   inspection_date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   visit_type: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  call_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  FL: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  FS: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  BL: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  BS: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_count_YE: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_count_MA: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_count_CY: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_count_BK: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_stock_YE: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_stock_MA: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_stock_CY: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_stock_BK: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_deliver_YE: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_deliver_CY: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_deliver_MA: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  toner_deliver_BK: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_count_YE: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_count_MA: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_count_CY: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_count_BK: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  drum_replacement_detail: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  call_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  FL: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  FS: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  BL: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  BS: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_count_YE: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_count_MA: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_count_CY: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_count_BK: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_stock_YE: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_stock_MA: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_stock_CY: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_stock_BK: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_deliver_YE: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_deliver_CY: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_deliver_MA: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  toner_deliver_BK: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_count_YE: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_count_MA: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_count_CY: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_count_BK: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  drum_replacement_detail: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status: z.union([ z.lazy(() => device_inspection_log_statusSchema),z.lazy(() => NullableEnumdevice_inspection_log_statusFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
@@ -4768,84 +4768,84 @@ export const device_install_infoCreateInputSchema: z.ZodType<Prisma.device_insta
   device_id: z.coerce.number(),
   installer_id: z.coerce.number(),
   mgmt_num: z.string().max(50),
-  ip_address: z.string().max(50).optional().optional().nullable(),
-  subnet_mask: z.string().max(50).optional().optional().nullable(),
-  gateway: z.string().max(50).optional().optional().nullable(),
-  dns1: z.string().max(50).optional().optional().nullable(),
-  dns2: z.string().max(50).optional().optional().nullable()
+  ip_address: z.string().max(50).nullable().optional().nullable(),
+  subnet_mask: z.string().max(50).nullable().optional().nullable(),
+  gateway: z.string().max(50).nullable().optional().nullable(),
+  dns1: z.string().max(50).nullable().optional().nullable(),
+  dns2: z.string().max(50).nullable().optional().nullable()
 }).strict();
 
 export const device_install_infoUncheckedCreateInputSchema: z.ZodType<Prisma.device_install_infoUncheckedCreateInput> = z.object({
   device_id: z.coerce.number(),
   installer_id: z.coerce.number(),
   mgmt_num: z.string().max(50),
-  ip_address: z.string().max(50).optional().optional().nullable(),
-  subnet_mask: z.string().max(50).optional().optional().nullable(),
-  gateway: z.string().max(50).optional().optional().nullable(),
-  dns1: z.string().max(50).optional().optional().nullable(),
-  dns2: z.string().max(50).optional().optional().nullable()
+  ip_address: z.string().max(50).nullable().optional().nullable(),
+  subnet_mask: z.string().max(50).nullable().optional().nullable(),
+  gateway: z.string().max(50).nullable().optional().nullable(),
+  dns1: z.string().max(50).nullable().optional().nullable(),
+  dns2: z.string().max(50).nullable().optional().nullable()
 }).strict();
 
 export const device_install_infoUpdateInputSchema: z.ZodType<Prisma.device_install_infoUpdateInput> = z.object({
   device_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   installer_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   mgmt_num: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  ip_address: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  subnet_mask: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  gateway: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dns1: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dns2: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ip_address: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  subnet_mask: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  gateway: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dns1: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dns2: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_install_infoUncheckedUpdateInputSchema: z.ZodType<Prisma.device_install_infoUncheckedUpdateInput> = z.object({
   device_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   installer_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   mgmt_num: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  ip_address: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  subnet_mask: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  gateway: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dns1: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dns2: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ip_address: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  subnet_mask: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  gateway: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dns1: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dns2: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_install_infoCreateManyInputSchema: z.ZodType<Prisma.device_install_infoCreateManyInput> = z.object({
   device_id: z.coerce.number(),
   installer_id: z.coerce.number(),
   mgmt_num: z.string().max(50),
-  ip_address: z.string().max(50).optional().optional().nullable(),
-  subnet_mask: z.string().max(50).optional().optional().nullable(),
-  gateway: z.string().max(50).optional().optional().nullable(),
-  dns1: z.string().max(50).optional().optional().nullable(),
-  dns2: z.string().max(50).optional().optional().nullable()
+  ip_address: z.string().max(50).nullable().optional().nullable(),
+  subnet_mask: z.string().max(50).nullable().optional().nullable(),
+  gateway: z.string().max(50).nullable().optional().nullable(),
+  dns1: z.string().max(50).nullable().optional().nullable(),
+  dns2: z.string().max(50).nullable().optional().nullable()
 }).strict();
 
 export const device_install_infoUpdateManyMutationInputSchema: z.ZodType<Prisma.device_install_infoUpdateManyMutationInput> = z.object({
   device_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   installer_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   mgmt_num: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  ip_address: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  subnet_mask: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  gateway: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dns1: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dns2: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ip_address: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  subnet_mask: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  gateway: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dns1: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dns2: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_install_infoUncheckedUpdateManyInputSchema: z.ZodType<Prisma.device_install_infoUncheckedUpdateManyInput> = z.object({
   device_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   installer_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   mgmt_num: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  ip_address: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  subnet_mask: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  gateway: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dns1: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dns2: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  ip_address: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  subnet_mask: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  gateway: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dns1: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dns2: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_location_logCreateInputSchema: z.ZodType<Prisma.device_location_logCreateInput> = z.object({
   device_id: z.coerce.number(),
   location_date: z.coerce.date(),
   location_id: z.coerce.number(),
-  location_detail: z.string().max(200).optional().optional().nullable()
+  location_detail: z.string().max(200).nullable().optional().nullable()
 }).strict();
 
 export const device_location_logUncheckedCreateInputSchema: z.ZodType<Prisma.device_location_logUncheckedCreateInput> = z.object({
@@ -4853,14 +4853,14 @@ export const device_location_logUncheckedCreateInputSchema: z.ZodType<Prisma.dev
   device_id: z.coerce.number(),
   location_date: z.coerce.date(),
   location_id: z.coerce.number(),
-  location_detail: z.string().max(200).optional().optional().nullable()
+  location_detail: z.string().max(200).nullable().optional().nullable()
 }).strict();
 
 export const device_location_logUpdateInputSchema: z.ZodType<Prisma.device_location_logUpdateInput> = z.object({
   device_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   location_date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   location_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  location_detail: z.union([ z.string().max(200).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  location_detail: z.union([ z.string().max(200).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_location_logUncheckedUpdateInputSchema: z.ZodType<Prisma.device_location_logUncheckedUpdateInput> = z.object({
@@ -4868,7 +4868,7 @@ export const device_location_logUncheckedUpdateInputSchema: z.ZodType<Prisma.dev
   device_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   location_date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   location_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  location_detail: z.union([ z.string().max(200).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  location_detail: z.union([ z.string().max(200).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_location_logCreateManyInputSchema: z.ZodType<Prisma.device_location_logCreateManyInput> = z.object({
@@ -4876,14 +4876,14 @@ export const device_location_logCreateManyInputSchema: z.ZodType<Prisma.device_l
   device_id: z.coerce.number(),
   location_date: z.coerce.date(),
   location_id: z.coerce.number(),
-  location_detail: z.string().max(200).optional().optional().nullable()
+  location_detail: z.string().max(200).nullable().optional().nullable()
 }).strict();
 
 export const device_location_logUpdateManyMutationInputSchema: z.ZodType<Prisma.device_location_logUpdateManyMutationInput> = z.object({
   device_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   location_date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   location_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  location_detail: z.union([ z.string().max(200).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  location_detail: z.union([ z.string().max(200).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_location_logUncheckedUpdateManyInputSchema: z.ZodType<Prisma.device_location_logUncheckedUpdateManyInput> = z.object({
@@ -4891,7 +4891,7 @@ export const device_location_logUncheckedUpdateManyInputSchema: z.ZodType<Prisma
   device_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   location_date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   location_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  location_detail: z.union([ z.string().max(200).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  location_detail: z.union([ z.string().max(200).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_modelCreateInputSchema: z.ZodType<Prisma.device_modelCreateInput> = z.object({
@@ -4942,69 +4942,69 @@ export const device_modelUncheckedUpdateManyInputSchema: z.ZodType<Prisma.device
 
 export const device_optionCreateInputSchema: z.ZodType<Prisma.device_optionCreateInput> = z.object({
   option_model_id: z.coerce.number(),
-  serial: z.string().max(50).optional().optional().nullable(),
+  serial: z.string().max(50).nullable().optional().nullable(),
   is_active: z.coerce.number().default(1).optional(),
   location_type: z.lazy(() => device_option_location_typeSchema),
-  location_warehouse_id: z.coerce.number().optional().optional().nullable(),
-  location_device_id: z.coerce.number().optional().optional().nullable()
+  location_warehouse_id: z.coerce.number().nullable().optional().nullable(),
+  location_device_id: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const device_optionUncheckedCreateInputSchema: z.ZodType<Prisma.device_optionUncheckedCreateInput> = z.object({
   device_option_id: z.coerce.number().optional(),
   option_model_id: z.coerce.number(),
-  serial: z.string().max(50).optional().optional().nullable(),
+  serial: z.string().max(50).nullable().optional().nullable(),
   is_active: z.coerce.number().default(1).optional(),
   location_type: z.lazy(() => device_option_location_typeSchema),
-  location_warehouse_id: z.coerce.number().optional().optional().nullable(),
-  location_device_id: z.coerce.number().optional().optional().nullable()
+  location_warehouse_id: z.coerce.number().nullable().optional().nullable(),
+  location_device_id: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const device_optionUpdateInputSchema: z.ZodType<Prisma.device_optionUpdateInput> = z.object({
   option_model_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  serial: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  serial: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   location_type: z.union([ z.lazy(() => device_option_location_typeSchema),z.lazy(() => Enumdevice_option_location_typeFieldUpdateOperationsInputSchema) ]).optional(),
-  location_warehouse_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  location_device_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  location_warehouse_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  location_device_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_optionUncheckedUpdateInputSchema: z.ZodType<Prisma.device_optionUncheckedUpdateInput> = z.object({
   device_option_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   option_model_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  serial: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  serial: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   location_type: z.union([ z.lazy(() => device_option_location_typeSchema),z.lazy(() => Enumdevice_option_location_typeFieldUpdateOperationsInputSchema) ]).optional(),
-  location_warehouse_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  location_device_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  location_warehouse_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  location_device_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_optionCreateManyInputSchema: z.ZodType<Prisma.device_optionCreateManyInput> = z.object({
   device_option_id: z.coerce.number().optional(),
   option_model_id: z.coerce.number(),
-  serial: z.string().max(50).optional().optional().nullable(),
+  serial: z.string().max(50).nullable().optional().nullable(),
   is_active: z.coerce.number().default(1).optional(),
   location_type: z.lazy(() => device_option_location_typeSchema),
-  location_warehouse_id: z.coerce.number().optional().optional().nullable(),
-  location_device_id: z.coerce.number().optional().optional().nullable()
+  location_warehouse_id: z.coerce.number().nullable().optional().nullable(),
+  location_device_id: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const device_optionUpdateManyMutationInputSchema: z.ZodType<Prisma.device_optionUpdateManyMutationInput> = z.object({
   option_model_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  serial: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  serial: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   location_type: z.union([ z.lazy(() => device_option_location_typeSchema),z.lazy(() => Enumdevice_option_location_typeFieldUpdateOperationsInputSchema) ]).optional(),
-  location_warehouse_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  location_device_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  location_warehouse_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  location_device_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_optionUncheckedUpdateManyInputSchema: z.ZodType<Prisma.device_optionUncheckedUpdateManyInput> = z.object({
   device_option_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   option_model_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  serial: z.union([ z.string().max(50).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  serial: z.union([ z.string().max(50).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   location_type: z.union([ z.lazy(() => device_option_location_typeSchema),z.lazy(() => Enumdevice_option_location_typeFieldUpdateOperationsInputSchema) ]).optional(),
-  location_warehouse_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  location_device_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  location_warehouse_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  location_device_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const device_option_compatibilityCreateInputSchema: z.ZodType<Prisma.device_option_compatibilityCreateInput> = z.object({
@@ -5077,121 +5077,121 @@ export const device_statusUncheckedUpdateManyInputSchema: z.ZodType<Prisma.devic
 export const inspection_approvalCreateInputSchema: z.ZodType<Prisma.inspection_approvalCreateInput> = z.object({
   requester_id: z.coerce.number(),
   request_at: z.coerce.date(),
-  approver_role_id: z.coerce.number().optional().optional().nullable(),
+  approver_role_id: z.coerce.number().nullable().optional().nullable(),
   device_inspection_log_id: z.coerce.number(),
-  approver_id: z.coerce.number().optional().optional().nullable(),
+  approver_id: z.coerce.number().nullable().optional().nullable(),
   approved_at: z.coerce.date().optional().nullable(),
-  is_approved: z.coerce.number().optional().optional().nullable()
+  is_approved: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const inspection_approvalUncheckedCreateInputSchema: z.ZodType<Prisma.inspection_approvalUncheckedCreateInput> = z.object({
   approval_id: z.coerce.number().optional(),
   requester_id: z.coerce.number(),
   request_at: z.coerce.date(),
-  approver_role_id: z.coerce.number().optional().optional().nullable(),
+  approver_role_id: z.coerce.number().nullable().optional().nullable(),
   device_inspection_log_id: z.coerce.number(),
-  approver_id: z.coerce.number().optional().optional().nullable(),
+  approver_id: z.coerce.number().nullable().optional().nullable(),
   approved_at: z.coerce.date().optional().nullable(),
-  is_approved: z.coerce.number().optional().optional().nullable()
+  is_approved: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const inspection_approvalUpdateInputSchema: z.ZodType<Prisma.inspection_approvalUpdateInput> = z.object({
   requester_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   request_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  approver_role_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approver_role_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   device_inspection_log_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  approver_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approver_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   approved_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  is_approved: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  is_approved: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const inspection_approvalUncheckedUpdateInputSchema: z.ZodType<Prisma.inspection_approvalUncheckedUpdateInput> = z.object({
   approval_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   requester_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   request_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  approver_role_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approver_role_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   device_inspection_log_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  approver_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approver_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   approved_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  is_approved: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  is_approved: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const inspection_approvalCreateManyInputSchema: z.ZodType<Prisma.inspection_approvalCreateManyInput> = z.object({
   approval_id: z.coerce.number().optional(),
   requester_id: z.coerce.number(),
   request_at: z.coerce.date(),
-  approver_role_id: z.coerce.number().optional().optional().nullable(),
+  approver_role_id: z.coerce.number().nullable().optional().nullable(),
   device_inspection_log_id: z.coerce.number(),
-  approver_id: z.coerce.number().optional().optional().nullable(),
+  approver_id: z.coerce.number().nullable().optional().nullable(),
   approved_at: z.coerce.date().optional().nullable(),
-  is_approved: z.coerce.number().optional().optional().nullable()
+  is_approved: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const inspection_approvalUpdateManyMutationInputSchema: z.ZodType<Prisma.inspection_approvalUpdateManyMutationInput> = z.object({
   requester_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   request_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  approver_role_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approver_role_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   device_inspection_log_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  approver_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approver_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   approved_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  is_approved: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  is_approved: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const inspection_approvalUncheckedUpdateManyInputSchema: z.ZodType<Prisma.inspection_approvalUncheckedUpdateManyInput> = z.object({
   approval_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   requester_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   request_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
-  approver_role_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approver_role_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   device_inspection_log_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  approver_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approver_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   approved_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  is_approved: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  is_approved: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const locationCreateInputSchema: z.ZodType<Prisma.locationCreateInput> = z.object({
   location_type: z.lazy(() => location_location_typeSchema),
-  warehouse_id: z.coerce.number().optional().optional().nullable(),
-  client_branch_id: z.coerce.number().optional().optional().nullable()
+  warehouse_id: z.coerce.number().nullable().optional().nullable(),
+  client_branch_id: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const locationUncheckedCreateInputSchema: z.ZodType<Prisma.locationUncheckedCreateInput> = z.object({
   location_id: z.coerce.number().optional(),
   location_type: z.lazy(() => location_location_typeSchema),
-  warehouse_id: z.coerce.number().optional().optional().nullable(),
-  client_branch_id: z.coerce.number().optional().optional().nullable()
+  warehouse_id: z.coerce.number().nullable().optional().nullable(),
+  client_branch_id: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const locationUpdateInputSchema: z.ZodType<Prisma.locationUpdateInput> = z.object({
   location_type: z.union([ z.lazy(() => location_location_typeSchema),z.lazy(() => Enumlocation_location_typeFieldUpdateOperationsInputSchema) ]).optional(),
-  warehouse_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  client_branch_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  warehouse_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  client_branch_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const locationUncheckedUpdateInputSchema: z.ZodType<Prisma.locationUncheckedUpdateInput> = z.object({
   location_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   location_type: z.union([ z.lazy(() => location_location_typeSchema),z.lazy(() => Enumlocation_location_typeFieldUpdateOperationsInputSchema) ]).optional(),
-  warehouse_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  client_branch_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  warehouse_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  client_branch_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const locationCreateManyInputSchema: z.ZodType<Prisma.locationCreateManyInput> = z.object({
   location_id: z.coerce.number().optional(),
   location_type: z.lazy(() => location_location_typeSchema),
-  warehouse_id: z.coerce.number().optional().optional().nullable(),
-  client_branch_id: z.coerce.number().optional().optional().nullable()
+  warehouse_id: z.coerce.number().nullable().optional().nullable(),
+  client_branch_id: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const locationUpdateManyMutationInputSchema: z.ZodType<Prisma.locationUpdateManyMutationInput> = z.object({
   location_type: z.union([ z.lazy(() => location_location_typeSchema),z.lazy(() => Enumlocation_location_typeFieldUpdateOperationsInputSchema) ]).optional(),
-  warehouse_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  client_branch_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  warehouse_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  client_branch_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const locationUncheckedUpdateManyInputSchema: z.ZodType<Prisma.locationUncheckedUpdateManyInput> = z.object({
   location_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   location_type: z.union([ z.lazy(() => location_location_typeSchema),z.lazy(() => Enumlocation_location_typeFieldUpdateOperationsInputSchema) ]).optional(),
-  warehouse_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  client_branch_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  warehouse_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  client_branch_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const option_modelCreateInputSchema: z.ZodType<Prisma.option_modelCreateInput> = z.object({
@@ -5241,35 +5241,35 @@ export const option_modelUncheckedUpdateManyInputSchema: z.ZodType<Prisma.option
 }).strict();
 
 export const sidoCreateInputSchema: z.ZodType<Prisma.sidoCreateInput> = z.object({
-  sido_name: z.string().max(45).optional().optional().nullable()
+  sido_name: z.string().max(45).nullable().optional().nullable()
 }).strict();
 
 export const sidoUncheckedCreateInputSchema: z.ZodType<Prisma.sidoUncheckedCreateInput> = z.object({
   sido_id: z.coerce.number().optional(),
-  sido_name: z.string().max(45).optional().optional().nullable()
+  sido_name: z.string().max(45).nullable().optional().nullable()
 }).strict();
 
 export const sidoUpdateInputSchema: z.ZodType<Prisma.sidoUpdateInput> = z.object({
-  sido_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  sido_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const sidoUncheckedUpdateInputSchema: z.ZodType<Prisma.sidoUncheckedUpdateInput> = z.object({
   sido_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  sido_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  sido_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const sidoCreateManyInputSchema: z.ZodType<Prisma.sidoCreateManyInput> = z.object({
   sido_id: z.coerce.number().optional(),
-  sido_name: z.string().max(45).optional().optional().nullable()
+  sido_name: z.string().max(45).nullable().optional().nullable()
 }).strict();
 
 export const sidoUpdateManyMutationInputSchema: z.ZodType<Prisma.sidoUpdateManyMutationInput> = z.object({
-  sido_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  sido_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const sidoUncheckedUpdateManyInputSchema: z.ZodType<Prisma.sidoUncheckedUpdateManyInput> = z.object({
   sido_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  sido_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  sido_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const sigunguCreateInputSchema: z.ZodType<Prisma.sigunguCreateInput> = z.object({
@@ -5315,12 +5315,12 @@ export const userCreateInputSchema: z.ZodType<Prisma.userCreateInput> = z.object
   user_name: z.string().max(45),
   login_id: z.string().max(45),
   password: z.string().max(50),
-  mobile_num: z.string().max(20).optional().optional().nullable(),
-  office_num: z.string().max(20).optional().optional().nullable(),
-  email: z.string().max(100).optional().optional().nullable(),
+  mobile_num: z.string().max(20).nullable().optional().nullable(),
+  office_num: z.string().max(20).nullable().optional().nullable(),
+  email: z.string().max(100).nullable().optional().nullable(),
   modified_at: z.coerce.date().optional().nullable(),
   dept_id: z.coerce.number(),
-  approval_role_id: z.coerce.number().optional().optional().nullable(),
+  approval_role_id: z.coerce.number().nullable().optional().nullable(),
   position_id: z.coerce.number(),
   created_at: z.coerce.date().optional(),
   is_active: z.coerce.number().default(1).optional(),
@@ -5332,12 +5332,12 @@ export const userUncheckedCreateInputSchema: z.ZodType<Prisma.userUncheckedCreat
   user_name: z.string().max(45),
   login_id: z.string().max(45),
   password: z.string().max(50),
-  mobile_num: z.string().max(20).optional().optional().nullable(),
-  office_num: z.string().max(20).optional().optional().nullable(),
-  email: z.string().max(100).optional().optional().nullable(),
+  mobile_num: z.string().max(20).nullable().optional().nullable(),
+  office_num: z.string().max(20).nullable().optional().nullable(),
+  email: z.string().max(100).nullable().optional().nullable(),
   modified_at: z.coerce.date().optional().nullable(),
   dept_id: z.coerce.number(),
-  approval_role_id: z.coerce.number().optional().optional().nullable(),
+  approval_role_id: z.coerce.number().nullable().optional().nullable(),
   position_id: z.coerce.number(),
   created_at: z.coerce.date().optional(),
   is_active: z.coerce.number().default(1).optional(),
@@ -5348,12 +5348,12 @@ export const userUpdateInputSchema: z.ZodType<Prisma.userUpdateInput> = z.object
   user_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   login_id: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   password: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  mobile_num: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  office_num: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  email: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mobile_num: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  office_num: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  email: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   modified_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   dept_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  approval_role_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approval_role_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   position_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5365,12 +5365,12 @@ export const userUncheckedUpdateInputSchema: z.ZodType<Prisma.userUncheckedUpdat
   user_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   login_id: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   password: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  mobile_num: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  office_num: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  email: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mobile_num: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  office_num: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  email: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   modified_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   dept_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  approval_role_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approval_role_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   position_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5382,12 +5382,12 @@ export const userCreateManyInputSchema: z.ZodType<Prisma.userCreateManyInput> = 
   user_name: z.string().max(45),
   login_id: z.string().max(45),
   password: z.string().max(50),
-  mobile_num: z.string().max(20).optional().optional().nullable(),
-  office_num: z.string().max(20).optional().optional().nullable(),
-  email: z.string().max(100).optional().optional().nullable(),
+  mobile_num: z.string().max(20).nullable().optional().nullable(),
+  office_num: z.string().max(20).nullable().optional().nullable(),
+  email: z.string().max(100).nullable().optional().nullable(),
   modified_at: z.coerce.date().optional().nullable(),
   dept_id: z.coerce.number(),
-  approval_role_id: z.coerce.number().optional().optional().nullable(),
+  approval_role_id: z.coerce.number().nullable().optional().nullable(),
   position_id: z.coerce.number(),
   created_at: z.coerce.date().optional(),
   is_active: z.coerce.number().default(1).optional(),
@@ -5398,12 +5398,12 @@ export const userUpdateManyMutationInputSchema: z.ZodType<Prisma.userUpdateManyM
   user_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   login_id: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   password: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  mobile_num: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  office_num: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  email: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mobile_num: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  office_num: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  email: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   modified_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   dept_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  approval_role_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approval_role_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   position_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5415,12 +5415,12 @@ export const userUncheckedUpdateManyInputSchema: z.ZodType<Prisma.userUncheckedU
   user_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   login_id: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   password: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  mobile_num: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  office_num: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  email: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mobile_num: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  office_num: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  email: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   modified_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   dept_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  approval_role_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approval_role_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   position_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
@@ -5536,84 +5536,84 @@ export const warehouseUncheckedUpdateManyInputSchema: z.ZodType<Prisma.warehouse
 export const v_clientCreateInputSchema: z.ZodType<Prisma.v_clientCreateInput> = z.object({
   client_id: z.coerce.number().optional(),
   client_name: z.string().max(45).optional(),
-  parent_client_id: z.coerce.number().optional().optional().nullable(),
+  parent_client_id: z.coerce.number().nullable().optional().nullable(),
   default_client_branch_rate_id: z.coerce.number().default(0).optional(),
   is_active: z.coerce.number().default(0).optional(),
-  parent_client_name: z.string().max(45).optional().optional().nullable(),
-  client_rate: z.string().max(10).optional().optional().nullable(),
-  rate_detail: z.string().max(45).optional().optional().nullable(),
+  parent_client_name: z.string().max(45).nullable().optional().nullable(),
+  client_rate: z.string().max(10).nullable().optional().nullable(),
+  rate_detail: z.string().max(45).nullable().optional().nullable(),
   branch_count: z.coerce.number().default(0).optional()
 }).strict();
 
 export const v_clientUncheckedCreateInputSchema: z.ZodType<Prisma.v_clientUncheckedCreateInput> = z.object({
   client_id: z.coerce.number().optional(),
   client_name: z.string().max(45).optional(),
-  parent_client_id: z.coerce.number().optional().optional().nullable(),
+  parent_client_id: z.coerce.number().nullable().optional().nullable(),
   default_client_branch_rate_id: z.coerce.number().default(0).optional(),
   is_active: z.coerce.number().default(0).optional(),
-  parent_client_name: z.string().max(45).optional().optional().nullable(),
-  client_rate: z.string().max(10).optional().optional().nullable(),
-  rate_detail: z.string().max(45).optional().optional().nullable(),
+  parent_client_name: z.string().max(45).nullable().optional().nullable(),
+  client_rate: z.string().max(10).nullable().optional().nullable(),
+  rate_detail: z.string().max(45).nullable().optional().nullable(),
   branch_count: z.coerce.number().default(0).optional()
 }).strict();
 
 export const v_clientUpdateInputSchema: z.ZodType<Prisma.v_clientUpdateInput> = z.object({
   client_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   client_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  parent_client_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_client_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   default_client_branch_rate_id: z.union([ z.coerce.number().default(0),z.lazy(() => BigIntFieldUpdateOperationsInputSchema) ]).optional(),
   is_active: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  parent_client_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  client_rate: z.union([ z.string().max(10).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  rate_detail: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_client_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  client_rate: z.union([ z.string().max(10).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  rate_detail: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   branch_count: z.union([ z.coerce.number().default(0),z.lazy(() => BigIntFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const v_clientUncheckedUpdateInputSchema: z.ZodType<Prisma.v_clientUncheckedUpdateInput> = z.object({
   client_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   client_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  parent_client_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_client_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   default_client_branch_rate_id: z.union([ z.coerce.number().default(0),z.lazy(() => BigIntFieldUpdateOperationsInputSchema) ]).optional(),
   is_active: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  parent_client_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  client_rate: z.union([ z.string().max(10).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  rate_detail: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_client_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  client_rate: z.union([ z.string().max(10).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  rate_detail: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   branch_count: z.union([ z.coerce.number().default(0),z.lazy(() => BigIntFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const v_clientCreateManyInputSchema: z.ZodType<Prisma.v_clientCreateManyInput> = z.object({
   client_id: z.coerce.number().optional(),
   client_name: z.string().max(45).optional(),
-  parent_client_id: z.coerce.number().optional().optional().nullable(),
+  parent_client_id: z.coerce.number().nullable().optional().nullable(),
   default_client_branch_rate_id: z.coerce.number().default(0).optional(),
   is_active: z.coerce.number().default(0).optional(),
-  parent_client_name: z.string().max(45).optional().optional().nullable(),
-  client_rate: z.string().max(10).optional().optional().nullable(),
-  rate_detail: z.string().max(45).optional().optional().nullable(),
+  parent_client_name: z.string().max(45).nullable().optional().nullable(),
+  client_rate: z.string().max(10).nullable().optional().nullable(),
+  rate_detail: z.string().max(45).nullable().optional().nullable(),
   branch_count: z.coerce.number().default(0).optional()
 }).strict();
 
 export const v_clientUpdateManyMutationInputSchema: z.ZodType<Prisma.v_clientUpdateManyMutationInput> = z.object({
   client_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   client_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  parent_client_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_client_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   default_client_branch_rate_id: z.union([ z.coerce.number().default(0),z.lazy(() => BigIntFieldUpdateOperationsInputSchema) ]).optional(),
   is_active: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  parent_client_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  client_rate: z.union([ z.string().max(10).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  rate_detail: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_client_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  client_rate: z.union([ z.string().max(10).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  rate_detail: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   branch_count: z.union([ z.coerce.number().default(0),z.lazy(() => BigIntFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
 export const v_clientUncheckedUpdateManyInputSchema: z.ZodType<Prisma.v_clientUncheckedUpdateManyInput> = z.object({
   client_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   client_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  parent_client_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_client_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   default_client_branch_rate_id: z.union([ z.coerce.number().default(0),z.lazy(() => BigIntFieldUpdateOperationsInputSchema) ]).optional(),
   is_active: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  parent_client_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  client_rate: z.union([ z.string().max(10).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  rate_detail: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_client_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  client_rate: z.union([ z.string().max(10).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  rate_detail: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   branch_count: z.union([ z.coerce.number().default(0),z.lazy(() => BigIntFieldUpdateOperationsInputSchema) ]).optional(),
 }).strict();
 
@@ -5624,16 +5624,16 @@ export const v_client_branchCreateInputSchema: z.ZodType<Prisma.v_client_branchC
   sigungu_id: z.coerce.number(),
   mgmt_dept_id: z.coerce.number(),
   client_branch_rate_id: z.coerce.number(),
-  branch_mgr_name: z.string().max(45).optional().optional().nullable(),
-  branch_mgr_mobile_num: z.string().max(45).optional().optional().nullable(),
-  branch_mgr_office_num: z.string().max(45).optional().optional().nullable(),
-  branch_mgr_email: z.string().max(45).optional().optional().nullable(),
+  branch_mgr_name: z.string().max(45).nullable().optional().nullable(),
+  branch_mgr_mobile_num: z.string().max(45).nullable().optional().nullable(),
+  branch_mgr_office_num: z.string().max(45).nullable().optional().nullable(),
+  branch_mgr_email: z.string().max(45).nullable().optional().nullable(),
   is_active: z.coerce.number().default(1).optional(),
   remote_support: z.coerce.number().default(0).optional(),
   push_alert: z.coerce.number().default(0).optional(),
-  client_name: z.string().max(45).optional().optional().nullable(),
-  sigungu_name: z.string().max(45).optional().optional().nullable(),
-  sido_name: z.string().max(45).optional().optional().nullable()
+  client_name: z.string().max(45).nullable().optional().nullable(),
+  sigungu_name: z.string().max(45).nullable().optional().nullable(),
+  sido_name: z.string().max(45).nullable().optional().nullable()
 }).strict();
 
 export const v_client_branchUncheckedCreateInputSchema: z.ZodType<Prisma.v_client_branchUncheckedCreateInput> = z.object({
@@ -5643,16 +5643,16 @@ export const v_client_branchUncheckedCreateInputSchema: z.ZodType<Prisma.v_clien
   sigungu_id: z.coerce.number(),
   mgmt_dept_id: z.coerce.number(),
   client_branch_rate_id: z.coerce.number(),
-  branch_mgr_name: z.string().max(45).optional().optional().nullable(),
-  branch_mgr_mobile_num: z.string().max(45).optional().optional().nullable(),
-  branch_mgr_office_num: z.string().max(45).optional().optional().nullable(),
-  branch_mgr_email: z.string().max(45).optional().optional().nullable(),
+  branch_mgr_name: z.string().max(45).nullable().optional().nullable(),
+  branch_mgr_mobile_num: z.string().max(45).nullable().optional().nullable(),
+  branch_mgr_office_num: z.string().max(45).nullable().optional().nullable(),
+  branch_mgr_email: z.string().max(45).nullable().optional().nullable(),
   is_active: z.coerce.number().default(1).optional(),
   remote_support: z.coerce.number().default(0).optional(),
   push_alert: z.coerce.number().default(0).optional(),
-  client_name: z.string().max(45).optional().optional().nullable(),
-  sigungu_name: z.string().max(45).optional().optional().nullable(),
-  sido_name: z.string().max(45).optional().optional().nullable()
+  client_name: z.string().max(45).nullable().optional().nullable(),
+  sigungu_name: z.string().max(45).nullable().optional().nullable(),
+  sido_name: z.string().max(45).nullable().optional().nullable()
 }).strict();
 
 export const v_client_branchUpdateInputSchema: z.ZodType<Prisma.v_client_branchUpdateInput> = z.object({
@@ -5662,16 +5662,16 @@ export const v_client_branchUpdateInputSchema: z.ZodType<Prisma.v_client_branchU
   sigungu_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   mgmt_dept_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   client_branch_rate_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  branch_mgr_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_mobile_num: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_office_num: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_email: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_mobile_num: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_office_num: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_email: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   remote_support: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   push_alert: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  client_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  sigungu_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  sido_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  client_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  sigungu_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  sido_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_client_branchUncheckedUpdateInputSchema: z.ZodType<Prisma.v_client_branchUncheckedUpdateInput> = z.object({
@@ -5681,16 +5681,16 @@ export const v_client_branchUncheckedUpdateInputSchema: z.ZodType<Prisma.v_clien
   sigungu_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   mgmt_dept_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   client_branch_rate_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  branch_mgr_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_mobile_num: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_office_num: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_email: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_mobile_num: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_office_num: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_email: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   remote_support: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   push_alert: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  client_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  sigungu_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  sido_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  client_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  sigungu_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  sido_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_client_branchCreateManyInputSchema: z.ZodType<Prisma.v_client_branchCreateManyInput> = z.object({
@@ -5700,16 +5700,16 @@ export const v_client_branchCreateManyInputSchema: z.ZodType<Prisma.v_client_bra
   sigungu_id: z.coerce.number(),
   mgmt_dept_id: z.coerce.number(),
   client_branch_rate_id: z.coerce.number(),
-  branch_mgr_name: z.string().max(45).optional().optional().nullable(),
-  branch_mgr_mobile_num: z.string().max(45).optional().optional().nullable(),
-  branch_mgr_office_num: z.string().max(45).optional().optional().nullable(),
-  branch_mgr_email: z.string().max(45).optional().optional().nullable(),
+  branch_mgr_name: z.string().max(45).nullable().optional().nullable(),
+  branch_mgr_mobile_num: z.string().max(45).nullable().optional().nullable(),
+  branch_mgr_office_num: z.string().max(45).nullable().optional().nullable(),
+  branch_mgr_email: z.string().max(45).nullable().optional().nullable(),
   is_active: z.coerce.number().default(1).optional(),
   remote_support: z.coerce.number().default(0).optional(),
   push_alert: z.coerce.number().default(0).optional(),
-  client_name: z.string().max(45).optional().optional().nullable(),
-  sigungu_name: z.string().max(45).optional().optional().nullable(),
-  sido_name: z.string().max(45).optional().optional().nullable()
+  client_name: z.string().max(45).nullable().optional().nullable(),
+  sigungu_name: z.string().max(45).nullable().optional().nullable(),
+  sido_name: z.string().max(45).nullable().optional().nullable()
 }).strict();
 
 export const v_client_branchUpdateManyMutationInputSchema: z.ZodType<Prisma.v_client_branchUpdateManyMutationInput> = z.object({
@@ -5719,16 +5719,16 @@ export const v_client_branchUpdateManyMutationInputSchema: z.ZodType<Prisma.v_cl
   sigungu_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   mgmt_dept_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   client_branch_rate_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  branch_mgr_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_mobile_num: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_office_num: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_email: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_mobile_num: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_office_num: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_email: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   remote_support: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   push_alert: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  client_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  sigungu_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  sido_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  client_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  sigungu_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  sido_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_client_branchUncheckedUpdateManyInputSchema: z.ZodType<Prisma.v_client_branchUncheckedUpdateManyInput> = z.object({
@@ -5738,408 +5738,408 @@ export const v_client_branchUncheckedUpdateManyInputSchema: z.ZodType<Prisma.v_c
   sigungu_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   mgmt_dept_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   client_branch_rate_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  branch_mgr_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_mobile_num: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_office_num: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  branch_mgr_email: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_mobile_num: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_office_num: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  branch_mgr_email: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   remote_support: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   push_alert: z.union([ z.coerce.number().default(0),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  client_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  sigungu_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  sido_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  client_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  sigungu_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  sido_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_consumable_modelCreateInputSchema: z.ZodType<Prisma.v_consumable_modelCreateInput> = z.object({
   compatibility_id: z.string().max(23),
   consumable_model_id: z.coerce.number().default(0).optional().nullable(),
-  manufacturer: z.string().max(100).optional().optional().nullable(),
-  consumable_name: z.string().max(100).optional().optional().nullable(),
-  consumable_type: z.string().max(100).optional().optional().nullable(),
-  model_manufacturer: z.string().max(100).optional().optional().nullable()
+  manufacturer: z.string().max(100).nullable().optional().nullable(),
+  consumable_name: z.string().max(100).nullable().optional().nullable(),
+  consumable_type: z.string().max(100).nullable().optional().nullable(),
+  model_manufacturer: z.string().max(100).nullable().optional().nullable()
 }).strict();
 
 export const v_consumable_modelUncheckedCreateInputSchema: z.ZodType<Prisma.v_consumable_modelUncheckedCreateInput> = z.object({
   compatibility_id: z.string().max(23),
   consumable_model_id: z.coerce.number().default(0).optional().nullable(),
-  manufacturer: z.string().max(100).optional().optional().nullable(),
-  consumable_name: z.string().max(100).optional().optional().nullable(),
-  consumable_type: z.string().max(100).optional().optional().nullable(),
-  model_manufacturer: z.string().max(100).optional().optional().nullable()
+  manufacturer: z.string().max(100).nullable().optional().nullable(),
+  consumable_name: z.string().max(100).nullable().optional().nullable(),
+  consumable_type: z.string().max(100).nullable().optional().nullable(),
+  model_manufacturer: z.string().max(100).nullable().optional().nullable()
 }).strict();
 
 export const v_consumable_modelUpdateInputSchema: z.ZodType<Prisma.v_consumable_modelUpdateInput> = z.object({
   compatibility_id: z.union([ z.string().max(23),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   consumable_model_id: z.union([ z.coerce.number().default(0),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  consumable_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  consumable_type: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  model_manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  consumable_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  consumable_type: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_consumable_modelUncheckedUpdateInputSchema: z.ZodType<Prisma.v_consumable_modelUncheckedUpdateInput> = z.object({
   compatibility_id: z.union([ z.string().max(23),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   consumable_model_id: z.union([ z.coerce.number().default(0),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  consumable_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  consumable_type: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  model_manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  consumable_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  consumable_type: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_consumable_modelCreateManyInputSchema: z.ZodType<Prisma.v_consumable_modelCreateManyInput> = z.object({
   compatibility_id: z.string().max(23),
   consumable_model_id: z.coerce.number().default(0).optional().nullable(),
-  manufacturer: z.string().max(100).optional().optional().nullable(),
-  consumable_name: z.string().max(100).optional().optional().nullable(),
-  consumable_type: z.string().max(100).optional().optional().nullable(),
-  model_manufacturer: z.string().max(100).optional().optional().nullable()
+  manufacturer: z.string().max(100).nullable().optional().nullable(),
+  consumable_name: z.string().max(100).nullable().optional().nullable(),
+  consumable_type: z.string().max(100).nullable().optional().nullable(),
+  model_manufacturer: z.string().max(100).nullable().optional().nullable()
 }).strict();
 
 export const v_consumable_modelUpdateManyMutationInputSchema: z.ZodType<Prisma.v_consumable_modelUpdateManyMutationInput> = z.object({
   compatibility_id: z.union([ z.string().max(23),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   consumable_model_id: z.union([ z.coerce.number().default(0),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  consumable_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  consumable_type: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  model_manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  consumable_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  consumable_type: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_consumable_modelUncheckedUpdateManyInputSchema: z.ZodType<Prisma.v_consumable_modelUncheckedUpdateManyInput> = z.object({
   compatibility_id: z.union([ z.string().max(23),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   consumable_model_id: z.union([ z.coerce.number().default(0),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  consumable_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  consumable_type: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  model_manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  consumable_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  consumable_type: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_deptCreateInputSchema: z.ZodType<Prisma.v_deptCreateInput> = z.object({
   dept_id: z.coerce.number().optional(),
   dept_1_id: z.string().max(20).optional(),
   dept_1: z.string().max(100).optional(),
-  dept_2_id: z.string().max(20).optional().optional().nullable(),
-  dept_2: z.string().max(100).optional().optional().nullable(),
-  dept_3_id: z.string().max(20).optional().optional().nullable(),
-  dept_3: z.string().max(100).optional().optional().nullable()
+  dept_2_id: z.string().max(20).nullable().optional().nullable(),
+  dept_2: z.string().max(100).nullable().optional().nullable(),
+  dept_3_id: z.string().max(20).nullable().optional().nullable(),
+  dept_3: z.string().max(100).nullable().optional().nullable()
 }).strict();
 
 export const v_deptUncheckedCreateInputSchema: z.ZodType<Prisma.v_deptUncheckedCreateInput> = z.object({
   dept_id: z.coerce.number().optional(),
   dept_1_id: z.string().max(20).optional(),
   dept_1: z.string().max(100).optional(),
-  dept_2_id: z.string().max(20).optional().optional().nullable(),
-  dept_2: z.string().max(100).optional().optional().nullable(),
-  dept_3_id: z.string().max(20).optional().optional().nullable(),
-  dept_3: z.string().max(100).optional().optional().nullable()
+  dept_2_id: z.string().max(20).nullable().optional().nullable(),
+  dept_2: z.string().max(100).nullable().optional().nullable(),
+  dept_3_id: z.string().max(20).nullable().optional().nullable(),
+  dept_3: z.string().max(100).nullable().optional().nullable()
 }).strict();
 
 export const v_deptUpdateInputSchema: z.ZodType<Prisma.v_deptUpdateInput> = z.object({
   dept_id: z.union([ z.coerce.number(),z.lazy(() => BigIntFieldUpdateOperationsInputSchema) ]).optional(),
   dept_1_id: z.union([ z.string().max(20),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   dept_1: z.union([ z.string().max(100),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  dept_2_id: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dept_2: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dept_3_id: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dept_3: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_2_id: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_2: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_3_id: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_3: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_deptUncheckedUpdateInputSchema: z.ZodType<Prisma.v_deptUncheckedUpdateInput> = z.object({
   dept_id: z.union([ z.coerce.number(),z.lazy(() => BigIntFieldUpdateOperationsInputSchema) ]).optional(),
   dept_1_id: z.union([ z.string().max(20),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   dept_1: z.union([ z.string().max(100),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  dept_2_id: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dept_2: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dept_3_id: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dept_3: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_2_id: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_2: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_3_id: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_3: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_deptCreateManyInputSchema: z.ZodType<Prisma.v_deptCreateManyInput> = z.object({
   dept_id: z.coerce.number().optional(),
   dept_1_id: z.string().max(20).optional(),
   dept_1: z.string().max(100).optional(),
-  dept_2_id: z.string().max(20).optional().optional().nullable(),
-  dept_2: z.string().max(100).optional().optional().nullable(),
-  dept_3_id: z.string().max(20).optional().optional().nullable(),
-  dept_3: z.string().max(100).optional().optional().nullable()
+  dept_2_id: z.string().max(20).nullable().optional().nullable(),
+  dept_2: z.string().max(100).nullable().optional().nullable(),
+  dept_3_id: z.string().max(20).nullable().optional().nullable(),
+  dept_3: z.string().max(100).nullable().optional().nullable()
 }).strict();
 
 export const v_deptUpdateManyMutationInputSchema: z.ZodType<Prisma.v_deptUpdateManyMutationInput> = z.object({
   dept_id: z.union([ z.coerce.number(),z.lazy(() => BigIntFieldUpdateOperationsInputSchema) ]).optional(),
   dept_1_id: z.union([ z.string().max(20),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   dept_1: z.union([ z.string().max(100),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  dept_2_id: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dept_2: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dept_3_id: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dept_3: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_2_id: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_2: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_3_id: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_3: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_deptUncheckedUpdateManyInputSchema: z.ZodType<Prisma.v_deptUncheckedUpdateManyInput> = z.object({
   dept_id: z.union([ z.coerce.number(),z.lazy(() => BigIntFieldUpdateOperationsInputSchema) ]).optional(),
   dept_1_id: z.union([ z.string().max(20),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   dept_1: z.union([ z.string().max(100),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  dept_2_id: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dept_2: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dept_3_id: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  dept_3: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_2_id: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_2: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_3_id: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_3: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_device_driverCreateInputSchema: z.ZodType<Prisma.v_device_driverCreateInput> = z.object({
   device_driver_id: z.coerce.number().optional(),
   device_model_id: z.coerce.number(),
-  driver_manufacturer: z.string().max(100).optional().optional().nullable(),
-  printer_language: z.string().max(45).optional().optional().nullable(),
-  install_file_address: z.string().max(200).optional().optional().nullable(),
-  model_manufacturer: z.string().max(100).optional().optional().nullable(),
-  model_name: z.string().max(100).optional().optional().nullable(),
-  color_support: z.coerce.number().optional().optional().nullable()
+  driver_manufacturer: z.string().max(100).nullable().optional().nullable(),
+  printer_language: z.string().max(45).nullable().optional().nullable(),
+  install_file_address: z.string().max(200).nullable().optional().nullable(),
+  model_manufacturer: z.string().max(100).nullable().optional().nullable(),
+  model_name: z.string().max(100).nullable().optional().nullable(),
+  color_support: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const v_device_driverUncheckedCreateInputSchema: z.ZodType<Prisma.v_device_driverUncheckedCreateInput> = z.object({
   device_driver_id: z.coerce.number().optional(),
   device_model_id: z.coerce.number(),
-  driver_manufacturer: z.string().max(100).optional().optional().nullable(),
-  printer_language: z.string().max(45).optional().optional().nullable(),
-  install_file_address: z.string().max(200).optional().optional().nullable(),
-  model_manufacturer: z.string().max(100).optional().optional().nullable(),
-  model_name: z.string().max(100).optional().optional().nullable(),
-  color_support: z.coerce.number().optional().optional().nullable()
+  driver_manufacturer: z.string().max(100).nullable().optional().nullable(),
+  printer_language: z.string().max(45).nullable().optional().nullable(),
+  install_file_address: z.string().max(200).nullable().optional().nullable(),
+  model_manufacturer: z.string().max(100).nullable().optional().nullable(),
+  model_name: z.string().max(100).nullable().optional().nullable(),
+  color_support: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const v_device_driverUpdateInputSchema: z.ZodType<Prisma.v_device_driverUpdateInput> = z.object({
   device_driver_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   device_model_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  driver_manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  printer_language: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  install_file_address: z.union([ z.string().max(200).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  model_manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  model_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  color_support: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  driver_manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  printer_language: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  install_file_address: z.union([ z.string().max(200).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  color_support: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_device_driverUncheckedUpdateInputSchema: z.ZodType<Prisma.v_device_driverUncheckedUpdateInput> = z.object({
   device_driver_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   device_model_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  driver_manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  printer_language: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  install_file_address: z.union([ z.string().max(200).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  model_manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  model_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  color_support: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  driver_manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  printer_language: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  install_file_address: z.union([ z.string().max(200).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  color_support: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_device_driverCreateManyInputSchema: z.ZodType<Prisma.v_device_driverCreateManyInput> = z.object({
   device_driver_id: z.coerce.number().optional(),
   device_model_id: z.coerce.number(),
-  driver_manufacturer: z.string().max(100).optional().optional().nullable(),
-  printer_language: z.string().max(45).optional().optional().nullable(),
-  install_file_address: z.string().max(200).optional().optional().nullable(),
-  model_manufacturer: z.string().max(100).optional().optional().nullable(),
-  model_name: z.string().max(100).optional().optional().nullable(),
-  color_support: z.coerce.number().optional().optional().nullable()
+  driver_manufacturer: z.string().max(100).nullable().optional().nullable(),
+  printer_language: z.string().max(45).nullable().optional().nullable(),
+  install_file_address: z.string().max(200).nullable().optional().nullable(),
+  model_manufacturer: z.string().max(100).nullable().optional().nullable(),
+  model_name: z.string().max(100).nullable().optional().nullable(),
+  color_support: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const v_device_driverUpdateManyMutationInputSchema: z.ZodType<Prisma.v_device_driverUpdateManyMutationInput> = z.object({
   device_driver_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   device_model_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  driver_manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  printer_language: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  install_file_address: z.union([ z.string().max(200).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  model_manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  model_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  color_support: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  driver_manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  printer_language: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  install_file_address: z.union([ z.string().max(200).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  color_support: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_device_driverUncheckedUpdateManyInputSchema: z.ZodType<Prisma.v_device_driverUncheckedUpdateManyInput> = z.object({
   device_driver_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   device_model_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  driver_manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  printer_language: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  install_file_address: z.union([ z.string().max(200).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  model_manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  model_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  color_support: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  driver_manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  printer_language: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  install_file_address: z.union([ z.string().max(200).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  color_support: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_userCreateInputSchema: z.ZodType<Prisma.v_userCreateInput> = z.object({
   user_id: z.coerce.number().optional(),
   user_name: z.string().max(45),
   login_id: z.string().max(45),
-  mobile_num: z.string().max(20).optional().optional().nullable(),
-  office_num: z.string().max(20).optional().optional().nullable(),
-  email: z.string().max(100).optional().optional().nullable(),
+  mobile_num: z.string().max(20).nullable().optional().nullable(),
+  office_num: z.string().max(20).nullable().optional().nullable(),
+  email: z.string().max(100).nullable().optional().nullable(),
   modified_at: z.coerce.date().optional().nullable(),
   created_at: z.coerce.date().optional(),
   is_active: z.coerce.number().default(1).optional(),
   permission: z.lazy(() => v_user_permissionSchema).optional(),
   dept_id: z.coerce.number(),
-  approval_role_id: z.coerce.number().optional().optional().nullable(),
+  approval_role_id: z.coerce.number().nullable().optional().nullable(),
   position_id: z.coerce.number(),
-  dept_name: z.string().max(100).optional().optional().nullable(),
-  parent_dept_id: z.coerce.number().optional().optional().nullable()
+  dept_name: z.string().max(100).nullable().optional().nullable(),
+  parent_dept_id: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const v_userUncheckedCreateInputSchema: z.ZodType<Prisma.v_userUncheckedCreateInput> = z.object({
   user_id: z.coerce.number().optional(),
   user_name: z.string().max(45),
   login_id: z.string().max(45),
-  mobile_num: z.string().max(20).optional().optional().nullable(),
-  office_num: z.string().max(20).optional().optional().nullable(),
-  email: z.string().max(100).optional().optional().nullable(),
+  mobile_num: z.string().max(20).nullable().optional().nullable(),
+  office_num: z.string().max(20).nullable().optional().nullable(),
+  email: z.string().max(100).nullable().optional().nullable(),
   modified_at: z.coerce.date().optional().nullable(),
   created_at: z.coerce.date().optional(),
   is_active: z.coerce.number().default(1).optional(),
   permission: z.lazy(() => v_user_permissionSchema).optional(),
   dept_id: z.coerce.number(),
-  approval_role_id: z.coerce.number().optional().optional().nullable(),
+  approval_role_id: z.coerce.number().nullable().optional().nullable(),
   position_id: z.coerce.number(),
-  dept_name: z.string().max(100).optional().optional().nullable(),
-  parent_dept_id: z.coerce.number().optional().optional().nullable()
+  dept_name: z.string().max(100).nullable().optional().nullable(),
+  parent_dept_id: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const v_userUpdateInputSchema: z.ZodType<Prisma.v_userUpdateInput> = z.object({
   user_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   user_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   login_id: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  mobile_num: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  office_num: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  email: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mobile_num: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  office_num: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  email: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   modified_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   permission: z.union([ z.lazy(() => v_user_permissionSchema),z.lazy(() => Enumv_user_permissionFieldUpdateOperationsInputSchema) ]).optional(),
   dept_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  approval_role_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approval_role_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   position_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  dept_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  parent_dept_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_dept_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_userUncheckedUpdateInputSchema: z.ZodType<Prisma.v_userUncheckedUpdateInput> = z.object({
   user_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   user_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   login_id: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  mobile_num: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  office_num: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  email: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mobile_num: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  office_num: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  email: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   modified_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   permission: z.union([ z.lazy(() => v_user_permissionSchema),z.lazy(() => Enumv_user_permissionFieldUpdateOperationsInputSchema) ]).optional(),
   dept_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  approval_role_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approval_role_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   position_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  dept_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  parent_dept_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_dept_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_userCreateManyInputSchema: z.ZodType<Prisma.v_userCreateManyInput> = z.object({
   user_id: z.coerce.number().optional(),
   user_name: z.string().max(45),
   login_id: z.string().max(45),
-  mobile_num: z.string().max(20).optional().optional().nullable(),
-  office_num: z.string().max(20).optional().optional().nullable(),
-  email: z.string().max(100).optional().optional().nullable(),
+  mobile_num: z.string().max(20).nullable().optional().nullable(),
+  office_num: z.string().max(20).nullable().optional().nullable(),
+  email: z.string().max(100).nullable().optional().nullable(),
   modified_at: z.coerce.date().optional().nullable(),
   created_at: z.coerce.date().optional(),
   is_active: z.coerce.number().default(1).optional(),
   permission: z.lazy(() => v_user_permissionSchema).optional(),
   dept_id: z.coerce.number(),
-  approval_role_id: z.coerce.number().optional().optional().nullable(),
+  approval_role_id: z.coerce.number().nullable().optional().nullable(),
   position_id: z.coerce.number(),
-  dept_name: z.string().max(100).optional().optional().nullable(),
-  parent_dept_id: z.coerce.number().optional().optional().nullable()
+  dept_name: z.string().max(100).nullable().optional().nullable(),
+  parent_dept_id: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const v_userUpdateManyMutationInputSchema: z.ZodType<Prisma.v_userUpdateManyMutationInput> = z.object({
   user_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   user_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   login_id: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  mobile_num: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  office_num: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  email: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mobile_num: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  office_num: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  email: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   modified_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   permission: z.union([ z.lazy(() => v_user_permissionSchema),z.lazy(() => Enumv_user_permissionFieldUpdateOperationsInputSchema) ]).optional(),
   dept_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  approval_role_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approval_role_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   position_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  dept_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  parent_dept_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_dept_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_userUncheckedUpdateManyInputSchema: z.ZodType<Prisma.v_userUncheckedUpdateManyInput> = z.object({
   user_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   user_name: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   login_id: z.union([ z.string().max(45),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  mobile_num: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  office_num: z.union([ z.string().max(20).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  email: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mobile_num: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  office_num: z.union([ z.string().max(20).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  email: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   modified_at: z.union([ z.coerce.date(),z.lazy(() => NullableDateTimeFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   created_at: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   is_active: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   permission: z.union([ z.lazy(() => v_user_permissionSchema),z.lazy(() => Enumv_user_permissionFieldUpdateOperationsInputSchema) ]).optional(),
   dept_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  approval_role_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  approval_role_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   position_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  dept_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  parent_dept_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  dept_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  parent_dept_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_warehouseCreateInputSchema: z.ZodType<Prisma.v_warehouseCreateInput> = z.object({
   warehouse_id: z.coerce.number().optional(),
   warehouse_name: z.string().max(100),
   mgmt_dept_id: z.coerce.number(),
-  mgmt_dept_name: z.string().max(100).optional().optional().nullable(),
-  mgmt_parent_dept_id: z.coerce.number().optional().optional().nullable()
+  mgmt_dept_name: z.string().max(100).nullable().optional().nullable(),
+  mgmt_parent_dept_id: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const v_warehouseUncheckedCreateInputSchema: z.ZodType<Prisma.v_warehouseUncheckedCreateInput> = z.object({
   warehouse_id: z.coerce.number().optional(),
   warehouse_name: z.string().max(100),
   mgmt_dept_id: z.coerce.number(),
-  mgmt_dept_name: z.string().max(100).optional().optional().nullable(),
-  mgmt_parent_dept_id: z.coerce.number().optional().optional().nullable()
+  mgmt_dept_name: z.string().max(100).nullable().optional().nullable(),
+  mgmt_parent_dept_id: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const v_warehouseUpdateInputSchema: z.ZodType<Prisma.v_warehouseUpdateInput> = z.object({
   warehouse_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   warehouse_name: z.union([ z.string().max(100),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   mgmt_dept_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  mgmt_dept_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  mgmt_parent_dept_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mgmt_dept_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mgmt_parent_dept_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_warehouseUncheckedUpdateInputSchema: z.ZodType<Prisma.v_warehouseUncheckedUpdateInput> = z.object({
   warehouse_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   warehouse_name: z.union([ z.string().max(100),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   mgmt_dept_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  mgmt_dept_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  mgmt_parent_dept_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mgmt_dept_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mgmt_parent_dept_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_warehouseCreateManyInputSchema: z.ZodType<Prisma.v_warehouseCreateManyInput> = z.object({
   warehouse_id: z.coerce.number().optional(),
   warehouse_name: z.string().max(100),
   mgmt_dept_id: z.coerce.number(),
-  mgmt_dept_name: z.string().max(100).optional().optional().nullable(),
-  mgmt_parent_dept_id: z.coerce.number().optional().optional().nullable()
+  mgmt_dept_name: z.string().max(100).nullable().optional().nullable(),
+  mgmt_parent_dept_id: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const v_warehouseUpdateManyMutationInputSchema: z.ZodType<Prisma.v_warehouseUpdateManyMutationInput> = z.object({
   warehouse_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   warehouse_name: z.union([ z.string().max(100),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   mgmt_dept_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  mgmt_dept_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  mgmt_parent_dept_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mgmt_dept_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mgmt_parent_dept_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_warehouseUncheckedUpdateManyInputSchema: z.ZodType<Prisma.v_warehouseUncheckedUpdateManyInput> = z.object({
   warehouse_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
   warehouse_name: z.union([ z.string().max(100),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   mgmt_dept_id: z.union([ z.coerce.number(),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  mgmt_dept_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  mgmt_parent_dept_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mgmt_dept_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mgmt_parent_dept_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_deviceCreateInputSchema: z.ZodType<Prisma.v_deviceCreateInput> = z.object({
@@ -6150,22 +6150,22 @@ export const v_deviceCreateInputSchema: z.ZodType<Prisma.v_deviceCreateInput> = 
   serial: z.string().max(50),
   regi_date: z.coerce.date(),
   mac: z.string().max(50),
-  last_inspection_log_id: z.coerce.number().optional().optional().nullable(),
-  last_location_log_id: z.coerce.number().optional().optional().nullable(),
+  last_inspection_log_id: z.coerce.number().nullable().optional().nullable(),
+  last_location_log_id: z.coerce.number().nullable().optional().nullable(),
   status_id: z.coerce.number().default(1).optional(),
-  model_name: z.string().max(100).optional().optional().nullable(),
-  manufacturer: z.string().max(100).optional().optional().nullable(),
-  owner_dept_name: z.string().max(100).optional().optional().nullable(),
-  mgmt_dept_name: z.string().max(100).optional().optional().nullable(),
+  model_name: z.string().max(100).nullable().optional().nullable(),
+  manufacturer: z.string().max(100).nullable().optional().nullable(),
+  owner_dept_name: z.string().max(100).nullable().optional().nullable(),
+  mgmt_dept_name: z.string().max(100).nullable().optional().nullable(),
   location_id: z.coerce.number().default(0).optional().nullable(),
   warehouse_id: z.coerce.number().default(0).optional().nullable(),
-  warehouse_name: z.string().max(100).optional().optional().nullable(),
+  warehouse_name: z.string().max(100).nullable().optional().nullable(),
   client_branch_id: z.coerce.number().default(0).optional().nullable(),
-  client_branch_name: z.string().max(100).optional().optional().nullable(),
-  status_name: z.string().max(45).optional().optional().nullable(),
-  has_fax: z.coerce.number().optional().optional().nullable(),
-  has_desk: z.coerce.number().optional().optional().nullable(),
-  has_shelf: z.coerce.number().optional().optional().nullable()
+  client_branch_name: z.string().max(100).nullable().optional().nullable(),
+  status_name: z.string().max(45).nullable().optional().nullable(),
+  has_fax: z.coerce.number().nullable().optional().nullable(),
+  has_desk: z.coerce.number().nullable().optional().nullable(),
+  has_shelf: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const v_deviceUncheckedCreateInputSchema: z.ZodType<Prisma.v_deviceUncheckedCreateInput> = z.object({
@@ -6176,22 +6176,22 @@ export const v_deviceUncheckedCreateInputSchema: z.ZodType<Prisma.v_deviceUnchec
   serial: z.string().max(50),
   regi_date: z.coerce.date(),
   mac: z.string().max(50),
-  last_inspection_log_id: z.coerce.number().optional().optional().nullable(),
-  last_location_log_id: z.coerce.number().optional().optional().nullable(),
+  last_inspection_log_id: z.coerce.number().nullable().optional().nullable(),
+  last_location_log_id: z.coerce.number().nullable().optional().nullable(),
   status_id: z.coerce.number().default(1).optional(),
-  model_name: z.string().max(100).optional().optional().nullable(),
-  manufacturer: z.string().max(100).optional().optional().nullable(),
-  owner_dept_name: z.string().max(100).optional().optional().nullable(),
-  mgmt_dept_name: z.string().max(100).optional().optional().nullable(),
+  model_name: z.string().max(100).nullable().optional().nullable(),
+  manufacturer: z.string().max(100).nullable().optional().nullable(),
+  owner_dept_name: z.string().max(100).nullable().optional().nullable(),
+  mgmt_dept_name: z.string().max(100).nullable().optional().nullable(),
   location_id: z.coerce.number().default(0).optional().nullable(),
   warehouse_id: z.coerce.number().default(0).optional().nullable(),
-  warehouse_name: z.string().max(100).optional().optional().nullable(),
+  warehouse_name: z.string().max(100).nullable().optional().nullable(),
   client_branch_id: z.coerce.number().default(0).optional().nullable(),
-  client_branch_name: z.string().max(100).optional().optional().nullable(),
-  status_name: z.string().max(45).optional().optional().nullable(),
-  has_fax: z.coerce.number().optional().optional().nullable(),
-  has_desk: z.coerce.number().optional().optional().nullable(),
-  has_shelf: z.coerce.number().optional().optional().nullable()
+  client_branch_name: z.string().max(100).nullable().optional().nullable(),
+  status_name: z.string().max(45).nullable().optional().nullable(),
+  has_fax: z.coerce.number().nullable().optional().nullable(),
+  has_desk: z.coerce.number().nullable().optional().nullable(),
+  has_shelf: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const v_deviceUpdateInputSchema: z.ZodType<Prisma.v_deviceUpdateInput> = z.object({
@@ -6202,22 +6202,22 @@ export const v_deviceUpdateInputSchema: z.ZodType<Prisma.v_deviceUpdateInput> = 
   serial: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   regi_date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   mac: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  last_inspection_log_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  last_location_log_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  last_inspection_log_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  last_location_log_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status_id: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  model_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  owner_dept_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  mgmt_dept_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  owner_dept_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mgmt_dept_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location_id: z.union([ z.coerce.number().default(0),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   warehouse_id: z.union([ z.coerce.number().default(0),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  warehouse_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  warehouse_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   client_branch_id: z.union([ z.coerce.number().default(0),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  client_branch_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  status_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  has_fax: z.union([ z.coerce.number().optional(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  has_desk: z.union([ z.coerce.number().optional(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  has_shelf: z.union([ z.coerce.number().optional(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  client_branch_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  status_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  has_fax: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  has_desk: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  has_shelf: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_deviceUncheckedUpdateInputSchema: z.ZodType<Prisma.v_deviceUncheckedUpdateInput> = z.object({
@@ -6228,22 +6228,22 @@ export const v_deviceUncheckedUpdateInputSchema: z.ZodType<Prisma.v_deviceUnchec
   serial: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   regi_date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   mac: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  last_inspection_log_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  last_location_log_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  last_inspection_log_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  last_location_log_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status_id: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  model_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  owner_dept_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  mgmt_dept_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  owner_dept_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mgmt_dept_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location_id: z.union([ z.coerce.number().default(0),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   warehouse_id: z.union([ z.coerce.number().default(0),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  warehouse_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  warehouse_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   client_branch_id: z.union([ z.coerce.number().default(0),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  client_branch_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  status_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  has_fax: z.union([ z.coerce.number().optional(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  has_desk: z.union([ z.coerce.number().optional(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  has_shelf: z.union([ z.coerce.number().optional(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  client_branch_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  status_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  has_fax: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  has_desk: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  has_shelf: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_deviceCreateManyInputSchema: z.ZodType<Prisma.v_deviceCreateManyInput> = z.object({
@@ -6254,22 +6254,22 @@ export const v_deviceCreateManyInputSchema: z.ZodType<Prisma.v_deviceCreateManyI
   serial: z.string().max(50),
   regi_date: z.coerce.date(),
   mac: z.string().max(50),
-  last_inspection_log_id: z.coerce.number().optional().optional().nullable(),
-  last_location_log_id: z.coerce.number().optional().optional().nullable(),
+  last_inspection_log_id: z.coerce.number().nullable().optional().nullable(),
+  last_location_log_id: z.coerce.number().nullable().optional().nullable(),
   status_id: z.coerce.number().default(1).optional(),
-  model_name: z.string().max(100).optional().optional().nullable(),
-  manufacturer: z.string().max(100).optional().optional().nullable(),
-  owner_dept_name: z.string().max(100).optional().optional().nullable(),
-  mgmt_dept_name: z.string().max(100).optional().optional().nullable(),
+  model_name: z.string().max(100).nullable().optional().nullable(),
+  manufacturer: z.string().max(100).nullable().optional().nullable(),
+  owner_dept_name: z.string().max(100).nullable().optional().nullable(),
+  mgmt_dept_name: z.string().max(100).nullable().optional().nullable(),
   location_id: z.coerce.number().default(0).optional().nullable(),
   warehouse_id: z.coerce.number().default(0).optional().nullable(),
-  warehouse_name: z.string().max(100).optional().optional().nullable(),
+  warehouse_name: z.string().max(100).nullable().optional().nullable(),
   client_branch_id: z.coerce.number().default(0).optional().nullable(),
-  client_branch_name: z.string().max(100).optional().optional().nullable(),
-  status_name: z.string().max(45).optional().optional().nullable(),
-  has_fax: z.coerce.number().optional().optional().nullable(),
-  has_desk: z.coerce.number().optional().optional().nullable(),
-  has_shelf: z.coerce.number().optional().optional().nullable()
+  client_branch_name: z.string().max(100).nullable().optional().nullable(),
+  status_name: z.string().max(45).nullable().optional().nullable(),
+  has_fax: z.coerce.number().nullable().optional().nullable(),
+  has_desk: z.coerce.number().nullable().optional().nullable(),
+  has_shelf: z.coerce.number().nullable().optional().nullable()
 }).strict();
 
 export const v_deviceUpdateManyMutationInputSchema: z.ZodType<Prisma.v_deviceUpdateManyMutationInput> = z.object({
@@ -6280,22 +6280,22 @@ export const v_deviceUpdateManyMutationInputSchema: z.ZodType<Prisma.v_deviceUpd
   serial: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   regi_date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   mac: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  last_inspection_log_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  last_location_log_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  last_inspection_log_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  last_location_log_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status_id: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  model_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  owner_dept_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  mgmt_dept_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  owner_dept_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mgmt_dept_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location_id: z.union([ z.coerce.number().default(0),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   warehouse_id: z.union([ z.coerce.number().default(0),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  warehouse_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  warehouse_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   client_branch_id: z.union([ z.coerce.number().default(0),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  client_branch_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  status_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  has_fax: z.union([ z.coerce.number().optional(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  has_desk: z.union([ z.coerce.number().optional(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  has_shelf: z.union([ z.coerce.number().optional(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  client_branch_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  status_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  has_fax: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  has_desk: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  has_shelf: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_deviceUncheckedUpdateManyInputSchema: z.ZodType<Prisma.v_deviceUncheckedUpdateManyInput> = z.object({
@@ -6306,22 +6306,22 @@ export const v_deviceUncheckedUpdateManyInputSchema: z.ZodType<Prisma.v_deviceUn
   serial: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
   regi_date: z.union([ z.coerce.date(),z.lazy(() => DateTimeFieldUpdateOperationsInputSchema) ]).optional(),
   mac: z.union([ z.string().max(50),z.lazy(() => StringFieldUpdateOperationsInputSchema) ]).optional(),
-  last_inspection_log_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  last_location_log_id: z.union([ z.coerce.number().optional(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  last_inspection_log_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  last_location_log_id: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   status_id: z.union([ z.coerce.number().default(1),z.lazy(() => IntFieldUpdateOperationsInputSchema) ]).optional(),
-  model_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  manufacturer: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  owner_dept_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  mgmt_dept_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  owner_dept_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  mgmt_dept_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   location_id: z.union([ z.coerce.number().default(0),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   warehouse_id: z.union([ z.coerce.number().default(0),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  warehouse_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  warehouse_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   client_branch_id: z.union([ z.coerce.number().default(0),z.lazy(() => NullableIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  client_branch_name: z.union([ z.string().max(100).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  status_name: z.union([ z.string().max(45).optional(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  has_fax: z.union([ z.coerce.number().optional(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  has_desk: z.union([ z.coerce.number().optional(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
-  has_shelf: z.union([ z.coerce.number().optional(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  client_branch_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  status_name: z.union([ z.string().max(45).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  has_fax: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  has_desk: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  has_shelf: z.union([ z.coerce.number().nullable(),z.lazy(() => NullableBigIntFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const IntFilterSchema: z.ZodType<Prisma.IntFilter> = z.object({

@@ -23,7 +23,7 @@ function addZodValidations() {
         const defaultValue = defaultMatch ? defaultMatch[1] : ''
         return `${line} /// @zod.custom.use(z.coerce.number().default(${defaultValue}))`
       } else if (line.includes('?')) {
-        return `${line} /// @zod.custom.use(z.coerce.number().optional())`
+        return `${line} /// @zod.custom.use(z.coerce.number().nullable())`
       } else {
         return `${line} /// @zod.custom.use(z.coerce.number())`
       }
@@ -38,7 +38,7 @@ function addZodValidations() {
       const maxLength = maxMatch ? maxMatch[1] : '255'
       
       if (line.includes('?')) {
-        return `${line} /// @zod.custom.use(z.string().max(${maxLength}).optional())`
+        return `${line} /// @zod.custom.use(z.string().max(${maxLength}).nullable())`
       } else {
         return `${line} /// @zod.custom.use(z.string().max(${maxLength}))`
       }
