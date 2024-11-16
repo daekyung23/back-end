@@ -49,12 +49,12 @@ router.get('/all',
 
 router.patch('/update', 
   validateInput({ body: z.intersection( uniqueKeySchema, updateSchema ) }), 
-  controller.update
+  controller.update<'dept_id'>
 )
 
 router.delete('/delete', 
   validateInput({ query: uniqueKeySchema }), 
-  controller.delete
+  controller.delete<'dept_id'>
 )
 
 export const deptRouter = router

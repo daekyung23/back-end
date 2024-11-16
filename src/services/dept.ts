@@ -45,7 +45,8 @@ export class DeptService extends Service<typeof MODEL, typeof VIEW> {
   }
 
   getChildDeptById = async (query: Pick<dept, 'dept_id'>) => {
-    const dept = await this.modelRepository.findMany({ where: query })
+    const dept = await this.modelRepository.findMany({ 
+      where: { parent_dept_id: query.dept_id } })
     return { dept }
   }
 }
