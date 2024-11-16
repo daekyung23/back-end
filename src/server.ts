@@ -7,7 +7,7 @@ import { prisma } from '@lib/prisma'
 import requestLogger from '@middlewares/request-logger'
 import responseLogger from '@middlewares/response-logger'
 import errorHandler from '@middlewares/error-handler'
-import routes from './routes' // alias 경로 왜 안되지?
+import routes from '@routes'
 
 const app = express()
 

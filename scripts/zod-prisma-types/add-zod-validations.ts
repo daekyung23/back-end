@@ -1,42 +1,53 @@
-// import * as fs from 'fs'
-// import * as path from 'path'
+import * as fs from 'fs'
+import * as path from 'path'
 
-// function addZodValidations() {
-//   const schemaPath = path.join(process.cwd(), 'prisma', 'schema.prisma')
-//   let content = fs.readFileSync(schemaPath, 'utf8')
-  
-//   // 1. 기존 주석 제거
-//   let lines = content.split('\n')
-//   lines = lines.filter(line => !line.includes('@zod.'))
-//   content = lines.join('\n')
-  
-//   // 2. 새로운 validation 추가
-//   // Required VarChar 필드
-//   content = content.replace(
-//     /(\s+)(\w+)\s+String\s+@db\.VarChar\((\d+)\)(?!\?)/g,
-//     '$1$2 String @db.VarChar($3) /// @zod.string({ required_error: "$2은 필수 입력값입니다" }).min(1).max($3, { message: "$2은 $3자를 초과할 수 없습니다" })'
-//   )
-  
-//   // Optional VarChar 필드
-//   content = content.replace(
-//     /(\s+)(\w+)\s+String\?\s+@db\.VarChar\((\d+)\)/g,
-//     '$1$2 String? @db.VarChar($3) /// @zod.string.max($3, { message: "$2은 $3자를 초과할 수 없습니다" })'
-//   )
-  
-//   // Required TinyInt 필드
-//   content = content.replace(
-//     /(\s+)(\w+)\s+Int\s+.*@db\.TinyInt(?!\?)/g,
-//     '$1$2 Int @db.TinyInt /// @zod.number({ required_error: "$2은 필수 입력값입니다" }).int().min(0).max(1)'
-//   )
-  
-//   // Optional TinyInt 필드
-//   content = content.replace(
-//     /(\s+)(\w+)\s+Int\?\s+.*@db\.TinyInt/g,
-//     '$1$2 Int? @db.TinyInt /// @zod.number.int().min(0).max(1)'
-//   )
-  
-//   fs.writeFileSync(schemaPath, content)
-//   console.log('Zod validations updated!')
-// }
+function addZodValidations() {
+  const schemaPath = path.join(process.cwd(), 'prisma', 'schema.prisma')
+  let lines = fs.readFileSync(schemaPath, 'utf8').split('\n')
 
-// addZodValidations()
+
+  // 1단계: 기존 주석 제거 및 이전 줄 삭제
+  for (let i = 0; i < lines.length; i++) {
+    if (lines[i].includes('/// @zod.custom.use')) lines.splice(i--, 1)
+  }
+  
+  // 각 줄 별로 처리
+  lines = lines.filter(line => !line.includes('/// @zod.custom.use')).map(line => {
+    
+    // 필드 타입별 처리
+    if (line.includes('Int')) {
+      if (line.includes('@id')) {
+        return `${line} /// @zod.custom.use(z.coerce.number())`
+      } else if (line.includes('@default')) {
+        const defaultMatch = line.match(/@default\(([^)]+)\)/)
+        const defaultValue = defaultMatch ? defaultMatch[1] : ''
+        return `${line} /// @zod.custom.use(z.coerce.number().default(${defaultValue}))`
+      } else if (line.includes('?')) {
+        return `${line} /// @zod.custom.use(z.coerce.number().optional())`
+      } else {
+        return `${line} /// @zod.custom.use(z.coerce.number())`
+      }
+    }
+    
+    if (line.includes('String') && line.includes('@db.VarChar')) {
+      if (line.includes('@id')) {
+        line = line.replace('String?', 'String')
+      }
+      
+      const maxMatch = line.match(/@db\.VarChar\((\d+)\)/)
+      const maxLength = maxMatch ? maxMatch[1] : '255'
+      
+      if (line.includes('?')) {
+        return `${line} /// @zod.custom.use(z.string().max(${maxLength}).optional())`
+      } else {
+        return `${line} /// @zod.custom.use(z.string().max(${maxLength}))`
+      }
+    }
+    
+    return line
+  })
+  fs.writeFileSync(schemaPath, lines.join('\n'))
+  console.log('Zod validations updated!')
+}
+
+addZodValidations()

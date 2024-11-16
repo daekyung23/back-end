@@ -2,11 +2,15 @@
   "name": "crm-system",
   "version": "1.0.0",
   "description": "Customer Relationship Management",
+  "engines": {
+    "node": ">=18.17.1",
+    "npm": ">=10.8.1"
+  },
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cross-env ts-node -r tsconfig-paths/register dist/src/server.js",
-    "dev": "cross-env ts-node -r tsconfig-paths/register src/server.ts",
+    "start": "cross-env NODE_ENV=production node -r tsconfig-paths/register dist/src/server.js",
+    "dev": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register src/server.ts",
     "prebuild": "npx rimraf dist",
     "build": "npm run prisma:generate && tsc && tsc-alias && npm run make-dirs",
     "make-dirs": "npx mkdirp dist/src/utils dist/prisma/client",
@@ -21,6 +25,7 @@
     "schema:prisma:push": "prisma db push",
     "view:prisma:push": "cross-env ts-node -r tsconfig-paths/register scripts/prisma/push-views.ts",
     "prisma:generate": "prisma generate && npm run prisma:bugfix:convert-aggregate && npm run convert:zod:comments",
+    "generate:zod": "ts-node scripts/zod-prisma-types/generate-schema.ts",
     "prisma:bugfix:convert-aggregate": "cross-env ts-node -r tsconfig-paths/register scripts/zod-prisma-types/convert-aggregate-names.ts",
     "convert:zod:comments": "cross-env ts-node scripts/zod-prisma-types/convert-zod-comments.ts"
   },
@@ -38,8 +43,7 @@
     "express-async-errors": "^3.1.1",
     "mysql2": "^3.11.4",
     "type-fest": "^4.27.0",
-    "zod": "^3.23.8",
-    "zod-prisma-types": "^3.1.8"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
@@ -51,6 +55,7 @@
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "zod-prisma-types": "^3.1.3"
   }
 }

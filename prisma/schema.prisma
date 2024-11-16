@@ -7,8 +7,8 @@ generator zod {
   provider               = "zod-prisma-types"
   output                 = "./zod-schemas"
   addInputTypeValidation = "true"
-  createInputTypes       = "true"
   createModelTypes       = "true"
+  createInputTypes       = "true"
 }
 
 datasource db {
@@ -17,28 +17,28 @@ datasource db {
 }
 
 model approval_role {
-  role_id       Int    @id @default(autoincrement())
-  role_name     String @db.VarChar(45)
-  upper_role_id Int?
+  role_id       Int    @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  role_name     String @db.VarChar(45) /// @zod.custom.use(z.string().max(45))
+  upper_role_id Int? /// @zod.custom.use(z.coerce.number().optional())
 
   @@index([upper_role_id], map: "fk_approval_role_approval_role1_idx")
 }
 
 model call {
-  call_id                  Int       @id @default(autoincrement())
-  call_type_id             Int
-  client_branch_id         Int
-  requester_name           String    @db.VarChar(50)
-  requester_num            String    @db.VarChar(20)
-  requester_black_consumer Int       @default(0) @db.TinyInt
-  device_id                Int?
-  detail                   String    @db.VarChar(200)
-  state                    String    @db.VarChar(45)
+  call_id                  Int       @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  call_type_id             Int /// @zod.custom.use(z.coerce.number())
+  client_branch_id         Int /// @zod.custom.use(z.coerce.number())
+  requester_name           String    @db.VarChar(50) /// @zod.custom.use(z.string().max(50))
+  requester_num            String    @db.VarChar(20) /// @zod.custom.use(z.string().max(20))
+  requester_black_consumer Int       @default(0) @db.TinyInt /// @zod.custom.use(z.coerce.number().default(0))
+  device_id                Int? /// @zod.custom.use(z.coerce.number().optional())
+  detail                   String    @db.VarChar(200) /// @zod.custom.use(z.string().max(200))
+  state                    String    @db.VarChar(45) /// @zod.custom.use(z.string().max(45))
   received_at              DateTime  @db.Timestamp(0)
-  receiver_id              Int
+  receiver_id              Int /// @zod.custom.use(z.coerce.number())
   transferred_at           DateTime? @db.Timestamp(0)
-  transferred_dept_id      Int?
-  assigner_id              Int?
+  transferred_dept_id      Int? /// @zod.custom.use(z.coerce.number().optional())
+  assigner_id              Int? /// @zod.custom.use(z.coerce.number().optional())
   completed_at             DateTime? @db.Timestamp(0)
 
   @@index([call_type_id], map: "fk_call_call_type1_idx")
@@ -50,38 +50,38 @@ model call {
 }
 
 model call_type {
-  call_type_id        Int    @id @default(autoincrement())
-  call_type_name      String @db.VarChar(50)
-  parent_call_type_id Int?
+  call_type_id        Int    @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  call_type_name      String @db.VarChar(50) /// @zod.custom.use(z.string().max(50))
+  parent_call_type_id Int? /// @zod.custom.use(z.coerce.number().optional())
 
   @@index([parent_call_type_id], map: "fk_call_type_call_type1_idx")
 }
 
 model client {
-  client_id                     Int    @id @default(autoincrement())
-  parent_client_id              Int?
-  default_client_branch_rate_id Int
-  client_name                   String @db.VarChar(45)
-  is_active                     Int    @default(1) @db.TinyInt
+  client_id                     Int    @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  parent_client_id              Int? /// @zod.custom.use(z.coerce.number().optional())
+  default_client_branch_rate_id Int /// @zod.custom.use(z.coerce.number())
+  client_name                   String @db.VarChar(45) /// @zod.custom.use(z.string().max(45))
+  is_active                     Int    @default(1) @db.TinyInt /// @zod.custom.use(z.coerce.number().default(1))
 
   @@index([parent_client_id], map: "fk_client_client1_idx")
   @@index([default_client_branch_rate_id], map: "fk_client_client_branch_rate1_idx")
 }
 
 model client_branch {
-  client_branch_id      Int     @id @default(autoincrement())
-  sigungu_id            Int
-  mgmt_dept_id          Int
-  client_id             Int
-  client_branch_name    String  @db.VarChar(100)
-  client_branch_rate_id Int
-  branch_mgr_name       String? @db.VarChar(45)
-  branch_mgr_mobile_num String? @db.VarChar(45)
-  branch_mgr_office_num String? @db.VarChar(45)
-  branch_mgr_email      String? @db.VarChar(45)
-  is_active             Int     @default(1) @db.TinyInt
-  remote_support        Int     @default(0) @db.TinyInt
-  push_alert            Int     @default(0) @db.TinyInt
+  client_branch_id      Int     @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  sigungu_id            Int /// @zod.custom.use(z.coerce.number())
+  mgmt_dept_id          Int /// @zod.custom.use(z.coerce.number())
+  client_id             Int /// @zod.custom.use(z.coerce.number())
+  client_branch_name    String  @db.VarChar(100) /// @zod.custom.use(z.string().max(100))
+  client_branch_rate_id Int /// @zod.custom.use(z.coerce.number())
+  branch_mgr_name       String? @db.VarChar(45) /// @zod.custom.use(z.string().max(45).optional())
+  branch_mgr_mobile_num String? @db.VarChar(45) /// @zod.custom.use(z.string().max(45).optional())
+  branch_mgr_office_num String? @db.VarChar(45) /// @zod.custom.use(z.string().max(45).optional())
+  branch_mgr_email      String? @db.VarChar(45) /// @zod.custom.use(z.string().max(45).optional())
+  is_active             Int     @default(1) @db.TinyInt /// @zod.custom.use(z.coerce.number().default(1))
+  remote_support        Int     @default(0) @db.TinyInt /// @zod.custom.use(z.coerce.number().default(0))
+  push_alert            Int     @default(0) @db.TinyInt /// @zod.custom.use(z.coerce.number().default(0))
 
   @@index([client_id], map: "fk_client_branch_client1_idx")
   @@index([client_branch_rate_id], map: "fk_client_branch_client_branch_rate1_idx")
@@ -90,37 +90,37 @@ model client_branch {
 }
 
 model client_rate {
-  client_rate_id Int     @id @default(autoincrement())
-  rate_type      String  @db.VarChar(10)
-  rate_detail    String? @db.VarChar(45)
+  client_rate_id Int     @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  rate_type      String  @db.VarChar(10) /// @zod.custom.use(z.string().max(10))
+  rate_detail    String? @db.VarChar(45) /// @zod.custom.use(z.string().max(45).optional())
 }
 
 model consumable_model {
-  consumable_model_id Int    @id @default(autoincrement())
-  manufacturer        String @db.VarChar(100)
-  consumable_name     String @db.VarChar(100)
-  consumable_type     String @db.VarChar(100)
+  consumable_model_id Int    @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  manufacturer        String @db.VarChar(100) /// @zod.custom.use(z.string().max(100))
+  consumable_name     String @db.VarChar(100) /// @zod.custom.use(z.string().max(100))
+  consumable_type     String @db.VarChar(100) /// @zod.custom.use(z.string().max(100))
 }
 
 model dept {
-  dept_id        Int    @id @default(autoincrement())
-  parent_dept_id Int?
-  dept_name      String @db.VarChar(100)
+  dept_id        Int    @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  parent_dept_id Int? /// @zod.custom.use(z.coerce.number().optional())
+  dept_name      String @db.VarChar(100) /// @zod.custom.use(z.string().max(100))
 
   @@index([parent_dept_id], map: "fk_dept_dept1_idx")
 }
 
 model device {
-  device_id              Int      @id @default(autoincrement())
-  device_model_id        Int
-  owner_dept_id          Int
-  mgmt_dept_id           Int
-  serial                 String   @db.VarChar(50)
+  device_id              Int      @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  device_model_id        Int /// @zod.custom.use(z.coerce.number())
+  owner_dept_id          Int /// @zod.custom.use(z.coerce.number())
+  mgmt_dept_id           Int /// @zod.custom.use(z.coerce.number())
+  serial                 String   @db.VarChar(50) /// @zod.custom.use(z.string().max(50))
   regi_date              DateTime @db.Date
-  mac                    String   @db.VarChar(50)
-  last_inspection_log_id Int?
-  last_location_log_id   Int?
-  status_id              Int      @default(1)
+  mac                    String   @db.VarChar(50) /// @zod.custom.use(z.string().max(50))
+  last_inspection_log_id Int? /// @zod.custom.use(z.coerce.number().optional())
+  last_location_log_id   Int? /// @zod.custom.use(z.coerce.number().optional())
+  status_id              Int      @default(1) /// @zod.custom.use(z.coerce.number().default(1))
 
   @@index([owner_dept_id], map: "fk_device_dept1_idx")
   @@index([mgmt_dept_id], map: "fk_device_dept2_idx")
@@ -131,17 +131,17 @@ model device {
 }
 
 model device_approval {
-  approval_id             Int       @id @default(autoincrement())
-  approval_type_id        Int
-  sub_approval_id         Int?
-  requester_id            Int
+  approval_id             Int       @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  approval_type_id        Int /// @zod.custom.use(z.coerce.number())
+  sub_approval_id         Int? /// @zod.custom.use(z.coerce.number().optional())
+  requester_id            Int /// @zod.custom.use(z.coerce.number())
   request_at              DateTime  @db.Timestamp(0)
-  approver_role_id        Int
-  origin_location_id      Int?
-  destination_location_id Int?
-  approver_id             Int?
+  approver_role_id        Int /// @zod.custom.use(z.coerce.number())
+  origin_location_id      Int? /// @zod.custom.use(z.coerce.number().optional())
+  destination_location_id Int? /// @zod.custom.use(z.coerce.number().optional())
+  approver_id             Int? /// @zod.custom.use(z.coerce.number().optional())
   approve_at              DateTime? @db.Timestamp(0)
-  is_approved             Int?      @db.TinyInt
+  is_approved             Int?      @db.TinyInt /// @zod.custom.use(z.coerce.number().optional())
 
   @@index([approver_role_id], map: "fk_approval_approver_group1_idx")
   @@index([sub_approval_id], map: "fk_device_approval_device_approval1_idx")
@@ -153,55 +153,55 @@ model device_approval {
 }
 
 model device_approval_type {
-  approval_type_id   Int    @id @default(autoincrement())
-  approval_type_name String @db.VarChar(45)
+  approval_type_id   Int    @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  approval_type_name String @db.VarChar(45) /// @zod.custom.use(z.string().max(45))
 }
 
 model device_consumable_compatibility {
-  device_model_id     Int
-  consumable_model_id Int
+  device_model_id     Int /// @zod.custom.use(z.coerce.number())
+  consumable_model_id Int /// @zod.custom.use(z.coerce.number())
 
   @@id([device_model_id, consumable_model_id])
 }
 
 model device_driver {
-  device_driver_id     Int     @id @default(autoincrement())
-  device_model_id      Int
-  manufacturer         String? @db.VarChar(100)
-  printer_language     String? @db.VarChar(45)
-  install_file_address String? @db.VarChar(200)
+  device_driver_id     Int     @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  device_model_id      Int /// @zod.custom.use(z.coerce.number())
+  manufacturer         String? @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
+  printer_language     String? @db.VarChar(45) /// @zod.custom.use(z.string().max(45).optional())
+  install_file_address String? @db.VarChar(200) /// @zod.custom.use(z.string().max(200).optional())
 
   @@index([device_model_id], map: "fk_driver_device_model1_idx")
 }
 
 model device_inspection_log {
-  device_inspection_log_id Int                           @id @default(autoincrement())
-  device_id                Int
-  inspector_id             Int
+  device_inspection_log_id Int                           @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  device_id                Int /// @zod.custom.use(z.coerce.number())
+  inspector_id             Int /// @zod.custom.use(z.coerce.number())
   inspection_date          DateTime                      @db.Date
-  visit_type               String                        @db.VarChar(45)
-  call_id                  Int?
-  FL                       Int?
-  FS                       Int?
-  BL                       Int?
-  BS                       Int?
-  toner_count_YE           Int?
-  toner_count_MA           Int?
-  toner_count_CY           Int?
-  toner_count_BK           Int?
-  toner_stock_YE           Int?
-  toner_stock_MA           Int?
-  toner_stock_CY           Int?
-  toner_stock_BK           Int?
-  toner_deliver_YE         Int?
-  toner_deliver_CY         Int?
-  toner_deliver_MA         Int?
-  toner_deliver_BK         Int?
-  drum_count_YE            Int?
-  drum_count_MA            Int?
-  drum_count_CY            Int?
-  drum_count_BK            Int?
-  drum_replacement_detail  String?                       @db.VarChar(50)
+  visit_type               String                        @db.VarChar(45) /// @zod.custom.use(z.string().max(45))
+  call_id                  Int? /// @zod.custom.use(z.coerce.number().optional())
+  FL                       Int? /// @zod.custom.use(z.coerce.number().optional())
+  FS                       Int? /// @zod.custom.use(z.coerce.number().optional())
+  BL                       Int? /// @zod.custom.use(z.coerce.number().optional())
+  BS                       Int? /// @zod.custom.use(z.coerce.number().optional())
+  toner_count_YE           Int? /// @zod.custom.use(z.coerce.number().optional())
+  toner_count_MA           Int? /// @zod.custom.use(z.coerce.number().optional())
+  toner_count_CY           Int? /// @zod.custom.use(z.coerce.number().optional())
+  toner_count_BK           Int? /// @zod.custom.use(z.coerce.number().optional())
+  toner_stock_YE           Int? /// @zod.custom.use(z.coerce.number().optional())
+  toner_stock_MA           Int? /// @zod.custom.use(z.coerce.number().optional())
+  toner_stock_CY           Int? /// @zod.custom.use(z.coerce.number().optional())
+  toner_stock_BK           Int? /// @zod.custom.use(z.coerce.number().optional())
+  toner_deliver_YE         Int? /// @zod.custom.use(z.coerce.number().optional())
+  toner_deliver_CY         Int? /// @zod.custom.use(z.coerce.number().optional())
+  toner_deliver_MA         Int? /// @zod.custom.use(z.coerce.number().optional())
+  toner_deliver_BK         Int? /// @zod.custom.use(z.coerce.number().optional())
+  drum_count_YE            Int? /// @zod.custom.use(z.coerce.number().optional())
+  drum_count_MA            Int? /// @zod.custom.use(z.coerce.number().optional())
+  drum_count_CY            Int? /// @zod.custom.use(z.coerce.number().optional())
+  drum_count_BK            Int? /// @zod.custom.use(z.coerce.number().optional())
+  drum_replacement_detail  String?                       @db.VarChar(50) /// @zod.custom.use(z.string().max(50).optional())
   status                   device_inspection_log_status?
 
   @@index([device_id], map: "fk_device_history_device_idx")
@@ -210,45 +210,45 @@ model device_inspection_log {
 }
 
 model device_install_info {
-  device_id    Int     @id
-  installer_id Int
-  mgmt_num     String  @db.VarChar(50)
-  ip_address   String? @db.VarChar(50)
-  subnet_mask  String? @db.VarChar(50)
-  gateway      String? @db.VarChar(50)
-  dns1         String? @db.VarChar(50)
-  dns2         String? @db.VarChar(50)
+  device_id    Int     @id /// @zod.custom.use(z.coerce.number())
+  installer_id Int /// @zod.custom.use(z.coerce.number())
+  mgmt_num     String  @db.VarChar(50) /// @zod.custom.use(z.string().max(50))
+  ip_address   String? @db.VarChar(50) /// @zod.custom.use(z.string().max(50).optional())
+  subnet_mask  String? @db.VarChar(50) /// @zod.custom.use(z.string().max(50).optional())
+  gateway      String? @db.VarChar(50) /// @zod.custom.use(z.string().max(50).optional())
+  dns1         String? @db.VarChar(50) /// @zod.custom.use(z.string().max(50).optional())
+  dns2         String? @db.VarChar(50) /// @zod.custom.use(z.string().max(50).optional())
 
   @@index([device_id], map: "fk_device_install_info_device1_idx")
   @@index([installer_id], map: "fk_device_install_info_user1_idx")
 }
 
 model device_location_log {
-  device_location_log_id Int      @id @default(autoincrement())
-  device_id              Int
+  device_location_log_id Int      @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  device_id              Int /// @zod.custom.use(z.coerce.number())
   location_date          DateTime @db.Date
-  location_id            Int
-  location_detail        String?  @db.VarChar(200)
+  location_id            Int /// @zod.custom.use(z.coerce.number())
+  location_detail        String?  @db.VarChar(200) /// @zod.custom.use(z.string().max(200).optional())
 
   @@index([device_id], map: "fk_device_location_log_device1_idx")
   @@index([location_id], map: "fk_device_location_log_location1_idx")
 }
 
 model device_model {
-  device_model_id Int    @id @default(autoincrement())
-  model_name      String @db.VarChar(100)
-  manufacturer    String @db.VarChar(100)
-  color_support   Int    @db.TinyInt
+  device_model_id Int    @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  model_name      String @db.VarChar(100) /// @zod.custom.use(z.string().max(100))
+  manufacturer    String @db.VarChar(100) /// @zod.custom.use(z.string().max(100))
+  color_support   Int    @db.TinyInt /// @zod.custom.use(z.coerce.number())
 }
 
 model device_option {
-  device_option_id      Int                         @id @default(autoincrement())
-  option_model_id       Int
-  serial                String?                     @db.VarChar(50)
-  is_active             Int                         @default(1) @db.TinyInt
+  device_option_id      Int                         @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  option_model_id       Int /// @zod.custom.use(z.coerce.number())
+  serial                String?                     @db.VarChar(50) /// @zod.custom.use(z.string().max(50).optional())
+  is_active             Int                         @default(1) @db.TinyInt /// @zod.custom.use(z.coerce.number().default(1))
   location_type         device_option_location_type
-  location_warehouse_id Int?
-  location_device_id    Int?
+  location_warehouse_id Int? /// @zod.custom.use(z.coerce.number().optional())
+  location_device_id    Int? /// @zod.custom.use(z.coerce.number().optional())
 
   @@index([location_device_id], map: "fk_device_option_device1_idx")
   @@index([option_model_id], map: "fk_device_option_device_option_model1_idx")
@@ -256,26 +256,26 @@ model device_option {
 }
 
 model device_option_compatibility {
-  device_model_id Int
-  option_model_id Int
+  device_model_id Int /// @zod.custom.use(z.coerce.number())
+  option_model_id Int /// @zod.custom.use(z.coerce.number())
 
   @@id([device_model_id, option_model_id])
 }
 
 model device_status {
-  status_id   Int    @id @default(autoincrement())
-  status_name String @db.VarChar(45)
+  status_id   Int    @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  status_name String @db.VarChar(45) /// @zod.custom.use(z.string().max(45))
 }
 
 model inspection_approval {
-  approval_id              Int       @id @default(autoincrement())
-  requester_id             Int
+  approval_id              Int       @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  requester_id             Int /// @zod.custom.use(z.coerce.number())
   request_at               DateTime  @db.Timestamp(0)
-  approver_role_id         Int?
-  device_inspection_log_id Int
-  approver_id              Int?
+  approver_role_id         Int? /// @zod.custom.use(z.coerce.number().optional())
+  device_inspection_log_id Int /// @zod.custom.use(z.coerce.number())
+  approver_id              Int? /// @zod.custom.use(z.coerce.number().optional())
   approved_at              DateTime? @db.Timestamp(0)
-  is_approved              Int?      @db.TinyInt
+  is_approved              Int?      @db.TinyInt /// @zod.custom.use(z.coerce.number().optional())
 
   @@index([approver_role_id], map: "fk_inspection_approval_approval_role1_idx")
   @@index([device_inspection_log_id], map: "fk_inspection_approval_device_inspection_log1_idx")
@@ -284,49 +284,49 @@ model inspection_approval {
 }
 
 model location {
-  location_id      Int                    @id @default(autoincrement())
+  location_id      Int                    @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
   location_type    location_location_type
-  warehouse_id     Int?
-  client_branch_id Int?
+  warehouse_id     Int? /// @zod.custom.use(z.coerce.number().optional())
+  client_branch_id Int? /// @zod.custom.use(z.coerce.number().optional())
 
   @@index([client_branch_id], map: "fk_location_client_branch1_idx")
   @@index([warehouse_id], map: "fk_location_warehouse1_idx")
 }
 
 model option_model {
-  option_model_id   Int    @id @default(autoincrement())
-  option_model_name String @db.VarChar(100)
-  option_type       String @db.VarChar(45)
-  manufacturer      String @db.VarChar(100)
+  option_model_id   Int    @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  option_model_name String @db.VarChar(100) /// @zod.custom.use(z.string().max(100))
+  option_type       String @db.VarChar(45) /// @zod.custom.use(z.string().max(45))
+  manufacturer      String @db.VarChar(100) /// @zod.custom.use(z.string().max(100))
 }
 
 model sido {
-  sido_id   Int     @id @default(autoincrement())
-  sido_name String? @db.VarChar(45)
+  sido_id   Int     @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  sido_name String? @db.VarChar(45) /// @zod.custom.use(z.string().max(45).optional())
 }
 
 model sigungu {
-  sigungu_id   Int    @id @default(autoincrement())
-  sigungu_name String @db.VarChar(45)
-  sido_id      Int
+  sigungu_id   Int    @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  sigungu_name String @db.VarChar(45) /// @zod.custom.use(z.string().max(45))
+  sido_id      Int /// @zod.custom.use(z.coerce.number())
 
   @@index([sido_id], map: "fk_sigungu_sido1_idx")
 }
 
 model user {
-  user_id          Int             @id @default(autoincrement())
-  user_name        String          @db.VarChar(45)
-  login_id         String          @unique(map: "login_id_UNIQUE") @db.VarChar(45)
-  password         String          @db.VarChar(50)
-  mobile_num       String?         @db.VarChar(20)
-  office_num       String?         @db.VarChar(20)
-  email            String?         @db.VarChar(100)
+  user_id          Int             @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  user_name        String          @db.VarChar(45) /// @zod.custom.use(z.string().max(45))
+  login_id         String          @unique(map: "login_id_UNIQUE") @db.VarChar(45) /// @zod.custom.use(z.string().max(45))
+  password         String          @db.VarChar(50) /// @zod.custom.use(z.string().max(50))
+  mobile_num       String?         @db.VarChar(20) /// @zod.custom.use(z.string().max(20).optional())
+  office_num       String?         @db.VarChar(20) /// @zod.custom.use(z.string().max(20).optional())
+  email            String?         @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
   modified_at      DateTime?       @default(now()) @db.Timestamp(0)
-  dept_id          Int
-  approval_role_id Int?
-  position_id      Int
+  dept_id          Int /// @zod.custom.use(z.coerce.number())
+  approval_role_id Int? /// @zod.custom.use(z.coerce.number().optional())
+  position_id      Int /// @zod.custom.use(z.coerce.number())
   created_at       DateTime        @default(now()) @db.Timestamp(0)
-  is_active        Int             @default(1) @db.TinyInt
+  is_active        Int             @default(1) @db.TinyInt /// @zod.custom.use(z.coerce.number().default(1))
   permission       user_permission @default(user)
 
   @@index([approval_role_id], map: "fk_user_approval_role1_idx")
@@ -335,144 +335,144 @@ model user {
 }
 
 model user_position {
-  user_position_id Int    @id @default(autoincrement())
-  position_name    String @db.VarChar(45)
+  user_position_id Int    @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  position_name    String @db.VarChar(45) /// @zod.custom.use(z.string().max(45))
 }
 
 model user_role_assignment {
-  role_id     Int
-  approver_id Int
+  role_id     Int /// @zod.custom.use(z.coerce.number())
+  approver_id Int /// @zod.custom.use(z.coerce.number())
 
   @@id([role_id, approver_id])
 }
 
 model warehouse {
-  warehouse_id   Int    @id @default(autoincrement())
-  warehouse_name String @db.VarChar(100)
-  mgmt_dept_id   Int
+  warehouse_id   Int    @id @default(autoincrement()) /// @zod.custom.use(z.coerce.number())
+  warehouse_name String @db.VarChar(100) /// @zod.custom.use(z.string().max(100))
+  mgmt_dept_id   Int /// @zod.custom.use(z.coerce.number())
 
   @@index([mgmt_dept_id], map: "fk_warehouse_dept1_idx")
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_client {
-  client_id                     Int     @id @default(0)
-  client_name                   String  @default("") @db.VarChar(45)
-  parent_client_id              Int?
-  default_client_branch_rate_id BigInt  @default(0)
-  is_active                     Int     @default(0)
-  parent_client_name            String? @db.VarChar(45)
-  client_rate                   String? @db.VarChar(10)
-  rate_detail                   String? @db.VarChar(45)
-  branch_count                  BigInt  @default(0)
+  client_id                     Int     @id @default(0) /// @zod.custom.use(z.coerce.number())
+  client_name                   String  @default("") @db.VarChar(45) /// @zod.custom.use(z.string().max(45))
+  parent_client_id              Int? /// @zod.custom.use(z.coerce.number().optional())
+  default_client_branch_rate_id BigInt  @default(0) /// @zod.custom.use(z.coerce.number().default(0))
+  is_active                     Int     @default(0) /// @zod.custom.use(z.coerce.number().default(0))
+  parent_client_name            String? @db.VarChar(45) /// @zod.custom.use(z.string().max(45).optional())
+  client_rate                   String? @db.VarChar(10) /// @zod.custom.use(z.string().max(10).optional())
+  rate_detail                   String? @db.VarChar(45) /// @zod.custom.use(z.string().max(45).optional())
+  branch_count                  BigInt  @default(0) /// @zod.custom.use(z.coerce.number().default(0))
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_client_branch {
-  client_branch_id      Int     @id @default(0)
-  client_branch_name    String  @db.VarChar(100)
-  client_id             Int
-  sigungu_id            Int
-  mgmt_dept_id          Int
-  client_branch_rate_id Int
-  branch_mgr_name       String? @db.VarChar(45)
-  branch_mgr_mobile_num String? @db.VarChar(45)
-  branch_mgr_office_num String? @db.VarChar(45)
-  branch_mgr_email      String? @db.VarChar(45)
-  is_active             Int     @default(1) @db.TinyInt
-  remote_support        Int     @default(0) @db.TinyInt
-  push_alert            Int     @default(0) @db.TinyInt
-  client_name           String? @db.VarChar(45)
-  sigungu_name          String? @db.VarChar(45)
-  sido_name             String? @db.VarChar(45)
+  client_branch_id      Int     @id @default(0) /// @zod.custom.use(z.coerce.number())
+  client_branch_name    String  @db.VarChar(100) /// @zod.custom.use(z.string().max(100))
+  client_id             Int /// @zod.custom.use(z.coerce.number())
+  sigungu_id            Int /// @zod.custom.use(z.coerce.number())
+  mgmt_dept_id          Int /// @zod.custom.use(z.coerce.number())
+  client_branch_rate_id Int /// @zod.custom.use(z.coerce.number())
+  branch_mgr_name       String? @db.VarChar(45) /// @zod.custom.use(z.string().max(45).optional())
+  branch_mgr_mobile_num String? @db.VarChar(45) /// @zod.custom.use(z.string().max(45).optional())
+  branch_mgr_office_num String? @db.VarChar(45) /// @zod.custom.use(z.string().max(45).optional())
+  branch_mgr_email      String? @db.VarChar(45) /// @zod.custom.use(z.string().max(45).optional())
+  is_active             Int     @default(1) @db.TinyInt /// @zod.custom.use(z.coerce.number().default(1))
+  remote_support        Int     @default(0) @db.TinyInt /// @zod.custom.use(z.coerce.number().default(0))
+  push_alert            Int     @default(0) @db.TinyInt /// @zod.custom.use(z.coerce.number().default(0))
+  client_name           String? @db.VarChar(45) /// @zod.custom.use(z.string().max(45).optional())
+  sigungu_name          String? @db.VarChar(45) /// @zod.custom.use(z.string().max(45).optional())
+  sido_name             String? @db.VarChar(45) /// @zod.custom.use(z.string().max(45).optional())
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_consumable_model {
-  compatibility_id    String @id @db.VarChar(23)
-  consumable_model_id Int?    @default(0)
-  manufacturer        String? @db.VarChar(100)
-  consumable_name     String? @db.VarChar(100)
-  consumable_type     String? @db.VarChar(100)
-  model_manufacturer  String? @db.VarChar(100)
+  compatibility_id    String @id @db.VarChar(23) /// @zod.custom.use(z.string().max(23))
+  consumable_model_id Int?    @default(0) /// @zod.custom.use(z.coerce.number().default(0))
+  manufacturer        String? @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
+  consumable_name     String? @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
+  consumable_type     String? @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
+  model_manufacturer  String? @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_dept {
-  dept_id   BigInt  @id @default(0)
-  dept_1_id String  @default("") @db.VarChar(20)
-  dept_1    String  @default("") @db.VarChar(100)
-  dept_2_id String? @db.VarChar(20)
-  dept_2    String? @db.VarChar(100)
-  dept_3_id String? @db.VarChar(20)
-  dept_3    String? @db.VarChar(100)
+  dept_id   BigInt  @id @default(0) /// @zod.custom.use(z.coerce.number())
+  dept_1_id String  @default("") @db.VarChar(20) /// @zod.custom.use(z.string().max(20))
+  dept_1    String  @default("") @db.VarChar(100) /// @zod.custom.use(z.string().max(100))
+  dept_2_id String? @db.VarChar(20) /// @zod.custom.use(z.string().max(20).optional())
+  dept_2    String? @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
+  dept_3_id String? @db.VarChar(20) /// @zod.custom.use(z.string().max(20).optional())
+  dept_3    String? @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_device_driver {
-  device_driver_id     Int     @id @default(0)
-  device_model_id      Int
-  driver_manufacturer  String? @db.VarChar(100)
-  printer_language     String? @db.VarChar(45)
-  install_file_address String? @db.VarChar(200)
-  model_manufacturer   String? @db.VarChar(100)
-  model_name           String? @db.VarChar(100)
-  color_support        Int?    @db.TinyInt
+  device_driver_id     Int     @id @default(0) /// @zod.custom.use(z.coerce.number())
+  device_model_id      Int /// @zod.custom.use(z.coerce.number())
+  driver_manufacturer  String? @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
+  printer_language     String? @db.VarChar(45) /// @zod.custom.use(z.string().max(45).optional())
+  install_file_address String? @db.VarChar(200) /// @zod.custom.use(z.string().max(200).optional())
+  model_manufacturer   String? @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
+  model_name           String? @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
+  color_support        Int?    @db.TinyInt /// @zod.custom.use(z.coerce.number().optional())
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_user {
-  user_id          Int               @id @default(0)
-  user_name        String            @db.VarChar(45)
-  login_id         String            @db.VarChar(45)
-  mobile_num       String?           @db.VarChar(20)
-  office_num       String?           @db.VarChar(20)
-  email            String?           @db.VarChar(100)
+  user_id          Int               @id @default(0) /// @zod.custom.use(z.coerce.number())
+  user_name        String            @db.VarChar(45) /// @zod.custom.use(z.string().max(45))
+  login_id         String            @db.VarChar(45) /// @zod.custom.use(z.string().max(45))
+  mobile_num       String?           @db.VarChar(20) /// @zod.custom.use(z.string().max(20).optional())
+  office_num       String?           @db.VarChar(20) /// @zod.custom.use(z.string().max(20).optional())
+  email            String?           @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
   modified_at      DateTime?         @default(now()) @db.Timestamp(0)
   created_at       DateTime          @default(now()) @db.Timestamp(0)
-  is_active        Int               @default(1) @db.TinyInt
+  is_active        Int               @default(1) @db.TinyInt /// @zod.custom.use(z.coerce.number().default(1))
   permission       v_user_permission @default(user)
-  dept_id          Int
-  approval_role_id Int?
-  position_id      Int
-  dept_name        String?           @db.VarChar(100)
-  parent_dept_id   Int?
+  dept_id          Int /// @zod.custom.use(z.coerce.number())
+  approval_role_id Int? /// @zod.custom.use(z.coerce.number().optional())
+  position_id      Int /// @zod.custom.use(z.coerce.number())
+  dept_name        String?           @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
+  parent_dept_id   Int? /// @zod.custom.use(z.coerce.number().optional())
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_warehouse {
-  warehouse_id        Int     @id @default(0)
-  warehouse_name      String  @db.VarChar(100)
-  mgmt_dept_id        Int
-  mgmt_dept_name      String? @db.VarChar(100)
-  mgmt_parent_dept_id Int?
+  warehouse_id        Int     @id @default(0) /// @zod.custom.use(z.coerce.number())
+  warehouse_name      String  @db.VarChar(100) /// @zod.custom.use(z.string().max(100))
+  mgmt_dept_id        Int /// @zod.custom.use(z.coerce.number())
+  mgmt_dept_name      String? @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
+  mgmt_parent_dept_id Int? /// @zod.custom.use(z.coerce.number().optional())
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_device {
-  device_id              Int      @id @default(0)
-  device_model_id        Int
-  owner_dept_id          Int
-  mgmt_dept_id           Int
-  serial                 String   @db.VarChar(50)
+  device_id              Int      @id @default(0) /// @zod.custom.use(z.coerce.number())
+  device_model_id        Int /// @zod.custom.use(z.coerce.number())
+  owner_dept_id          Int /// @zod.custom.use(z.coerce.number())
+  mgmt_dept_id           Int /// @zod.custom.use(z.coerce.number())
+  serial                 String   @db.VarChar(50) /// @zod.custom.use(z.string().max(50))
   regi_date              DateTime @db.Date
-  mac                    String   @db.VarChar(50)
-  last_inspection_log_id Int?
-  last_location_log_id   Int?
-  status_id              Int      @default(1)
-  model_name             String?  @db.VarChar(100)
-  manufacturer           String?  @db.VarChar(100)
-  owner_dept_name        String?  @db.VarChar(100)
-  mgmt_dept_name         String?  @db.VarChar(100)
-  location_id            Int?     @default(0)
-  warehouse_id           Int?     @default(0)
-  warehouse_name         String?  @db.VarChar(100)
-  client_branch_id       Int?     @default(0)
-  client_branch_name     String?  @db.VarChar(100)
-  status_name            String?  @db.VarChar(45)
-  has_fax                BigInt?
-  has_desk               BigInt?
-  has_shelf              BigInt?
+  mac                    String   @db.VarChar(50) /// @zod.custom.use(z.string().max(50))
+  last_inspection_log_id Int? /// @zod.custom.use(z.coerce.number().optional())
+  last_location_log_id   Int? /// @zod.custom.use(z.coerce.number().optional())
+  status_id              Int      @default(1) /// @zod.custom.use(z.coerce.number().default(1))
+  model_name             String?  @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
+  manufacturer           String?  @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
+  owner_dept_name        String?  @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
+  mgmt_dept_name         String?  @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
+  location_id            Int?     @default(0) /// @zod.custom.use(z.coerce.number().default(0))
+  warehouse_id           Int?     @default(0) /// @zod.custom.use(z.coerce.number().default(0))
+  warehouse_name         String?  @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
+  client_branch_id       Int?     @default(0) /// @zod.custom.use(z.coerce.number().default(0))
+  client_branch_name     String?  @db.VarChar(100) /// @zod.custom.use(z.string().max(100).optional())
+  status_name            String?  @db.VarChar(45) /// @zod.custom.use(z.string().max(45).optional())
+  has_fax                BigInt? /// @zod.custom.use(z.coerce.number().optional())
+  has_desk               BigInt? /// @zod.custom.use(z.coerce.number().optional())
+  has_shelf              BigInt? /// @zod.custom.use(z.coerce.number().optional())
 }
 
 enum location_location_type {
