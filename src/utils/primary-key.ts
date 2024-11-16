@@ -1,4 +1,4 @@
-// primaryKeyCache.ts
+// primary-key.ts
 import { Prisma, PrismaClient } from '@prisma/client';
 
 class PrimaryKey {

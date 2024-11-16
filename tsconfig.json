@@ -20,6 +20,7 @@
       "@src/*": ["src/*"],
       "@config": ["config"],
       "@config/*": ["config/*"],
+      "@prisma/client": ["./node_modules/.prisma/client"],
       "@prisma": ["prisma"],
       "@prisma/*": ["prisma/*"],
       "@zod-schemas": ["prisma/zod-schemas"],

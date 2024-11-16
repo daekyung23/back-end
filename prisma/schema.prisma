@@ -6,8 +6,8 @@ generator client {
 generator zod {
   provider               = "zod-prisma-types"
   output                 = "./zod-schemas"
-  createInputTypes       = "true"
   addInputTypeValidation = "true"
+  createInputTypes       = "true"
   createModelTypes       = "true"
 }
 
@@ -18,7 +18,7 @@ datasource db {
 
 model approval_role {
   role_id       Int    @id @default(autoincrement())
-  role_name String @db.VarChar(45) /// @zod.string({ required_error: "role_name은 필수 입력값입니다" }).min(1).max(45, { message: "role_name은 45자를 초과할 수 없습니다" })
+  role_name     String @db.VarChar(45)
   upper_role_id Int?
 
   @@index([upper_role_id], map: "fk_approval_role_approval_role1_idx")
@@ -28,12 +28,12 @@ model call {
   call_id                  Int       @id @default(autoincrement())
   call_type_id             Int
   client_branch_id         Int
-  requester_name String @db.VarChar(50) /// @zod.string({ required_error: "requester_name은 필수 입력값입니다" }).min(1).max(50, { message: "requester_name은 50자를 초과할 수 없습니다" })
-  requester_num String @db.VarChar(20) /// @zod.string({ required_error: "requester_num은 필수 입력값입니다" }).min(1).max(20, { message: "requester_num은 20자를 초과할 수 없습니다" })
-  requester_black_consumer Int @db.TinyInt /// @zod.number({ required_error: "requester_black_consumer은 필수 입력값입니다" }).int().min(0).max(1)
+  requester_name           String    @db.VarChar(50)
+  requester_num            String    @db.VarChar(20)
+  requester_black_consumer Int       @default(0) @db.TinyInt
   device_id                Int?
-  detail String @db.VarChar(200) /// @zod.string({ required_error: "detail은 필수 입력값입니다" }).min(1).max(200, { message: "detail은 200자를 초과할 수 없습니다" })
-  state String @db.VarChar(45) /// @zod.string({ required_error: "state은 필수 입력값입니다" }).min(1).max(45, { message: "state은 45자를 초과할 수 없습니다" })
+  detail                   String    @db.VarChar(200)
+  state                    String    @db.VarChar(45)
   received_at              DateTime  @db.Timestamp(0)
   receiver_id              Int
   transferred_at           DateTime? @db.Timestamp(0)
@@ -51,7 +51,7 @@ model call {
 
 model call_type {
   call_type_id        Int    @id @default(autoincrement())
-  call_type_name String @db.VarChar(50) /// @zod.string({ required_error: "call_type_name은 필수 입력값입니다" }).min(1).max(50, { message: "call_type_name은 50자를 초과할 수 없습니다" })
+  call_type_name      String @db.VarChar(50)
   parent_call_type_id Int?
 
   @@index([parent_call_type_id], map: "fk_call_type_call_type1_idx")
@@ -61,8 +61,8 @@ model client {
   client_id                     Int    @id @default(autoincrement())
   parent_client_id              Int?
   default_client_branch_rate_id Int
-  client_name String @db.VarChar(45) /// @zod.string({ required_error: "client_name은 필수 입력값입니다" }).min(1).max(45, { message: "client_name은 45자를 초과할 수 없습니다" })
-  is_active Int @db.TinyInt /// @zod.number({ required_error: "is_active은 필수 입력값입니다" }).int().min(0).max(1)
+  client_name                   String @db.VarChar(45)
+  is_active                     Int    @default(1) @db.TinyInt
 
   @@index([parent_client_id], map: "fk_client_client1_idx")
   @@index([default_client_branch_rate_id], map: "fk_client_client_branch_rate1_idx")
@@ -73,15 +73,15 @@ model client_branch {
   sigungu_id            Int
   mgmt_dept_id          Int
   client_id             Int
-  client_branch_name String @db.VarChar(100) /// @zod.string({ required_error: "client_branch_name은 필수 입력값입니다" }).min(1).max(100, { message: "client_branch_name은 100자를 초과할 수 없습니다" })
+  client_branch_name    String  @db.VarChar(100)
   client_branch_rate_id Int
-  branch_mgr_name String? @db.VarChar(45) /// @zod.string.max(45, { message: "branch_mgr_name은 45자를 초과할 수 없습니다" })
-  branch_mgr_mobile_num String? @db.VarChar(45) /// @zod.string.max(45, { message: "branch_mgr_mobile_num은 45자를 초과할 수 없습니다" })
-  branch_mgr_office_num String? @db.VarChar(45) /// @zod.string.max(45, { message: "branch_mgr_office_num은 45자를 초과할 수 없습니다" })
-  branch_mgr_email String? @db.VarChar(45) /// @zod.string.max(45, { message: "branch_mgr_email은 45자를 초과할 수 없습니다" })
-  is_active Int @db.TinyInt /// @zod.number({ required_error: "is_active은 필수 입력값입니다" }).int().min(0).max(1)
-  remote_support Int @db.TinyInt /// @zod.number({ required_error: "remote_support은 필수 입력값입니다" }).int().min(0).max(1)
-  push_alert Int @db.TinyInt /// @zod.number({ required_error: "push_alert은 필수 입력값입니다" }).int().min(0).max(1)
+  branch_mgr_name       String? @db.VarChar(45)
+  branch_mgr_mobile_num String? @db.VarChar(45)
+  branch_mgr_office_num String? @db.VarChar(45)
+  branch_mgr_email      String? @db.VarChar(45)
+  is_active             Int     @default(1) @db.TinyInt
+  remote_support        Int     @default(0) @db.TinyInt
+  push_alert            Int     @default(0) @db.TinyInt
 
   @@index([client_id], map: "fk_client_branch_client1_idx")
   @@index([client_branch_rate_id], map: "fk_client_branch_client_branch_rate1_idx")
@@ -91,21 +91,21 @@ model client_branch {
 
 model client_rate {
   client_rate_id Int     @id @default(autoincrement())
-  rate_type String @db.VarChar(10) /// @zod.string({ required_error: "rate_type은 필수 입력값입니다" }).min(1).max(10, { message: "rate_type은 10자를 초과할 수 없습니다" })
-  rate_detail String? @db.VarChar(45) /// @zod.string.max(45, { message: "rate_detail은 45자를 초과할 수 없습니다" })
+  rate_type      String  @db.VarChar(10)
+  rate_detail    String? @db.VarChar(45)
 }
 
 model consumable_model {
   consumable_model_id Int    @id @default(autoincrement())
-  manufacturer String @db.VarChar(100) /// @zod.string({ required_error: "manufacturer은 필수 입력값입니다" }).min(1).max(100, { message: "manufacturer은 100자를 초과할 수 없습니다" })
-  consumable_name String @db.VarChar(100) /// @zod.string({ required_error: "consumable_name은 필수 입력값입니다" }).min(1).max(100, { message: "consumable_name은 100자를 초과할 수 없습니다" })
-  consumable_type String @db.VarChar(100) /// @zod.string({ required_error: "consumable_type은 필수 입력값입니다" }).min(1).max(100, { message: "consumable_type은 100자를 초과할 수 없습니다" })
+  manufacturer        String @db.VarChar(100)
+  consumable_name     String @db.VarChar(100)
+  consumable_type     String @db.VarChar(100)
 }
 
 model dept {
   dept_id        Int    @id @default(autoincrement())
   parent_dept_id Int?
-  dept_name String @db.VarChar(100) /// @zod.string({ required_error: "dept_name은 필수 입력값입니다" }).min(1).max(100, { message: "dept_name은 100자를 초과할 수 없습니다" })
+  dept_name      String @db.VarChar(100)
 
   @@index([parent_dept_id], map: "fk_dept_dept1_idx")
 }
@@ -115,9 +115,9 @@ model device {
   device_model_id        Int
   owner_dept_id          Int
   mgmt_dept_id           Int
-  serial String @db.VarChar(50) /// @zod.string({ required_error: "serial은 필수 입력값입니다" }).min(1).max(50, { message: "serial은 50자를 초과할 수 없습니다" })
+  serial                 String   @db.VarChar(50)
   regi_date              DateTime @db.Date
-  mac String @db.VarChar(50) /// @zod.string({ required_error: "mac은 필수 입력값입니다" }).min(1).max(50, { message: "mac은 50자를 초과할 수 없습니다" })
+  mac                    String   @db.VarChar(50)
   last_inspection_log_id Int?
   last_location_log_id   Int?
   status_id              Int      @default(1)
@@ -141,7 +141,7 @@ model device_approval {
   destination_location_id Int?
   approver_id             Int?
   approve_at              DateTime? @db.Timestamp(0)
-  is_approved Int? @db.TinyInt /// @zod.number.int().min(0).max(1)
+  is_approved             Int?      @db.TinyInt
 
   @@index([approver_role_id], map: "fk_approval_approver_group1_idx")
   @@index([sub_approval_id], map: "fk_device_approval_device_approval1_idx")
@@ -154,7 +154,7 @@ model device_approval {
 
 model device_approval_type {
   approval_type_id   Int    @id @default(autoincrement())
-  approval_type_name String @db.VarChar(45) /// @zod.string({ required_error: "approval_type_name은 필수 입력값입니다" }).min(1).max(45, { message: "approval_type_name은 45자를 초과할 수 없습니다" })
+  approval_type_name String @db.VarChar(45)
 }
 
 model device_consumable_compatibility {
@@ -167,9 +167,9 @@ model device_consumable_compatibility {
 model device_driver {
   device_driver_id     Int     @id @default(autoincrement())
   device_model_id      Int
-  manufacturer String? @db.VarChar(100) /// @zod.string.max(100, { message: "manufacturer은 100자를 초과할 수 없습니다" })
-  printer_language String? @db.VarChar(45) /// @zod.string.max(45, { message: "printer_language은 45자를 초과할 수 없습니다" })
-  install_file_address String? @db.VarChar(200) /// @zod.string.max(200, { message: "install_file_address은 200자를 초과할 수 없습니다" })
+  manufacturer         String? @db.VarChar(100)
+  printer_language     String? @db.VarChar(45)
+  install_file_address String? @db.VarChar(200)
 
   @@index([device_model_id], map: "fk_driver_device_model1_idx")
 }
@@ -179,7 +179,7 @@ model device_inspection_log {
   device_id                Int
   inspector_id             Int
   inspection_date          DateTime                      @db.Date
-  visit_type String @db.VarChar(45) /// @zod.string({ required_error: "visit_type은 필수 입력값입니다" }).min(1).max(45, { message: "visit_type은 45자를 초과할 수 없습니다" })
+  visit_type               String                        @db.VarChar(45)
   call_id                  Int?
   FL                       Int?
   FS                       Int?
@@ -201,7 +201,7 @@ model device_inspection_log {
   drum_count_MA            Int?
   drum_count_CY            Int?
   drum_count_BK            Int?
-  drum_replacement_detail String? @db.VarChar(50) /// @zod.string.max(50, { message: "drum_replacement_detail은 50자를 초과할 수 없습니다" })
+  drum_replacement_detail  String?                       @db.VarChar(50)
   status                   device_inspection_log_status?
 
   @@index([device_id], map: "fk_device_history_device_idx")
@@ -212,12 +212,12 @@ model device_inspection_log {
 model device_install_info {
   device_id    Int     @id
   installer_id Int
-  mgmt_num String @db.VarChar(50) /// @zod.string({ required_error: "mgmt_num은 필수 입력값입니다" }).min(1).max(50, { message: "mgmt_num은 50자를 초과할 수 없습니다" })
-  ip_address String? @db.VarChar(50) /// @zod.string.max(50, { message: "ip_address은 50자를 초과할 수 없습니다" })
-  subnet_mask String? @db.VarChar(50) /// @zod.string.max(50, { message: "subnet_mask은 50자를 초과할 수 없습니다" })
-  gateway String? @db.VarChar(50) /// @zod.string.max(50, { message: "gateway은 50자를 초과할 수 없습니다" })
-  dns1 String? @db.VarChar(50) /// @zod.string.max(50, { message: "dns1은 50자를 초과할 수 없습니다" })
-  dns2 String? @db.VarChar(50) /// @zod.string.max(50, { message: "dns2은 50자를 초과할 수 없습니다" })
+  mgmt_num     String  @db.VarChar(50)
+  ip_address   String? @db.VarChar(50)
+  subnet_mask  String? @db.VarChar(50)
+  gateway      String? @db.VarChar(50)
+  dns1         String? @db.VarChar(50)
+  dns2         String? @db.VarChar(50)
 
   @@index([device_id], map: "fk_device_install_info_device1_idx")
   @@index([installer_id], map: "fk_device_install_info_user1_idx")
@@ -228,7 +228,7 @@ model device_location_log {
   device_id              Int
   location_date          DateTime @db.Date
   location_id            Int
-  location_detail String? @db.VarChar(200) /// @zod.string.max(200, { message: "location_detail은 200자를 초과할 수 없습니다" })
+  location_detail        String?  @db.VarChar(200)
 
   @@index([device_id], map: "fk_device_location_log_device1_idx")
   @@index([location_id], map: "fk_device_location_log_location1_idx")
@@ -236,16 +236,16 @@ model device_location_log {
 
 model device_model {
   device_model_id Int    @id @default(autoincrement())
-  model_name String @db.VarChar(100) /// @zod.string({ required_error: "model_name은 필수 입력값입니다" }).min(1).max(100, { message: "model_name은 100자를 초과할 수 없습니다" })
-  manufacturer String @db.VarChar(100) /// @zod.string({ required_error: "manufacturer은 필수 입력값입니다" }).min(1).max(100, { message: "manufacturer은 100자를 초과할 수 없습니다" })
-  color_support Int @db.TinyInt /// @zod.number({ required_error: "color_support은 필수 입력값입니다" }).int().min(0).max(1)
+  model_name      String @db.VarChar(100)
+  manufacturer    String @db.VarChar(100)
+  color_support   Int    @db.TinyInt
 }
 
 model device_option {
   device_option_id      Int                         @id @default(autoincrement())
   option_model_id       Int
-  serial String? @db.VarChar(50) /// @zod.string.max(50, { message: "serial은 50자를 초과할 수 없습니다" })
-  is_active Int @db.TinyInt /// @zod.number({ required_error: "is_active은 필수 입력값입니다" }).int().min(0).max(1)
+  serial                String?                     @db.VarChar(50)
+  is_active             Int                         @default(1) @db.TinyInt
   location_type         device_option_location_type
   location_warehouse_id Int?
   location_device_id    Int?
@@ -264,7 +264,7 @@ model device_option_compatibility {
 
 model device_status {
   status_id   Int    @id @default(autoincrement())
-  status_name String @db.VarChar(45) /// @zod.string({ required_error: "status_name은 필수 입력값입니다" }).min(1).max(45, { message: "status_name은 45자를 초과할 수 없습니다" })
+  status_name String @db.VarChar(45)
 }
 
 model inspection_approval {
@@ -275,7 +275,7 @@ model inspection_approval {
   device_inspection_log_id Int
   approver_id              Int?
   approved_at              DateTime? @db.Timestamp(0)
-  is_approved Int? @db.TinyInt /// @zod.number.int().min(0).max(1)
+  is_approved              Int?      @db.TinyInt
 
   @@index([approver_role_id], map: "fk_inspection_approval_approval_role1_idx")
   @@index([device_inspection_log_id], map: "fk_inspection_approval_device_inspection_log1_idx")
@@ -295,19 +295,19 @@ model location {
 
 model option_model {
   option_model_id   Int    @id @default(autoincrement())
-  option_model_name String @db.VarChar(100) /// @zod.string({ required_error: "option_model_name은 필수 입력값입니다" }).min(1).max(100, { message: "option_model_name은 100자를 초과할 수 없습니다" })
-  option_type String @db.VarChar(45) /// @zod.string({ required_error: "option_type은 필수 입력값입니다" }).min(1).max(45, { message: "option_type은 45자를 초과할 수 없습니다" })
-  manufacturer String @db.VarChar(100) /// @zod.string({ required_error: "manufacturer은 필수 입력값입니다" }).min(1).max(100, { message: "manufacturer은 100자를 초과할 수 없습니다" })
+  option_model_name String @db.VarChar(100)
+  option_type       String @db.VarChar(45)
+  manufacturer      String @db.VarChar(100)
 }
 
 model sido {
   sido_id   Int     @id @default(autoincrement())
-  sido_name String? @db.VarChar(45) /// @zod.string.max(45, { message: "sido_name은 45자를 초과할 수 없습니다" })
+  sido_name String? @db.VarChar(45)
 }
 
 model sigungu {
   sigungu_id   Int    @id @default(autoincrement())
-  sigungu_name String @db.VarChar(45) /// @zod.string({ required_error: "sigungu_name은 필수 입력값입니다" }).min(1).max(45, { message: "sigungu_name은 45자를 초과할 수 없습니다" })
+  sigungu_name String @db.VarChar(45)
   sido_id      Int
 
   @@index([sido_id], map: "fk_sigungu_sido1_idx")
@@ -315,18 +315,18 @@ model sigungu {
 
 model user {
   user_id          Int             @id @default(autoincrement())
-  user_name String @db.VarChar(45) /// @zod.string({ required_error: "user_name은 필수 입력값입니다" }).min(1).max(45, { message: "user_name은 45자를 초과할 수 없습니다" })
+  user_name        String          @db.VarChar(45)
   login_id         String          @unique(map: "login_id_UNIQUE") @db.VarChar(45)
-  password String @db.VarChar(50) /// @zod.string({ required_error: "password은 필수 입력값입니다" }).min(1).max(50, { message: "password은 50자를 초과할 수 없습니다" })
-  mobile_num String? @db.VarChar(20) /// @zod.string.max(20, { message: "mobile_num은 20자를 초과할 수 없습니다" })
-  office_num String? @db.VarChar(20) /// @zod.string.max(20, { message: "office_num은 20자를 초과할 수 없습니다" })
-  email String? @db.VarChar(100) /// @zod.string.max(100, { message: "email은 100자를 초과할 수 없습니다" })
+  password         String          @db.VarChar(50)
+  mobile_num       String?         @db.VarChar(20)
+  office_num       String?         @db.VarChar(20)
+  email            String?         @db.VarChar(100)
   modified_at      DateTime?       @default(now()) @db.Timestamp(0)
   dept_id          Int
   approval_role_id Int?
   position_id      Int
   created_at       DateTime        @default(now()) @db.Timestamp(0)
-  is_active Int @db.TinyInt /// @zod.number({ required_error: "is_active은 필수 입력값입니다" }).int().min(0).max(1)
+  is_active        Int             @default(1) @db.TinyInt
   permission       user_permission @default(user)
 
   @@index([approval_role_id], map: "fk_user_approval_role1_idx")
@@ -336,7 +336,7 @@ model user {
 
 model user_position {
   user_position_id Int    @id @default(autoincrement())
-  position_name String @db.VarChar(45) /// @zod.string({ required_error: "position_name은 필수 입력값입니다" }).min(1).max(45, { message: "position_name은 45자를 초과할 수 없습니다" })
+  position_name    String @db.VarChar(45)
 }
 
 model user_role_assignment {
@@ -348,7 +348,7 @@ model user_role_assignment {
 
 model warehouse {
   warehouse_id   Int    @id @default(autoincrement())
-  warehouse_name String @db.VarChar(100) /// @zod.string({ required_error: "warehouse_name은 필수 입력값입니다" }).min(1).max(100, { message: "warehouse_name은 100자를 초과할 수 없습니다" })
+  warehouse_name String @db.VarChar(100)
   mgmt_dept_id   Int
 
   @@index([mgmt_dept_id], map: "fk_warehouse_dept1_idx")
@@ -356,39 +356,123 @@ model warehouse {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_client {
-  client_id                     Int     @unique @default(0)
-  client_name String @db.VarChar(45) /// @zod.string({ required_error: "client_name은 필수 입력값입니다" }).min(1).max(45, { message: "client_name은 45자를 초과할 수 없습니다" })
-  parent_client_id Int? @db.TinyInt /// @zod.number.int().min(0).max(1) /// @zod.number({ required_error: "default_client_branch_rate_id은 필수 입력값입니다" }).int().min(0).max(1)
-  parent_client_name String? @db.VarChar(45) /// @zod.string.max(45, { message: "parent_client_name은 45자를 초과할 수 없습니다" })
-  rate_type String? @db.VarChar(10) /// @zod.string.max(10, { message: "rate_type은 10자를 초과할 수 없습니다" })
-  rate_detail String? @db.VarChar(45) /// @zod.string.max(45, { message: "rate_detail은 45자를 초과할 수 없습니다" })
+  client_id                     Int     @id @default(0)
+  client_name                   String  @default("") @db.VarChar(45)
+  parent_client_id              Int?
+  default_client_branch_rate_id BigInt  @default(0)
+  is_active                     Int     @default(0)
+  parent_client_name            String? @db.VarChar(45)
+  client_rate                   String? @db.VarChar(10)
+  rate_detail                   String? @db.VarChar(45)
   branch_count                  BigInt  @default(0)
 }
 
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_client_branch {
-  client_branch_id      Int     @unique @default(0)
-  client_branch_name String @db.VarChar(100) /// @zod.string({ required_error: "client_branch_name은 필수 입력값입니다" }).min(1).max(100, { message: "client_branch_name은 100자를 초과할 수 없습니다" })
+  client_branch_id      Int     @id @default(0)
+  client_branch_name    String  @db.VarChar(100)
   client_id             Int
   sigungu_id            Int
   mgmt_dept_id          Int
   client_branch_rate_id Int
-  branch_mgr_name String? @db.VarChar(45) /// @zod.string.max(45, { message: "branch_mgr_name은 45자를 초과할 수 없습니다" })
-  branch_mgr_mobile_num String? @db.VarChar(45) /// @zod.string.max(45, { message: "branch_mgr_mobile_num은 45자를 초과할 수 없습니다" })
-  branch_mgr_office_num String? @db.VarChar(45) /// @zod.string.max(45, { message: "branch_mgr_office_num은 45자를 초과할 수 없습니다" })
-  branch_mgr_email String? @db.VarChar(45) /// @zod.string.max(45, { message: "branch_mgr_email은 45자를 초과할 수 없습니다" })
-  is_active Int @db.TinyInt /// @zod.number({ required_error: "is_active은 필수 입력값입니다" }).int().min(0).max(1)
-  remote_support Int @db.TinyInt /// @zod.number({ required_error: "remote_support은 필수 입력값입니다" }).int().min(0).max(1)
-  push_alert Int @db.TinyInt /// @zod.number({ required_error: "push_alert은 필수 입력값입니다" }).int().min(0).max(1)
-  client_name String? @db.VarChar(45) /// @zod.string.max(45, { message: "client_name은 45자를 초과할 수 없습니다" })
-  sigungu_name String? @db.VarChar(45) /// @zod.string.max(45, { message: "sigungu_name은 45자를 초과할 수 없습니다" })
-  sido_name String? @db.VarChar(45) /// @zod.string.max(45, { message: "sido_name은 45자를 초과할 수 없습니다" })
+  branch_mgr_name       String? @db.VarChar(45)
+  branch_mgr_mobile_num String? @db.VarChar(45)
+  branch_mgr_office_num String? @db.VarChar(45)
+  branch_mgr_email      String? @db.VarChar(45)
+  is_active             Int     @default(1) @db.TinyInt
+  remote_support        Int     @default(0) @db.TinyInt
+  push_alert            Int     @default(0) @db.TinyInt
+  client_name           String? @db.VarChar(45)
+  sigungu_name          String? @db.VarChar(45)
+  sido_name             String? @db.VarChar(45)
 }
 
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view v_consumable_model {
+  compatibility_id    String @id @db.VarChar(23)
+  consumable_model_id Int?    @default(0)
+  manufacturer        String? @db.VarChar(100)
+  consumable_name     String? @db.VarChar(100)
+  consumable_type     String? @db.VarChar(100)
+  model_manufacturer  String? @db.VarChar(100)
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_dept {
-  dept_id          Int     @unique @default(0)
-  dept_name String @db.VarChar(100) /// @zod.string({ required_error: "dept_name은 필수 입력값입니다" }).min(1).max(100, { message: "dept_name은 100자를 초과할 수 없습니다" })
+  dept_id   BigInt  @id @default(0)
+  dept_1_id String  @default("") @db.VarChar(20)
+  dept_1    String  @default("") @db.VarChar(100)
+  dept_2_id String? @db.VarChar(20)
+  dept_2    String? @db.VarChar(100)
+  dept_3_id String? @db.VarChar(20)
+  dept_3    String? @db.VarChar(100)
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view v_device_driver {
+  device_driver_id     Int     @id @default(0)
+  device_model_id      Int
+  driver_manufacturer  String? @db.VarChar(100)
+  printer_language     String? @db.VarChar(45)
+  install_file_address String? @db.VarChar(200)
+  model_manufacturer   String? @db.VarChar(100)
+  model_name           String? @db.VarChar(100)
+  color_support        Int?    @db.TinyInt
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view v_user {
+  user_id          Int               @id @default(0)
+  user_name        String            @db.VarChar(45)
+  login_id         String            @db.VarChar(45)
+  mobile_num       String?           @db.VarChar(20)
+  office_num       String?           @db.VarChar(20)
+  email            String?           @db.VarChar(100)
+  modified_at      DateTime?         @default(now()) @db.Timestamp(0)
+  created_at       DateTime          @default(now()) @db.Timestamp(0)
+  is_active        Int               @default(1) @db.TinyInt
+  permission       v_user_permission @default(user)
+  dept_id          Int
+  approval_role_id Int?
+  position_id      Int
+  dept_name        String?           @db.VarChar(100)
   parent_dept_id   Int?
-  parent_dept_name String? @db.VarChar(100) /// @zod.string.max(100, { message: "parent_dept_name은 100자를 초과할 수 없습니다" })
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view v_warehouse {
+  warehouse_id        Int     @id @default(0)
+  warehouse_name      String  @db.VarChar(100)
+  mgmt_dept_id        Int
+  mgmt_dept_name      String? @db.VarChar(100)
+  mgmt_parent_dept_id Int?
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view v_device {
+  device_id              Int      @id @default(0)
+  device_model_id        Int
+  owner_dept_id          Int
+  mgmt_dept_id           Int
+  serial                 String   @db.VarChar(50)
+  regi_date              DateTime @db.Date
+  mac                    String   @db.VarChar(50)
+  last_inspection_log_id Int?
+  last_location_log_id   Int?
+  status_id              Int      @default(1)
+  model_name             String?  @db.VarChar(100)
+  manufacturer           String?  @db.VarChar(100)
+  owner_dept_name        String?  @db.VarChar(100)
+  mgmt_dept_name         String?  @db.VarChar(100)
+  location_id            Int?     @default(0)
+  warehouse_id           Int?     @default(0)
+  warehouse_name         String?  @db.VarChar(100)
+  client_branch_id       Int?     @default(0)
+  client_branch_name     String?  @db.VarChar(100)
+  status_name            String?  @db.VarChar(45)
+  has_fax                BigInt?
+  has_desk               BigInt?
+  has_shelf              BigInt?
 }
 
 enum location_location_type {
@@ -410,4 +494,10 @@ enum user_permission {
 enum device_inspection_log_status {
   normal
   pending
+}
+
+enum v_user_permission {
+  user
+  manager
+  admin
 }

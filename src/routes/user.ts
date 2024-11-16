@@ -4,26 +4,24 @@ import { validateInput } from '@middlewares/validators'
 import { z } from 'zod'
 
 import { 
-  client_branchUncheckedCreateInputSchema as createSchema,
-  client_branchUncheckedUpdateInputSchema as updateSchema,
-  client_branchWhereUniqueInputSchema as uniqueKeySchema,
-  clientWhereUniqueInputSchema as clientUniqueKeySchema
+  userUncheckedCreateInputSchema as createSchema,
+  userUncheckedUpdateInputSchema as updateSchema,
+  userWhereUniqueInputSchema as uniqueKeySchema,
 } from '@prisma/zod-schemas'
 import { searchSchema, activationSchema } from '@lib/zod-prisma-types'
 
 const router = Router()
-const controller = controllers.clientBranch
-
-// Defined At Controller & Service ------------------------------------------
-router.get('/by-client', 
-  validateInput({ query: clientUniqueKeySchema }), 
-  controller.findManyByClientId
-)
+const controller = controllers.user
 
 // Override At Service ------------------------------------------------------
 router.get('/search', 
   validateInput({ query: z.intersection(searchSchema, activationSchema) }), 
   controller.search
+)
+
+router.get('/check', 
+  validateInput({ query: uniqueKeySchema }), 
+  controller.exists
 )
 
 router.patch('/change-activation', 
@@ -37,19 +35,14 @@ router.post('/create',
   controller.create
 )
 
-router.get('/by-branch-id', 
-  validateInput({ query: uniqueKeySchema }), 
-  controller.findOneByUnique<'client_branch_id'>
-)
-
 router.patch('/update', 
   validateInput({ body: updateSchema }), 
-  controller.update<'client_branch_id'>
+  controller.update<'login_id'>
 )
 
 router.delete('/delete', 
   validateInput({ query: uniqueKeySchema }), 
-  controller.delete<'client_branch_id'>
+  controller.delete<'login_id'>
 )
 
-export const clientBranchRouter = router
+export const userRouter = router

@@ -1,22 +1,16 @@
 import { Service } from '@base/service'
 import { Repository } from '@base/repository'
-import { prisma } from '@lib/prisma'
+import { Prisma, prisma } from '@lib/prisma'
 import type { Activation } from '@lib/zod-prisma-types'
-import type { client_branch } from '@prisma/client'
-import type { SearchQuery, SearchResult } from '@base/types'
+import type { SearchQuery, SearchResult, Search } from '@base/types'
 import type { UpdateInputUnique } from '@lib/prisma'
 import type { Simplify } from 'type-fest'
 
-const MODEL = 'client_branch' as const
-const VIEW = 'v_client_branch' as const
+const MODEL = 'user' as const
+const VIEW = 'v_user' as const
 
-export class ClientBranchService extends Service<typeof MODEL, typeof VIEW> {
-  repository = new Repository<typeof MODEL, typeof VIEW>(prisma.client_branch, prisma.v_client_branch)
-  // Defined -------------------------------------------------------------------
-  findManyByClientId = async (query: Simplify<Pick<client_branch, 'client_id'>>) => {
-    return this.repository.findMany({ where: query })
-  }
-  
+export class UserService extends Service<typeof MODEL, typeof VIEW> {
+  repository = new Repository<typeof MODEL, typeof VIEW>(prisma.user, prisma.v_user)
   // Override ------------------------------------------------------------------
   override search = async (query: Simplify<SearchQuery<typeof VIEW>>): 
     Promise<SearchResult<typeof MODEL, typeof VIEW>> => {
@@ -25,11 +19,10 @@ export class ClientBranchService extends Service<typeof MODEL, typeof VIEW> {
     const skip = (page - 1) * take
     const where = {
       OR: [
-        { client_branch_name: { contains: search_term } },
-        { branch_mgr_name: { contains: search_term } },
-        { branch_mgr_mobile_num: { contains: search_term } },
-        { branch_mgr_office_num: { contains: search_term } },
-        { branch_mgr_email: { contains: search_term } },
+        { dept_name: { contains: search_term } },
+        { user_name: { contains: search_term } },
+        { login_id: { contains: search_term } },
+        { email: { contains: search_term } },
       ],
       is_active
     }
@@ -38,10 +31,16 @@ export class ClientBranchService extends Service<typeof MODEL, typeof VIEW> {
       this.repository.count({ where })
     ])
     return { 
-      client_branch: items, 
+      user: items, 
       totalPages: Math.ceil(total / take) 
     }
   }
+
+  override exists = async (query: Pick<Prisma.userWhereInput, 'login_id'>) => {
+    const { login_id } = query
+    const isExist = await this.repository.exists({ where: { login_id } })
+    return { isExist }
+  } 
 
   // 2. 메서드에서 사용
   override changeActivation = async<U extends keyof UpdateInputUnique<typeof MODEL>>(

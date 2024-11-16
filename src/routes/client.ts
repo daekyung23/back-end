@@ -6,53 +6,60 @@ import { z } from 'zod'
 import {
   clientUncheckedCreateInputSchema as createSchema,
   clientUncheckedUpdateInputSchema as updateSchema,
-  clientWhereUniqueInputSchema as primaryKeySchema,
-  clientSchema
+  clientWhereUniqueInputSchema as uniqueKeySchema,
+  clientSchema,
+  v_clientSchema
 } from '@prisma/zod-schemas'
 import { 
-  clientSearchSchema,
+  searchSchema,
   activationSchema 
 } from '@lib/zod-prisma-types'
 
 const router = Router()
 const controller = controllers.client
 
-router.get('/search', 
-  validateInput({ query: clientSearchSchema }), 
-  controller.search
-)
-
-router.get('/check', 
-  validateInput({ query: clientSchema.pick({ client_name: true }) }), 
-  controller.checkDuplicateByName
-)
-
+// Defined At Controller & Service ------------------------------------------
 router.get('/subclients/:client_id', 
-  validateInput({ params: primaryKeySchema }), 
+  validateInput({ params: uniqueKeySchema }), 
   controller.getSubClientsById
 )
 
+// Override At Service ------------------------------------------------------
+router.get('/search', 
+  validateInput({ query: 
+    searchSchema.extend({
+      is_active: activationSchema.shape.is_active,
+      client_rate: v_clientSchema.shape.client_rate
+    })
+  }), 
+  controller.search
+)
 
 router.patch('/change-activation', 
   validateInput({ body: activationSchema }), 
   controller.changeActivation
 )
 
-// CRUD ----------------------------------------------------------------------
+router.get('/check', 
+  validateInput({ query: clientSchema.pick({ client_name: true }) }), 
+  controller.exists
+)
+
+// Base CRUD ----------------------------------------------------------------
 router.post('/create', 
   validateInput({ body: createSchema }), 
   controller.create
 )
 
 router.patch('/update', 
-  validateInput({ body: z.intersection( primaryKeySchema, updateSchema ) }), 
-  controller.update
+  validateInput({ body: z.intersection( uniqueKeySchema, updateSchema ) }), 
+  controller.update<'client_id'>
 )
 
 router.delete('/delete', 
-  validateInput({ query: primaryKeySchema }), 
-  controller.delete
+  validateInput({ query: uniqueKeySchema }), 
+  controller.delete<'client_id'>
 )
 
 
-export default router
+export const clientRouter = router

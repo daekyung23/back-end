@@ -1,56 +1,89 @@
 
 import { Container } from '@base/container'
-import { PrismaModels } from '@lib/prisma'
+import { 
+  ModelDelegates, 
+  ModelName, 
+  CreateInputData,
+  FindUniqueInput, 
+  UncheckedUpdateInput, 
+  UpdateInputUnique,
+  DeleteInput,
+  CountInput
+} from '@lib/prisma'
+
 import type { Request, Response } from 'express'
 import { Service } from '@base/service'
+import type { Search } from '@base/types'
+import type { Activation } from '@lib/zod-prisma-types'
+import type { Fields } from '@lib/prisma'
 
-//역할: 응답 json 포맷팅, HTTP 상태 코드 반환, service 호출
+
+// Controller 역할: 응답 json 포맷팅, HTTP 상태 코드 반환, service 호출
 export class Controller<
-  ModelType extends keyof PrismaModels,
-  ViewType extends keyof PrismaModels = ModelType
->  extends Container<ModelType, ViewType> {
-  service: Service<ModelType, ViewType>
+  M extends ModelName,
+  V extends ModelName = M
+>  extends Container<M, V> {
+  service: Service<M, V>
+
+  constructor(
+    model: ModelDelegates[M],
+    view?: ModelDelegates[V],
+  ) {
+    super(model, view)
+    this.service = new Service<M, V>(model, view)
+  }
   
+  setService(service: Service<M, V>) {
+    this.service = service
+    return this
+  }
+
+  // CRUD
   create = async (req: Request, res: Response) => {
-    const data = req.validated.body
-    const result = await this.service.create({ 
-      data 
-    } as Parameters<PrismaModels[ModelType]['create']>[0])
+    const result = await this.service.create(req.validated.body as CreateInputData<M>)
     res.status(201).json(result)
   }
 
-  findOne = async (req: Request, res: Response) => {
-    const { [this.primaryKey]: fieldValue } = req.validated.query as Record<string, any>
-    const result = await this.service.findOne({
-      where: { [this.primaryKey]: fieldValue }
-    } as Parameters<PrismaModels[ModelType]['findUnique']>[0])
+  getAll = async (req: Request, res: Response) => {
+    const result = await this.service.getAll()
     res.json(result)
   }
 
-  findMany = async (req: Request, res: Response) => {
-    const uniqueFieldPlural = this.primaryKey + 's'
-    const { [uniqueFieldPlural]: fieldValue } = req.validated.query as Record<string, any>
-    const result = await this.service.findMany({ 
-      where: { [uniqueFieldPlural]: { in: fieldValue } }
-    } as Parameters<PrismaModels[ModelType]['findMany']>[0])
+  findOneByUnique = async<U extends keyof FindUniqueInput<V>>(req: Request, res: Response) => {
+    const result = await this.service.findOneByUnique(req.validated.query as Record<U, FindUniqueInput<V>[U]>)
     res.json(result)
   }
 
-  update = async (req: Request, res: Response) => {
-    const { [this.primaryKey]: value, ...data } = req.validated.body as Record<string, any>
-    const result = await this.service.update({ 
-      where: { [this.primaryKey]: value },
-      data
-    } as Parameters<PrismaModels[ModelType]['update']>[0])
+  findEachByUniqueArray = async<U extends keyof FindUniqueInput<V>>(req: Request, res: Response) => {
+    const result = await this.service.findEachByUniqueArray(req.validated.query as Record<U, FindUniqueInput<V>[U][]>)
     res.json(result)
   }
 
-  delete = async (req: Request, res: Response) => { 
-    const uniqueField = this.primaryKey as keyof typeof req.validated.query
-    const { [uniqueField]: fieldValue } = req.validated.query as Record<string, any>
-    const result = await this.service.delete({ 
-      where: { [uniqueField]: fieldValue },
-    } as Parameters<PrismaModels[ModelType]['delete']>[0])
+  update = async<U extends keyof UpdateInputUnique<M>> (req: Request, res: Response) => {
+    const result = await this.service.update<U>(req.validated.body as UncheckedUpdateInput<M>)
+    res.json(result)
+  }
+
+  delete = async<U extends keyof DeleteInput<M>> (req: Request, res: Response) => { 
+    const result = await this.service.delete<U>(req.validated.query as Record<U, DeleteInput<M>[U]>)
     res.json(result)  
+  }
+
+  // override Service 필수, Controller 선택
+  search = async (req: Request, res: Response) => {
+    const result = await this.service.search(req.validated.query as Search & Fields<V>)
+    res.json(result)
+  }
+
+  exists = async (req: Request, res: Response) => {
+    const result = await this.service.exists(req.validated.query as CountInput<M>)
+    res.json(result)
+  }
+
+  changeActivation = async<U extends keyof UpdateInputUnique<M>>(req: Request, res: Response) => {
+    const result = await this.service.changeActivation<U>(
+      req.validated.body as Record<U, UpdateInputUnique<M>[U]> & Activation
+    )
+    res.json(result)
   }
 }

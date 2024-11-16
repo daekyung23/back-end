@@ -1,17 +1,17 @@
-import type { PrismaModels } from '@lib/prisma'
+import type { ModelDelegates, ModelName } from '@lib/prisma'
 import primaryKey from '@utils/primary-key'
 
 export class Container<
-  ModelType extends keyof PrismaModels,
-  ViewType extends keyof PrismaModels = ModelType
->   {
-  protected model: PrismaModels[ModelType]
-  protected view?: PrismaModels[ViewType]
+  M extends ModelName,
+  V extends ModelName = M
+> {
+  protected model: ModelDelegates[M]
+  protected view?: ModelDelegates[V]
   protected readonly primaryKey: string
 
   constructor(
-    model: PrismaModels[ModelType],
-    view?: PrismaModels[ViewType]
+    model: ModelDelegates[M],
+    view?: ModelDelegates[V]
   ) {
     this.model = model
     this.view = view

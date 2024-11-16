@@ -1,4 +1,3 @@
-import 'module-alias/register'
 import config from '@config'
 import 'express-async-errors'
 import express from 'express'
@@ -8,6 +7,7 @@ import { prisma } from '@lib/prisma'
 import requestLogger from '@middlewares/request-logger'
 import responseLogger from '@middlewares/response-logger'
 import errorHandler from '@middlewares/error-handler'
+import routes from './routes' // alias 경로 왜 안되지?
 
 const app = express()
 
@@ -18,9 +18,17 @@ app.use(requestLogger)
 app.use(responseLogger)
 
 // 라우터 설정
-import routes from '@routes'
 app.use('/client', routes.client)
 app.use('/client-branch', routes.clientBranch)
+app.use('/consumable-model', routes.consumableModel)
+app.use('/device', routes.device)
+app.use('/device-driver', routes.deviceDriver)
+app.use('/device-model', routes.deviceModel)
+app.use('/sido', routes.sido)
+app.use('/sigungu', routes.sigungu)
+app.use('/user', routes.user)
+app.use('/user-position', routes.userPosition)
+app.use('/warehouse', routes.warehouse)
 
 // Prisma 연결 테스트 및 서버 시작
 async function bootstrap() {
