@@ -9,6 +9,10 @@ import responseLogger from '@middlewares/response-logger'
 import errorHandler from '@middlewares/error-handler'
 import routes from '@routes'
 
+BigInt.prototype.toJSON = function() {
+  return this.toString()
+}
+
 const app = express()
 
 // 미들웨어 설정
