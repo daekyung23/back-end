@@ -1,0 +1,2661 @@
+{
+  "tables": [
+    {
+      "name": "approval_role",
+      "columns": [
+        {
+          "name": "role_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "role_name",
+          "type": "varchar",
+          "nullable": false,
+          "length": 45,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "upper_role_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "fk_approval_role_approval_role1_idx",
+          "columns": [
+            "upper_role_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "role_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "call",
+      "columns": [
+        {
+          "name": "call_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "call_type_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "client_branch_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "requester_name",
+          "type": "varchar",
+          "nullable": false,
+          "length": 50,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "requester_num",
+          "type": "varchar",
+          "nullable": false,
+          "length": 20,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "requester_black_consumer",
+          "type": "tinyint",
+          "nullable": false,
+          "default": "0",
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "device_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "detail",
+          "type": "varchar",
+          "nullable": false,
+          "length": 200,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "state",
+          "type": "varchar",
+          "nullable": false,
+          "length": 45,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "received_at",
+          "type": "timestamp",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "receiver_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "transferred_at",
+          "type": "timestamp",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "transferred_dept_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "assigner_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "completed_at",
+          "type": "timestamp",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "fk_call_call_type1_idx",
+          "columns": [
+            "call_type_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_call_client_branch1_idx",
+          "columns": [
+            "client_branch_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_call_dept1_idx",
+          "columns": [
+            "transferred_dept_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_call_device1_idx",
+          "columns": [
+            "device_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_call_user1_idx",
+          "columns": [
+            "receiver_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_call_user2_idx",
+          "columns": [
+            "assigner_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "call_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "call_type",
+      "columns": [
+        {
+          "name": "call_type_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "call_type_name",
+          "type": "varchar",
+          "nullable": false,
+          "length": 50,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "parent_call_type_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "fk_call_type_call_type1_idx",
+          "columns": [
+            "parent_call_type_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "call_type_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "client",
+      "columns": [
+        {
+          "name": "client_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "parent_client_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "default_client_branch_rate_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "client_name",
+          "type": "varchar",
+          "nullable": false,
+          "length": 45,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "is_active",
+          "type": "tinyint",
+          "nullable": false,
+          "default": "1",
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "fk_client_client1_idx",
+          "columns": [
+            "parent_client_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_client_client_branch_rate1_idx",
+          "columns": [
+            "default_client_branch_rate_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "client_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "client_branch",
+      "columns": [
+        {
+          "name": "client_branch_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "sigungu_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "mgmt_dept_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "client_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "client_branch_name",
+          "type": "varchar",
+          "nullable": false,
+          "length": 100,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "client_branch_rate_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "branch_mgr_name",
+          "type": "varchar",
+          "nullable": true,
+          "length": 45,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "branch_mgr_mobile_num",
+          "type": "varchar",
+          "nullable": true,
+          "length": 45,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "branch_mgr_office_num",
+          "type": "varchar",
+          "nullable": true,
+          "length": 45,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "branch_mgr_email",
+          "type": "varchar",
+          "nullable": true,
+          "length": 45,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "is_active",
+          "type": "tinyint",
+          "nullable": false,
+          "default": "1",
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "remote_support",
+          "type": "tinyint",
+          "nullable": false,
+          "default": "0",
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "push_alert",
+          "type": "tinyint",
+          "nullable": false,
+          "default": "0",
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "fk_client_branch_client1_idx",
+          "columns": [
+            "client_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_client_branch_client_branch_rate1_idx",
+          "columns": [
+            "client_branch_rate_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_client_branch_dept1_idx",
+          "columns": [
+            "mgmt_dept_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_client_branch_sigungu1_idx",
+          "columns": [
+            "sigungu_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "client_branch_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "client_rate",
+      "columns": [
+        {
+          "name": "client_rate_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "rate_type",
+          "type": "varchar",
+          "nullable": false,
+          "length": 10,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "rate_detail",
+          "type": "varchar",
+          "nullable": true,
+          "length": 45,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "client_rate_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "consumable_model",
+      "columns": [
+        {
+          "name": "consumable_model_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "manufacturer",
+          "type": "varchar",
+          "nullable": false,
+          "length": 100,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "consumable_name",
+          "type": "varchar",
+          "nullable": false,
+          "length": 100,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "consumable_type",
+          "type": "varchar",
+          "nullable": false,
+          "length": 100,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "consumable_model_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "dept",
+      "columns": [
+        {
+          "name": "dept_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "parent_dept_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "dept_name",
+          "type": "varchar",
+          "nullable": false,
+          "length": 100,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "fk_dept_dept1_idx",
+          "columns": [
+            "parent_dept_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "dept_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "device",
+      "columns": [
+        {
+          "name": "device_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "device_model_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "owner_dept_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "mgmt_dept_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "serial",
+          "type": "varchar",
+          "nullable": false,
+          "length": 50,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "regi_date",
+          "type": "date",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "mac",
+          "type": "varchar",
+          "nullable": false,
+          "length": 50,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "last_inspection_log_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "last_location_log_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "status_id",
+          "type": "int",
+          "nullable": false,
+          "default": "1",
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "fk_device_dept1_idx",
+          "columns": [
+            "owner_dept_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_device_dept2_idx",
+          "columns": [
+            "mgmt_dept_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_device_device_condition1_idx",
+          "columns": [
+            "status_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_device_device_location_log1_idx",
+          "columns": [
+            "last_location_log_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_device_device_model1_idx",
+          "columns": [
+            "device_model_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_device_inspection_log1_idx",
+          "columns": [
+            "last_inspection_log_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "device_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "device_approval",
+      "columns": [
+        {
+          "name": "approval_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "approval_type_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "sub_approval_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "requester_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "request_at",
+          "type": "timestamp",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "approver_role_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "origin_location_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "destination_location_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "approver_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "approve_at",
+          "type": "timestamp",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "is_approved",
+          "type": "tinyint",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "fk_approval_approver_group1_idx",
+          "columns": [
+            "approver_role_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_device_approval_device_approval1_idx",
+          "columns": [
+            "sub_approval_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_device_approval_device_approval_type1_idx",
+          "columns": [
+            "approval_type_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_device_approval_location1_idx",
+          "columns": [
+            "origin_location_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_device_approval_location2_idx",
+          "columns": [
+            "destination_location_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_device_approval_user1_idx",
+          "columns": [
+            "requester_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_device_approval_user2_idx",
+          "columns": [
+            "approver_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "approval_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "device_approval_type",
+      "columns": [
+        {
+          "name": "approval_type_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "approval_type_name",
+          "type": "varchar",
+          "nullable": false,
+          "length": 45,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "approval_type_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "device_consumable_compatibility",
+      "columns": [
+        {
+          "name": "device_model_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "consumable_model_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "device_model_id",
+            "consumable_model_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "device_driver",
+      "columns": [
+        {
+          "name": "device_driver_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "device_model_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "manufacturer",
+          "type": "varchar",
+          "nullable": true,
+          "length": 100,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "printer_language",
+          "type": "varchar",
+          "nullable": true,
+          "length": 45,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "install_file_address",
+          "type": "varchar",
+          "nullable": true,
+          "length": 200,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "fk_driver_device_model1_idx",
+          "columns": [
+            "device_model_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "device_driver_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "device_inspection_log",
+      "columns": [
+        {
+          "name": "device_inspection_log_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "device_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "inspector_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "inspection_date",
+          "type": "date",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "visit_type",
+          "type": "varchar",
+          "nullable": false,
+          "length": 45,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "call_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "FL",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "FS",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "BL",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "BS",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "toner_count_YE",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "toner_count_MA",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "toner_count_CY",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "toner_count_BK",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "toner_stock_YE",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "toner_stock_MA",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "toner_stock_CY",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "toner_stock_BK",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "toner_deliver_YE",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "toner_deliver_CY",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "toner_deliver_MA",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "toner_deliver_BK",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "drum_count_YE",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "drum_count_MA",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "drum_count_CY",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "drum_count_BK",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "drum_replacement_detail",
+          "type": "varchar",
+          "nullable": true,
+          "length": 50,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "status",
+          "type": "enum",
+          "nullable": true,
+          "length": 7,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "fk_device_history_device_idx",
+          "columns": [
+            "device_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_device_inspection_log_user1_idx",
+          "columns": [
+            "inspector_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_device_log_call1_idx",
+          "columns": [
+            "call_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "device_inspection_log_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "device_install_info",
+      "columns": [
+        {
+          "name": "device_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "installer_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "mgmt_num",
+          "type": "varchar",
+          "nullable": false,
+          "length": 50,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "ip_address",
+          "type": "varchar",
+          "nullable": true,
+          "length": 50,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "subnet_mask",
+          "type": "varchar",
+          "nullable": true,
+          "length": 50,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "gateway",
+          "type": "varchar",
+          "nullable": true,
+          "length": 50,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "dns1",
+          "type": "varchar",
+          "nullable": true,
+          "length": 50,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "dns2",
+          "type": "varchar",
+          "nullable": true,
+          "length": 50,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "fk_device_install_info_device1_idx",
+          "columns": [
+            "device_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_device_install_info_user1_idx",
+          "columns": [
+            "installer_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "device_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "device_location_log",
+      "columns": [
+        {
+          "name": "device_location_log_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "device_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "location_date",
+          "type": "date",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "location_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "location_detail",
+          "type": "varchar",
+          "nullable": true,
+          "length": 200,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "fk_device_location_log_device1_idx",
+          "columns": [
+            "device_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_device_location_log_location1_idx",
+          "columns": [
+            "location_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "device_location_log_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "device_model",
+      "columns": [
+        {
+          "name": "device_model_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "model_name",
+          "type": "varchar",
+          "nullable": false,
+          "length": 100,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "manufacturer",
+          "type": "varchar",
+          "nullable": false,
+          "length": 100,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "color_support",
+          "type": "tinyint",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "device_model_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "device_option",
+      "columns": [
+        {
+          "name": "device_option_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "option_model_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "serial",
+          "type": "varchar",
+          "nullable": true,
+          "length": 50,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "is_active",
+          "type": "tinyint",
+          "nullable": false,
+          "default": "1",
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "location_type",
+          "type": "enum",
+          "nullable": false,
+          "length": 9,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "location_warehouse_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "location_device_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "fk_device_option_device1_idx",
+          "columns": [
+            "location_device_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_device_option_device_option_model1_idx",
+          "columns": [
+            "option_model_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_device_option_warehouse1_idx",
+          "columns": [
+            "location_warehouse_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "device_option_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "device_option_compatibility",
+      "columns": [
+        {
+          "name": "device_model_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "option_model_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "device_model_id",
+            "option_model_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "device_status",
+      "columns": [
+        {
+          "name": "status_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "status_name",
+          "type": "varchar",
+          "nullable": false,
+          "length": 45,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "status_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "inspection_approval",
+      "columns": [
+        {
+          "name": "approval_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "requester_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "request_at",
+          "type": "timestamp",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "approver_role_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "device_inspection_log_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "approver_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "approved_at",
+          "type": "timestamp",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "is_approved",
+          "type": "tinyint",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "fk_inspection_approval_approval_role1_idx",
+          "columns": [
+            "approver_role_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_inspection_approval_device_inspection_log1_idx",
+          "columns": [
+            "device_inspection_log_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_inspection_approval_user1_idx",
+          "columns": [
+            "approver_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_inspection_approval_user2_idx",
+          "columns": [
+            "requester_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "approval_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "location",
+      "columns": [
+        {
+          "name": "location_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "location_type",
+          "type": "enum",
+          "nullable": false,
+          "length": 13,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "warehouse_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "client_branch_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "fk_location_client_branch1_idx",
+          "columns": [
+            "client_branch_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_location_warehouse1_idx",
+          "columns": [
+            "warehouse_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "location_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "option_model",
+      "columns": [
+        {
+          "name": "option_model_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "option_model_name",
+          "type": "varchar",
+          "nullable": false,
+          "length": 100,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "option_type",
+          "type": "varchar",
+          "nullable": false,
+          "length": 45,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "manufacturer",
+          "type": "varchar",
+          "nullable": false,
+          "length": 100,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "option_model_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "sido",
+      "columns": [
+        {
+          "name": "sido_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "sido_name",
+          "type": "varchar",
+          "nullable": true,
+          "length": 45,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "sido_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "sigungu",
+      "columns": [
+        {
+          "name": "sigungu_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "sigungu_name",
+          "type": "varchar",
+          "nullable": false,
+          "length": 45,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "sido_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "fk_sigungu_sido1_idx",
+          "columns": [
+            "sido_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "sigungu_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "user",
+      "columns": [
+        {
+          "name": "user_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "user_name",
+          "type": "varchar",
+          "nullable": false,
+          "length": 45,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "login_id",
+          "type": "varchar",
+          "nullable": false,
+          "length": 45,
+          "isPrimary": false,
+          "isUnique": true,
+          "isGenerated": false
+        },
+        {
+          "name": "password",
+          "type": "varchar",
+          "nullable": false,
+          "length": 50,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "mobile_num",
+          "type": "varchar",
+          "nullable": true,
+          "length": 20,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "office_num",
+          "type": "varchar",
+          "nullable": true,
+          "length": 20,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "email",
+          "type": "varchar",
+          "nullable": true,
+          "length": 100,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "modified_at",
+          "type": "timestamp",
+          "nullable": true,
+          "default": "CURRENT_TIMESTAMP",
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "dept_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "approval_role_id",
+          "type": "int",
+          "nullable": true,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "position_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "nullable": false,
+          "default": "CURRENT_TIMESTAMP",
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "is_active",
+          "type": "tinyint",
+          "nullable": false,
+          "default": "1",
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "permission",
+          "type": "enum",
+          "nullable": false,
+          "default": "user",
+          "length": 7,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "fk_user_approval_role1_idx",
+          "columns": [
+            "approval_role_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_user_dept1_idx",
+          "columns": [
+            "dept_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "fk_user_user_position1_idx",
+          "columns": [
+            "position_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "login_id_UNIQUE",
+          "columns": [
+            "login_id"
+          ],
+          "isUnique": true
+        },
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "user_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "user_position",
+      "columns": [
+        {
+          "name": "user_position_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "position_name",
+          "type": "varchar",
+          "nullable": false,
+          "length": 45,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "user_position_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "user_role_assignment",
+      "columns": [
+        {
+          "name": "role_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "approver_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "role_id",
+            "approver_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    },
+    {
+      "name": "warehouse",
+      "columns": [
+        {
+          "name": "warehouse_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": true,
+          "isUnique": false,
+          "isGenerated": true
+        },
+        {
+          "name": "warehouse_name",
+          "type": "varchar",
+          "nullable": false,
+          "length": 100,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        },
+        {
+          "name": "mgmt_dept_id",
+          "type": "int",
+          "nullable": false,
+          "isPrimary": false,
+          "isUnique": false,
+          "isGenerated": false
+        }
+      ],
+      "indices": [
+        {
+          "name": "fk_warehouse_dept1_idx",
+          "columns": [
+            "mgmt_dept_id"
+          ],
+          "isUnique": false
+        },
+        {
+          "name": "PRIMARY",
+          "columns": [
+            "warehouse_id"
+          ],
+          "isUnique": true
+        }
+      ]
+    }
+  ],
+  "views": [
+    {
+      "name": "v_client",
+      "definition": "select `c`.`client_id` AS `client_id`,coalesce(`c`.`client_name`,'') AS `client_name`,`c`.`parent_client_id` AS `parent_client_id`,coalesce(`c`.`default_client_branch_rate_id`,0) AS `default_client_branch_rate_id`,coalesce(`c`.`is_active`,1) AS `is_active`,`p`.`client_name` AS `parent_client_name`,`cr`.`rate_type` AS `client_rate`,`cr`.`rate_detail` AS `rate_detail`,count(distinct `cb`.`client_branch_id`) AS `branch_count` from (((`mydb`.`client` `c` left join `mydb`.`client` `p` on((`c`.`parent_client_id` = `p`.`client_id`))) left join `mydb`.`client_rate` `cr` on((`c`.`default_client_branch_rate_id` = `cr`.`client_rate_id`))) left join `mydb`.`client_branch` `cb` on((`c`.`client_id` = `cb`.`client_id`))) group by `c`.`client_id`",
+      "columns": [
+        {
+          "name": "client_id",
+          "type": "int"
+        },
+        {
+          "name": "client_name",
+          "type": "varchar"
+        },
+        {
+          "name": "parent_client_id",
+          "type": "int"
+        },
+        {
+          "name": "default_client_branch_rate_id",
+          "type": "bigint"
+        },
+        {
+          "name": "is_active",
+          "type": "int"
+        },
+        {
+          "name": "parent_client_name",
+          "type": "varchar"
+        },
+        {
+          "name": "client_rate",
+          "type": "varchar"
+        },
+        {
+          "name": "rate_detail",
+          "type": "varchar"
+        },
+        {
+          "name": "branch_count",
+          "type": "bigint"
+        }
+      ]
+    },
+    {
+      "name": "v_client_branch",
+      "definition": "select `cb`.`client_branch_id` AS `client_branch_id`,`cb`.`client_branch_name` AS `client_branch_name`,`cb`.`client_id` AS `client_id`,`cb`.`sigungu_id` AS `sigungu_id`,`cb`.`mgmt_dept_id` AS `mgmt_dept_id`,`cb`.`client_branch_rate_id` AS `client_branch_rate_id`,`cb`.`branch_mgr_name` AS `branch_mgr_name`,`cb`.`branch_mgr_mobile_num` AS `branch_mgr_mobile_num`,`cb`.`branch_mgr_office_num` AS `branch_mgr_office_num`,`cb`.`branch_mgr_email` AS `branch_mgr_email`,`cb`.`is_active` AS `is_active`,`cb`.`remote_support` AS `remote_support`,`cb`.`push_alert` AS `push_alert`,`c`.`client_name` AS `client_name`,`sgg`.`sigungu_name` AS `sigungu_name`,`sd`.`sido_name` AS `sido_name` from (((`mydb`.`client_branch` `cb` left join `mydb`.`client` `c` on((`cb`.`client_id` = `c`.`client_id`))) left join `mydb`.`sigungu` `sgg` on((`cb`.`sigungu_id` = `sgg`.`sigungu_id`))) left join `mydb`.`sido` `sd` on((`sgg`.`sido_id` = `sd`.`sido_id`)))",
+      "columns": [
+        {
+          "name": "client_branch_id",
+          "type": "int"
+        },
+        {
+          "name": "client_branch_name",
+          "type": "varchar"
+        },
+        {
+          "name": "client_id",
+          "type": "int"
+        },
+        {
+          "name": "sigungu_id",
+          "type": "int"
+        },
+        {
+          "name": "mgmt_dept_id",
+          "type": "int"
+        },
+        {
+          "name": "client_branch_rate_id",
+          "type": "int"
+        },
+        {
+          "name": "branch_mgr_name",
+          "type": "varchar"
+        },
+        {
+          "name": "branch_mgr_mobile_num",
+          "type": "varchar"
+        },
+        {
+          "name": "branch_mgr_office_num",
+          "type": "varchar"
+        },
+        {
+          "name": "branch_mgr_email",
+          "type": "varchar"
+        },
+        {
+          "name": "is_active",
+          "type": "tinyint"
+        },
+        {
+          "name": "remote_support",
+          "type": "tinyint"
+        },
+        {
+          "name": "push_alert",
+          "type": "tinyint"
+        },
+        {
+          "name": "client_name",
+          "type": "varchar"
+        },
+        {
+          "name": "sigungu_name",
+          "type": "varchar"
+        },
+        {
+          "name": "sido_name",
+          "type": "varchar"
+        }
+      ]
+    },
+    {
+      "name": "v_consumable_model",
+      "definition": "select concat(`dcc`.`consumable_model_id`,'_',coalesce(`dcc`.`device_model_id`,0)) AS `compatibility_id`,`cm`.`consumable_model_id` AS `consumable_model_id`,`cm`.`manufacturer` AS `manufacturer`,`cm`.`consumable_name` AS `consumable_name`,`cm`.`consumable_type` AS `consumable_type`,`dm`.`manufacturer` AS `model_manufacturer`,`dm`.`model_name` AS `model_name` from ((`mydb`.`device_consumable_compatibility` `dcc` left join `mydb`.`consumable_model` `cm` on((`cm`.`consumable_model_id` = `dcc`.`consumable_model_id`))) left join `mydb`.`device_model` `dm` on((`dm`.`device_model_id` = `dcc`.`device_model_id`)))",
+      "columns": [
+        {
+          "name": "compatibility_id",
+          "type": "varchar"
+        },
+        {
+          "name": "consumable_model_id",
+          "type": "int"
+        },
+        {
+          "name": "manufacturer",
+          "type": "varchar"
+        },
+        {
+          "name": "consumable_name",
+          "type": "varchar"
+        },
+        {
+          "name": "consumable_type",
+          "type": "varchar"
+        },
+        {
+          "name": "model_manufacturer",
+          "type": "varchar"
+        },
+        {
+          "name": "model_name",
+          "type": "varchar"
+        }
+      ]
+    },
+    {
+      "name": "v_dept",
+      "definition": "with recursive `dept_path` as (select `d`.`dept_id` AS `dept_id`,cast(`d`.`dept_id` as char(20) charset utf8mb4) AS `path_id`,cast(`d`.`dept_name` as char(100) charset utf8mb4) AS `path_name`,1 AS `level` from `mydb`.`dept` `d` where (`d`.`parent_dept_id` is null) union all select `d`.`dept_id` AS `dept_id`,concat(`dp`.`path_id`,',',cast(`d`.`dept_id` as char(20) charset utf8mb4)) AS `CONCAT(dp.path_id, ',', CAST(d.dept_id AS CHAR(20)))`,concat(`dp`.`path_name`,',',`d`.`dept_name`) AS `CONCAT(dp.path_name, ',', d.dept_name)`,(`dp`.`level` + 1) AS `dp.level + 1` from (`mydb`.`dept` `d` join `dept_path` `dp` on((`d`.`parent_dept_id` = `dp`.`dept_id`))) where (`dp`.`level` < 3)) select coalesce(`d`.`dept_id`,0) AS `dept_id`,coalesce(cast(substring_index(`d`.`path_id`,',',1) as char(20) charset utf8mb4),'') AS `dept_1_id`,coalesce(substring_index(`d`.`path_name`,',',1),'') AS `dept_1`,cast((case when (`d`.`level` = 2) then `d`.`dept_id` when (`d`.`level` = 3) then substring_index(substring_index(`d`.`path_id`,',',2),',',-(1)) else NULL end) as char(20) charset utf8mb4) AS `dept_2_id`,(case when (`d`.`level` = 2) then substring_index(`d`.`path_name`,',',-(1)) when (`d`.`level` = 3) then substring_index(substring_index(`d`.`path_name`,',',2),',',-(1)) else NULL end) AS `dept_2`,cast((case when (`d`.`level` = 3) then `d`.`dept_id` else NULL end) as char(20) charset utf8mb4) AS `dept_3_id`,(case when (`d`.`level` = 3) then substring_index(`d`.`path_name`,',',-(1)) else NULL end) AS `dept_3` from `dept_path` `d`",
+      "columns": [
+        {
+          "name": "dept_id",
+          "type": "bigint"
+        },
+        {
+          "name": "dept_1_id",
+          "type": "varchar"
+        },
+        {
+          "name": "dept_1",
+          "type": "varchar"
+        },
+        {
+          "name": "dept_2_id",
+          "type": "varchar"
+        },
+        {
+          "name": "dept_2",
+          "type": "varchar"
+        },
+        {
+          "name": "dept_3_id",
+          "type": "varchar"
+        },
+        {
+          "name": "dept_3",
+          "type": "varchar"
+        }
+      ]
+    },
+    {
+      "name": "v_device",
+      "definition": "select `d`.`device_id` AS `device_id`,`d`.`device_model_id` AS `device_model_id`,`d`.`owner_dept_id` AS `owner_dept_id`,`d`.`mgmt_dept_id` AS `mgmt_dept_id`,`d`.`serial` AS `serial`,`d`.`regi_date` AS `regi_date`,`d`.`mac` AS `mac`,`d`.`last_inspection_log_id` AS `last_inspection_log_id`,`d`.`last_location_log_id` AS `last_location_log_id`,`d`.`status_id` AS `status_id`,`dm`.`model_name` AS `model_name`,`dm`.`manufacturer` AS `manufacturer`,`od`.`dept_name` AS `owner_dept_name`,`md`.`dept_name` AS `mgmt_dept_name`,`l`.`location_id` AS `location_id`,`w`.`warehouse_id` AS `warehouse_id`,`w`.`warehouse_name` AS `warehouse_name`,`cb`.`client_branch_id` AS `client_branch_id`,`cb`.`client_branch_name` AS `client_branch_name`,`ds`.`status_name` AS `status_name`,max((case when (`om`.`option_type` = 'fax') then true else false end)) AS `has_fax`,max((case when (`om`.`option_type` = 'desk') then true else false end)) AS `has_desk`,max((case when (`om`.`option_type` = 'shelf') then true else false end)) AS `has_shelf` from ((((((((((`mydb`.`device` `d` left join `mydb`.`device_model` `dm` on((`d`.`device_model_id` = `dm`.`device_model_id`))) left join `mydb`.`dept` `od` on((`d`.`owner_dept_id` = `od`.`dept_id`))) left join `mydb`.`dept` `md` on((`d`.`mgmt_dept_id` = `md`.`dept_id`))) left join `mydb`.`device_location_log` `dl` on((`d`.`last_location_log_id` = `dl`.`device_location_log_id`))) left join `mydb`.`location` `l` on((`dl`.`location_id` = `l`.`location_id`))) left join `mydb`.`warehouse` `w` on((`l`.`warehouse_id` = `w`.`warehouse_id`))) left join `mydb`.`client_branch` `cb` on((`l`.`client_branch_id` = `cb`.`client_branch_id`))) left join `mydb`.`device_status` `ds` on((`d`.`status_id` = `ds`.`status_id`))) left join `mydb`.`device_option` `do` on((`d`.`device_id` = `do`.`location_device_id`))) left join `mydb`.`option_model` `om` on((`do`.`device_option_id` = `om`.`option_model_id`))) group by `d`.`device_id`,`d`.`device_model_id`,`d`.`owner_dept_id`,`d`.`mgmt_dept_id`,`d`.`serial`,`d`.`regi_date`,`d`.`mac`,`d`.`last_inspection_log_id`,`d`.`last_location_log_id`,`d`.`status_id`,`dm`.`model_name`,`dm`.`manufacturer`,`od`.`dept_name`,`md`.`dept_name`,`l`.`location_id`,`w`.`warehouse_id`,`w`.`warehouse_name`,`cb`.`client_branch_id`,`cb`.`client_branch_name`,`ds`.`status_name`",
+      "columns": [
+        {
+          "name": "device_id",
+          "type": "int"
+        },
+        {
+          "name": "device_model_id",
+          "type": "int"
+        },
+        {
+          "name": "owner_dept_id",
+          "type": "int"
+        },
+        {
+          "name": "mgmt_dept_id",
+          "type": "int"
+        },
+        {
+          "name": "serial",
+          "type": "varchar"
+        },
+        {
+          "name": "regi_date",
+          "type": "date"
+        },
+        {
+          "name": "mac",
+          "type": "varchar"
+        },
+        {
+          "name": "last_inspection_log_id",
+          "type": "int"
+        },
+        {
+          "name": "last_location_log_id",
+          "type": "int"
+        },
+        {
+          "name": "status_id",
+          "type": "int"
+        },
+        {
+          "name": "model_name",
+          "type": "varchar"
+        },
+        {
+          "name": "manufacturer",
+          "type": "varchar"
+        },
+        {
+          "name": "owner_dept_name",
+          "type": "varchar"
+        },
+        {
+          "name": "mgmt_dept_name",
+          "type": "varchar"
+        },
+        {
+          "name": "location_id",
+          "type": "int"
+        },
+        {
+          "name": "warehouse_id",
+          "type": "int"
+        },
+        {
+          "name": "warehouse_name",
+          "type": "varchar"
+        },
+        {
+          "name": "client_branch_id",
+          "type": "int"
+        },
+        {
+          "name": "client_branch_name",
+          "type": "varchar"
+        },
+        {
+          "name": "status_name",
+          "type": "varchar"
+        },
+        {
+          "name": "has_fax",
+          "type": "bigint"
+        },
+        {
+          "name": "has_desk",
+          "type": "bigint"
+        },
+        {
+          "name": "has_shelf",
+          "type": "bigint"
+        }
+      ]
+    },
+    {
+      "name": "v_device_driver",
+      "definition": "select `dd`.`device_driver_id` AS `device_driver_id`,`dd`.`device_model_id` AS `device_model_id`,`dd`.`manufacturer` AS `driver_manufacturer`,`dd`.`printer_language` AS `printer_language`,`dd`.`install_file_address` AS `install_file_address`,`dm`.`manufacturer` AS `model_manufacturer`,`dm`.`model_name` AS `model_name`,`dm`.`color_support` AS `color_support` from (`mydb`.`device_driver` `dd` left join `mydb`.`device_model` `dm` on((`dd`.`device_model_id` = `dm`.`device_model_id`)))",
+      "columns": [
+        {
+          "name": "device_driver_id",
+          "type": "int"
+        },
+        {
+          "name": "device_model_id",
+          "type": "int"
+        },
+        {
+          "name": "driver_manufacturer",
+          "type": "varchar"
+        },
+        {
+          "name": "printer_language",
+          "type": "varchar"
+        },
+        {
+          "name": "install_file_address",
+          "type": "varchar"
+        },
+        {
+          "name": "model_manufacturer",
+          "type": "varchar"
+        },
+        {
+          "name": "model_name",
+          "type": "varchar"
+        },
+        {
+          "name": "color_support",
+          "type": "tinyint"
+        }
+      ]
+    },
+    {
+      "name": "v_user",
+      "definition": "select `u`.`user_id` AS `user_id`,`u`.`user_name` AS `user_name`,`u`.`login_id` AS `login_id`,`u`.`mobile_num` AS `mobile_num`,`u`.`office_num` AS `office_num`,`u`.`email` AS `email`,`u`.`modified_at` AS `modified_at`,`u`.`created_at` AS `created_at`,`u`.`is_active` AS `is_active`,`u`.`permission` AS `permission`,`u`.`dept_id` AS `dept_id`,`u`.`approval_role_id` AS `approval_role_id`,`u`.`position_id` AS `position_id`,`d`.`dept_name` AS `dept_name`,`d`.`parent_dept_id` AS `parent_dept_id` from (`mydb`.`user` `u` left join `mydb`.`dept` `d` on((`u`.`dept_id` = `d`.`dept_id`)))",
+      "columns": [
+        {
+          "name": "user_id",
+          "type": "int"
+        },
+        {
+          "name": "user_name",
+          "type": "varchar"
+        },
+        {
+          "name": "login_id",
+          "type": "varchar"
+        },
+        {
+          "name": "mobile_num",
+          "type": "varchar"
+        },
+        {
+          "name": "office_num",
+          "type": "varchar"
+        },
+        {
+          "name": "email",
+          "type": "varchar"
+        },
+        {
+          "name": "modified_at",
+          "type": "timestamp"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp"
+        },
+        {
+          "name": "is_active",
+          "type": "tinyint"
+        },
+        {
+          "name": "permission",
+          "type": "enum"
+        },
+        {
+          "name": "dept_id",
+          "type": "int"
+        },
+        {
+          "name": "approval_role_id",
+          "type": "int"
+        },
+        {
+          "name": "position_id",
+          "type": "int"
+        },
+        {
+          "name": "dept_name",
+          "type": "varchar"
+        },
+        {
+          "name": "parent_dept_id",
+          "type": "int"
+        }
+      ]
+    },
+    {
+      "name": "v_warehouse",
+      "definition": "select `w`.`warehouse_id` AS `warehouse_id`,`w`.`warehouse_name` AS `warehouse_name`,`w`.`mgmt_dept_id` AS `mgmt_dept_id`,`d`.`dept_name` AS `mgmt_dept_name`,`d`.`parent_dept_id` AS `mgmt_parent_dept_id` from (`mydb`.`warehouse` `w` left join `mydb`.`dept` `d` on((`w`.`mgmt_dept_id` = `d`.`dept_id`)))",
+      "columns": [
+        {
+          "name": "warehouse_id",
+          "type": "int"
+        },
+        {
+          "name": "warehouse_name",
+          "type": "varchar"
+        },
+        {
+          "name": "mgmt_dept_id",
+          "type": "int"
+        },
+        {
+          "name": "mgmt_dept_name",
+          "type": "varchar"
+        },
+        {
+          "name": "mgmt_parent_dept_id",
+          "type": "int"
+        }
+      ]
+    }
+  ]
+}

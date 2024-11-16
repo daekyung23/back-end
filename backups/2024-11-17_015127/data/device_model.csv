@@ -1,0 +1,21 @@
+device_model_id,model_name,manufacturer,color_support
+1,IR ADV 4245,캐논,0
+2,IR ADV C5550,캐논,1
+3,IR ADV C3330,캐논,1
+4,IR ADV C5535,캐논,1
+5,IR ADV C2025,캐논,1
+6,IR ADV C5045,캐논,1
+7,CLP-775N,삼성,1
+8,ML-4510ND,삼성,0
+9,SL-M4530ND,삼성,0
+10,B431,오키,0
+11,C843,오키,1
+12,ES8441,오키,1
+13,C9650,오키,1
+14,SL-K4350LX,삼성,0
+15,SL-X4220RX,삼성,1
+16,SL-X4300LX,삼성,1
+17,SL-X7500P,삼성,1
+18,SL-X7500LX,삼성,1
+19,SL-M4350ND,삼성,0
+20,GM4090,캐논,0

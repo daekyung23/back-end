@@ -3,6 +3,7 @@ import { Service } from '@base/service'
 import { Repository } from '@base/repository'
 import { prisma } from '@lib/prisma'
 import type { SearchQuery, SearchResult } from '@base/types'
+import type { CreateInputData } from '@lib/prisma'
 
 const MODEL = 'consumable_model' as const
 const VIEW = 'v_consumable_model' as const
@@ -30,6 +31,28 @@ export class ConsumableModelService extends Service<typeof MODEL, typeof VIEW> {
       consumable_model: items, 
       totalPages: Math.ceil(total / take) 
     }
+  }
+
+  createWithDeviceModelIds = async (body: CreateInputData<typeof MODEL> & { device_model_ids: number[] }) => {
+    const { device_model_ids, ...consumableData } = body
+    
+    // 트랜잭션으로 처리
+    const result = await prisma.$transaction(async (tx) => {
+      // 1. 소모품 모델 생성
+      const consumableModel = await tx.consumable_model.create({
+        data: consumableData
+      })
+      // 2. 호환성 정보 생성
+      await tx.device_consumable_compatibility.createMany({
+        data: device_model_ids.map(device_model_id => ({
+          device_model_id,
+          consumable_model_id: consumableModel.consumable_model_id
+        }))
+      })
+      return consumableModel
+    })
+  
+    return { [MODEL]: result }
   }
 }
 

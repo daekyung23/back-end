@@ -7,6 +7,7 @@ import { SigunguController } from './sigungu'
 import { services } from '@services'
 import { UserPositionController } from './user-position'
 import { DeviceModelController } from './device-model'
+import { ConsumableModelController } from './consumable-model'
 
 export const DefinedAtControllerAndService = {
   clientBranch: new ClientBranchController(prisma.client_branch, prisma.v_client_branch),
@@ -15,6 +16,7 @@ export const DefinedAtControllerAndService = {
   sigungu: new SigunguController(prisma.sigungu, undefined),
   userPosition: new UserPositionController(prisma.user_position, undefined),
   deviceModel: new DeviceModelController(prisma.device_model),
+  consumableModel: new ConsumableModelController(prisma.consumable_model, prisma.v_consumable_model),
 }
 
 export const OverrideAtService = {
@@ -22,7 +24,6 @@ export const OverrideAtService = {
   warehouse: new Controller<'warehouse', 'v_warehouse'>(prisma.warehouse, prisma.v_warehouse).setService(services.warehouse),
   user: new Controller<'user', 'v_user'>(prisma.user, prisma.v_user).setService(services.user),
   device: new Controller<'device', 'v_device'>(prisma.device, prisma.v_device).setService(services.device),
-  consumableModel: new Controller<'consumable_model', 'v_consumable_model'>(prisma.consumable_model, prisma.v_consumable_model).setService(services.consumableModel),
 }
 
 export const OnlyCRUD = {

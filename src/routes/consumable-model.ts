@@ -15,6 +15,12 @@ import {
 const router = Router()
 const controller = controllers.consumableModel
 
+// Defined At Controller & Service -------------------------------------------
+router.post('/create', 
+  validateInput({ body: createSchema }), 
+  controller.createWithDeviceModelIds
+)
+
 // Override At Service -------------------------------------------------------
 router.get('/search', 
   validateInput({ query: searchSchema.extend({
@@ -24,11 +30,6 @@ router.get('/search',
 )
 
 // CRUD ----------------------------------------------------------------------
-router.post('/create', 
-  validateInput({ body: createSchema }), 
-  controller.create
-)
-
 router.get('/check', 
   validateInput({ query: consumable_modelSchema.pick({ consumable_name: true }) }), 
   controller.exists
