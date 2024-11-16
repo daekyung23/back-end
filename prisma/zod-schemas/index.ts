@@ -74,7 +74,7 @@ export const V_clientScalarFieldEnumSchema = z.enum(['client_id','client_name','
 
 export const V_client_branchScalarFieldEnumSchema = z.enum(['client_branch_id','client_branch_name','client_id','sigungu_id','mgmt_dept_id','client_branch_rate_id','branch_mgr_name','branch_mgr_mobile_num','branch_mgr_office_num','branch_mgr_email','is_active','remote_support','push_alert','client_name','sigungu_name','sido_name']);
 
-export const V_consumable_modelScalarFieldEnumSchema = z.enum(['compatibility_id','consumable_model_id','manufacturer','consumable_name','consumable_type','model_manufacturer']);
+export const V_consumable_modelScalarFieldEnumSchema = z.enum(['compatibility_id','consumable_model_id','manufacturer','consumable_name','consumable_type','model_manufacturer','model_name']);
 
 export const V_deptScalarFieldEnumSchema = z.enum(['dept_id','dept_1_id','dept_1','dept_2_id','dept_2','dept_3_id','dept_3']);
 
@@ -615,6 +615,7 @@ export const v_consumable_modelSchema = z.object({
   consumable_name: z.string().max(100).nullable().nullable(),
   consumable_type: z.string().max(100).nullable().nullable(),
   model_manufacturer: z.string().max(100).nullable().nullable(),
+  model_name: z.string().max(100).nullable().nullable(),
 })
 
 export type v_consumable_model = z.infer<typeof v_consumable_modelSchema>
@@ -1139,6 +1140,7 @@ export const v_consumable_modelSelectSchema: z.ZodType<Prisma.v_consumable_model
   consumable_name: z.boolean().optional(),
   consumable_type: z.boolean().optional(),
   model_manufacturer: z.boolean().optional(),
+  model_name: z.boolean().optional(),
 }).strict()
 
 // V DEPT
@@ -3258,6 +3260,7 @@ export const v_consumable_modelWhereInputSchema: z.ZodType<Prisma.v_consumable_m
   consumable_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   consumable_type: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
   model_manufacturer: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
+  model_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string() ]).optional().nullable(),
 }).strict();
 
 export const v_consumable_modelOrderByWithRelationInputSchema: z.ZodType<Prisma.v_consumable_modelOrderByWithRelationInput> = z.object({
@@ -3267,6 +3270,7 @@ export const v_consumable_modelOrderByWithRelationInputSchema: z.ZodType<Prisma.
   consumable_name: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   consumable_type: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   model_manufacturer: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  model_name: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
 }).strict();
 
 export const v_consumable_modelWhereUniqueInputSchema: z.ZodType<Prisma.v_consumable_modelWhereUniqueInput> = z.object({
@@ -3282,6 +3286,7 @@ export const v_consumable_modelWhereUniqueInputSchema: z.ZodType<Prisma.v_consum
   consumable_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
   consumable_type: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
   model_manufacturer: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
+  model_name: z.union([ z.lazy(() => StringNullableFilterSchema),z.string().max(100).nullable() ]).optional().nullable(),
 }).strict());
 
 export const v_consumable_modelOrderByWithAggregationInputSchema: z.ZodType<Prisma.v_consumable_modelOrderByWithAggregationInput> = z.object({
@@ -3291,6 +3296,7 @@ export const v_consumable_modelOrderByWithAggregationInputSchema: z.ZodType<Pris
   consumable_name: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   consumable_type: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   model_manufacturer: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
+  model_name: z.union([ z.lazy(() => SortOrderSchema),z.lazy(() => SortOrderInputSchema) ]).optional(),
   _count: z.lazy(() => v_consumable_modelCountOrderByAggregateInputSchema).optional(),
   _avg: z.lazy(() => v_consumable_modelAvgOrderByAggregateInputSchema).optional(),
   _max: z.lazy(() => v_consumable_modelMaxOrderByAggregateInputSchema).optional(),
@@ -3308,6 +3314,7 @@ export const v_consumable_modelScalarWhereWithAggregatesInputSchema: z.ZodType<P
   consumable_name: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   consumable_type: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
   model_manufacturer: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
+  model_name: z.union([ z.lazy(() => StringNullableWithAggregatesFilterSchema),z.string() ]).optional().nullable(),
 }).strict();
 
 export const v_deptWhereInputSchema: z.ZodType<Prisma.v_deptWhereInput> = z.object({
@@ -5756,7 +5763,8 @@ export const v_consumable_modelCreateInputSchema: z.ZodType<Prisma.v_consumable_
   manufacturer: z.string().max(100).nullable().optional().nullable(),
   consumable_name: z.string().max(100).nullable().optional().nullable(),
   consumable_type: z.string().max(100).nullable().optional().nullable(),
-  model_manufacturer: z.string().max(100).nullable().optional().nullable()
+  model_manufacturer: z.string().max(100).nullable().optional().nullable(),
+  model_name: z.string().max(100).nullable().optional().nullable()
 }).strict();
 
 export const v_consumable_modelUncheckedCreateInputSchema: z.ZodType<Prisma.v_consumable_modelUncheckedCreateInput> = z.object({
@@ -5765,7 +5773,8 @@ export const v_consumable_modelUncheckedCreateInputSchema: z.ZodType<Prisma.v_co
   manufacturer: z.string().max(100).nullable().optional().nullable(),
   consumable_name: z.string().max(100).nullable().optional().nullable(),
   consumable_type: z.string().max(100).nullable().optional().nullable(),
-  model_manufacturer: z.string().max(100).nullable().optional().nullable()
+  model_manufacturer: z.string().max(100).nullable().optional().nullable(),
+  model_name: z.string().max(100).nullable().optional().nullable()
 }).strict();
 
 export const v_consumable_modelUpdateInputSchema: z.ZodType<Prisma.v_consumable_modelUpdateInput> = z.object({
@@ -5775,6 +5784,7 @@ export const v_consumable_modelUpdateInputSchema: z.ZodType<Prisma.v_consumable_
   consumable_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   consumable_type: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   model_manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_consumable_modelUncheckedUpdateInputSchema: z.ZodType<Prisma.v_consumable_modelUncheckedUpdateInput> = z.object({
@@ -5784,6 +5794,7 @@ export const v_consumable_modelUncheckedUpdateInputSchema: z.ZodType<Prisma.v_co
   consumable_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   consumable_type: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   model_manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_consumable_modelCreateManyInputSchema: z.ZodType<Prisma.v_consumable_modelCreateManyInput> = z.object({
@@ -5792,7 +5803,8 @@ export const v_consumable_modelCreateManyInputSchema: z.ZodType<Prisma.v_consuma
   manufacturer: z.string().max(100).nullable().optional().nullable(),
   consumable_name: z.string().max(100).nullable().optional().nullable(),
   consumable_type: z.string().max(100).nullable().optional().nullable(),
-  model_manufacturer: z.string().max(100).nullable().optional().nullable()
+  model_manufacturer: z.string().max(100).nullable().optional().nullable(),
+  model_name: z.string().max(100).nullable().optional().nullable()
 }).strict();
 
 export const v_consumable_modelUpdateManyMutationInputSchema: z.ZodType<Prisma.v_consumable_modelUpdateManyMutationInput> = z.object({
@@ -5802,6 +5814,7 @@ export const v_consumable_modelUpdateManyMutationInputSchema: z.ZodType<Prisma.v
   consumable_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   consumable_type: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   model_manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_consumable_modelUncheckedUpdateManyInputSchema: z.ZodType<Prisma.v_consumable_modelUncheckedUpdateManyInput> = z.object({
@@ -5811,6 +5824,7 @@ export const v_consumable_modelUncheckedUpdateManyInputSchema: z.ZodType<Prisma.
   consumable_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   consumable_type: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
   model_manufacturer: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
+  model_name: z.union([ z.string().max(100).nullable(),z.lazy(() => NullableStringFieldUpdateOperationsInputSchema) ]).optional().nullable(),
 }).strict();
 
 export const v_deptCreateInputSchema: z.ZodType<Prisma.v_deptCreateInput> = z.object({
@@ -7930,7 +7944,8 @@ export const v_consumable_modelCountOrderByAggregateInputSchema: z.ZodType<Prism
   manufacturer: z.lazy(() => SortOrderSchema).optional(),
   consumable_name: z.lazy(() => SortOrderSchema).optional(),
   consumable_type: z.lazy(() => SortOrderSchema).optional(),
-  model_manufacturer: z.lazy(() => SortOrderSchema).optional()
+  model_manufacturer: z.lazy(() => SortOrderSchema).optional(),
+  model_name: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const v_consumable_modelAvgOrderByAggregateInputSchema: z.ZodType<Prisma.v_consumable_modelAvgOrderByAggregateInput> = z.object({
@@ -7943,7 +7958,8 @@ export const v_consumable_modelMaxOrderByAggregateInputSchema: z.ZodType<Prisma.
   manufacturer: z.lazy(() => SortOrderSchema).optional(),
   consumable_name: z.lazy(() => SortOrderSchema).optional(),
   consumable_type: z.lazy(() => SortOrderSchema).optional(),
-  model_manufacturer: z.lazy(() => SortOrderSchema).optional()
+  model_manufacturer: z.lazy(() => SortOrderSchema).optional(),
+  model_name: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const v_consumable_modelMinOrderByAggregateInputSchema: z.ZodType<Prisma.v_consumable_modelMinOrderByAggregateInput> = z.object({
@@ -7952,7 +7968,8 @@ export const v_consumable_modelMinOrderByAggregateInputSchema: z.ZodType<Prisma.
   manufacturer: z.lazy(() => SortOrderSchema).optional(),
   consumable_name: z.lazy(() => SortOrderSchema).optional(),
   consumable_type: z.lazy(() => SortOrderSchema).optional(),
-  model_manufacturer: z.lazy(() => SortOrderSchema).optional()
+  model_manufacturer: z.lazy(() => SortOrderSchema).optional(),
+  model_name: z.lazy(() => SortOrderSchema).optional()
 }).strict();
 
 export const v_consumable_modelSumOrderByAggregateInputSchema: z.ZodType<Prisma.v_consumable_modelSumOrderByAggregateInput> = z.object({

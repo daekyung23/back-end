@@ -6,8 +6,8 @@ generator client {
 generator zod {
   provider               = "zod-prisma-types"
   output                 = "./zod-schemas"
-  addInputTypeValidation = "true"
   createModelTypes       = "true"
+  addInputTypeValidation = "true"
   createInputTypes       = "true"
 }
 
@@ -395,6 +395,7 @@ view v_consumable_model {
   consumable_name     String? @db.VarChar(100) /// @zod.custom.use(z.string().max(100).nullable())
   consumable_type     String? @db.VarChar(100) /// @zod.custom.use(z.string().max(100).nullable())
   model_manufacturer  String? @db.VarChar(100) /// @zod.custom.use(z.string().max(100).nullable())
+  model_name          String? @db.VarChar(100) /// @zod.custom.use(z.string().max(100).nullable())
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.

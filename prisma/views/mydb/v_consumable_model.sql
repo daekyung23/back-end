@@ -8,7 +8,8 @@ SELECT
   `cm`.`manufacturer` AS `manufacturer`,
   `cm`.`consumable_name` AS `consumable_name`,
   `cm`.`consumable_type` AS `consumable_type`,
-  `dm`.`manufacturer` AS `model_manufacturer`
+  `dm`.`manufacturer` AS `model_manufacturer`,
+  `dm`.`model_name` AS `model_name`
 FROM
   (
     (
