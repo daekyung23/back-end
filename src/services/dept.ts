@@ -34,6 +34,12 @@ export class DeptService extends Service<typeof MODEL, typeof VIEW> {
     }
   }
 
+
+  override getAll = async (): 
+    Promise<dept[]> => {
+    return this.modelRepository.findMany({})
+  }
+
   getDeptNameById = async (query: Pick<dept, 'dept_id'>) => {
     const dept: dept = await this.modelRepository.findOne({ where: query })
     return { dept_name: dept.dept_name }
