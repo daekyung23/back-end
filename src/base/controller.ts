@@ -14,7 +14,7 @@ import {
 import type { Request, Response } from 'express'
 import { Service } from '@base/service'
 import type { Search } from '@base/types'
-import type { Activation } from '@lib/zod-prisma-types'
+import type { Activation } from '@lib/zod'
 import type { Fields } from '@lib/prisma'
 
 

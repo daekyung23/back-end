@@ -2,11 +2,9 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "CommonJS",
-    "lib": ["ES2018"],
+    "lib": ["ES2020"],
     "moduleResolution": "node",
     "allowJs": true,
-    "outDir": "dist",
-    "rootDir": ".",
     "strict": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": false,
@@ -15,47 +13,26 @@
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
     "typeRoots": [
       "./node_modules/@types",
       "./node_modules/zod-prisma-types"
     ],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "baseUrl": "./src",
     "paths": {
-      "@/*": ["./*"],
-      "@src/*": ["src/*"],
-      "@config": ["config"],
-      "@config/*": ["config/*"],
-      "@prisma/client": ["./node_modules/.prisma/client"],
-      "@prisma": ["prisma"],
-      "@prisma/*": ["prisma/*"],
-      "@zod-schemas": ["prisma/zod-schemas"],
-      "@zod-schemas/*": ["prisma/zod-schemas/*"],
-      "@models": ["prisma/schema"],
-      "@models/*": ["prisma/schema/*"],
-      "@utils/*": ["src/utils/*"],
-      "@backups/*": ["backups/*"],
-      "@scripts/*": ["scripts/*"],
-      "@routes/*": ["src/routes/*"],
-      "@routes": ["src/routes"],
-      "@controllers/*": ["src/controllers/*"],
-      "@controllers": ["src/controllers"],
-      "@repositories/*": ["src/repositories/*"],
-      "@repositories": ["src/repositories"],
-      "@services/*": ["src/services/*"],
-      "@services": ["src/services"],
-      "@middlewares/*": ["src/middlewares/*"],
-      "@lib/*": ["src/lib/*"],
-      "@base/*": ["src/base/*"],
+      "@*": ["./*"],
+      "@prisma/client": ["../node_modules/.prisma/client"],
     },
     "resolveJsonModule": true
   },
   "include": [
-    "src/**/*",
-    "config/**/*",
-    "scripts/**/*"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules",
-    "dist"
+    "dist",
+    "prisma",
+    "scripts"
   ]
 } 

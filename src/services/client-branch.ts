@@ -1,7 +1,7 @@
 import { Service } from '@base/service'
 import { Repository } from '@base/repository'
 import { prisma } from '@lib/prisma'
-import type { Activation } from '@lib/zod-prisma-types'
+import type { Activation } from '@lib/zod'
 import type { client_branch } from '@prisma/client'
 import type { SearchQuery, SearchResult } from '@base/types'
 import type { UpdateInputUnique } from '@lib/prisma'

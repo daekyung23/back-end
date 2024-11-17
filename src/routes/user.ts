@@ -7,8 +7,9 @@ import {
   userUncheckedCreateInputSchema as createSchema,
   userUncheckedUpdateInputSchema as updateSchema,
   userWhereUniqueInputSchema as uniqueKeySchema,
-} from '@prisma/zod-schemas'
-import { searchSchema, activationSchema } from '@lib/zod-prisma-types'
+  searchSchema,
+  activationSchema,
+} from '@lib/zod'
 
 const router = Router()
 const controller = controllers.user

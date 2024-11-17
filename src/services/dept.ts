@@ -1,5 +1,5 @@
 import { Service } from '@base/service'
-import type { Search } from '@lib/zod-prisma-types'
+import type { Search } from '@lib/zod'
 import { prisma } from '@lib/prisma'
 import { Repository } from '@base/repository'
 import type { dept } from '@prisma/client'

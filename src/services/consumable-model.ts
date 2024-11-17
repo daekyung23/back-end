@@ -37,7 +37,7 @@ export class ConsumableModelService extends Service<typeof MODEL, typeof VIEW> {
     const { device_model_ids, ...consumableData } = body
     
     // 트랜잭션으로 처리
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: any) => {
       // 1. 소모품 모델 생성
       const consumableModel = await tx.consumable_model.create({
         data: consumableData

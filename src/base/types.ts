@@ -1,5 +1,5 @@
 import type { ModelName, Fields } from '@lib/prisma'
-import type { Search } from '@lib/zod-prisma-types'
+import type { Search } from '@/src/lib/zod'
 import type { Simplify } from 'type-fest'
 
 // service input
@@ -15,5 +15,5 @@ export type SearchResult<M extends ModelName, V extends ModelName> = {
   totalPages: number
 }
 
-export type { Search } from '@lib/zod-prisma-types'
+export type { Search } from '@/src/lib/zod'
 

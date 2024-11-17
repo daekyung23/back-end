@@ -7,8 +7,8 @@ import {
   warehouseUncheckedCreateInputSchema as createSchema,
   warehouseUncheckedUpdateInputSchema as updateSchema,
   warehouseWhereUniqueInputSchema as uniqueKeySchema,
-} from '@prisma/zod-schemas'
-import { searchSchema } from '@lib/zod-prisma-types'
+  searchSchema,
+} from '@lib/zod'
 
 const router = Router()
 const controller = controllers.warehouse

@@ -6,8 +6,8 @@ import {
   deviceUncheckedCreateInputSchema as createSchema,
   deviceUncheckedUpdateInputSchema as updateSchema,
   deviceWhereUniqueInputSchema as uniqueKeySchema,
-} from '@prisma/zod-schemas'
-import { searchSchema } from '@lib/zod-prisma-types'
+  searchSchema,
+} from '@lib/zod'
 
 const router = Router()
 const controller = controllers.device

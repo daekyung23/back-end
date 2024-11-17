@@ -1,7 +1,7 @@
-import config from '@config'
 import 'express-async-errors'
 import express from 'express'
 import cors from 'cors'
+import config from '@config'
 import { log } from '@utils/log'
 import { prisma } from '@lib/prisma'
 import requestLogger from '@middlewares/request-logger'

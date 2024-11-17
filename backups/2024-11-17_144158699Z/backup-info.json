@@ -1,0 +1,8 @@
+{
+  "timestamp": "2024-11-17T14:41:58.699Z",
+  "type": "MANUAL",
+  "message": "커밋 전 확인",
+  "createdBy": "gimdong-geon",
+  "prismaVersion": "5.1.1",
+  "nodeVersion": "v20.13.1"
+}

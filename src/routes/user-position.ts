@@ -4,8 +4,8 @@ import { validateInput } from '@middlewares/validators'
 
 import { 
   user_positionWhereUniqueInputSchema as uniqueKeySchema,
-  user_positionSchema
-} from '@prisma/zod-schemas'
+  user_positionSchema,
+} from '@lib/zod'
 
 const router = Router()
 const controller = controllers.userPosition

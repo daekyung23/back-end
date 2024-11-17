@@ -1,15 +1,15 @@
 import { Router } from 'express'
 import { controllers } from '@controllers'
 import { validateInput } from '@middlewares/validators'
-import { z } from 'zod'
-
 import { 
+  z,
   client_branchUncheckedCreateInputSchema as createSchema,
   client_branchUncheckedUpdateInputSchema as updateSchema,
   client_branchWhereUniqueInputSchema as uniqueKeySchema,
-  clientWhereUniqueInputSchema as clientUniqueKeySchema
-} from '@prisma/zod-schemas'
-import { searchSchema, activationSchema } from '@lib/zod-prisma-types'
+  clientWhereUniqueInputSchema as clientUniqueKeySchema,
+  searchSchema,
+  activationSchema
+} from '@lib/zod'
 
 const router = Router()
 const controller = controllers.clientBranch

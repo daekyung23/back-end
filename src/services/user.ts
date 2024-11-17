@@ -1,7 +1,7 @@
 import { Service } from '@base/service'
 import { Repository } from '@base/repository'
 import { Prisma, prisma } from '@lib/prisma'
-import type { Activation } from '@lib/zod-prisma-types'
+import type { Activation } from '@lib/zod'
 import type { SearchQuery, SearchResult, Search } from '@base/types'
 import type { UpdateInputUnique } from '@lib/prisma'
 import type { Simplify } from 'type-fest'
