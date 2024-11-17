@@ -211,7 +211,17 @@ async function getModelSchema(modelName) {
     if (!model) {
       throw new Error(`Model ${modelName} not found in schema`)
     }
-    return model
+
+    // view 여부 확인
+    const modelDefinition = schema
+      .split('\n')
+      .find(line => line.trim().startsWith(`model ${model.name}`) || 
+                    line.trim().startsWith(`view ${model.name}`))
+    
+    return {
+      ...model,
+      isView: modelDefinition?.trim().startsWith('view') || false
+    }
   } catch (error) {
     console.error(`스키마 정보 가져오기 실패 (${modelName}):`, error)
     throw error
@@ -267,7 +277,7 @@ const RestoreManager = {
     )
     
     if (!fs.existsSync(schemaPath)) {
-      throw new Error('schema.prisma 파을 찾을 �� 없습니다.')
+      throw new Error('schema.prisma 파을 찾을  없습니다.')
     }
 
     // schema.prisma 파일 복사
@@ -328,18 +338,19 @@ const RestoreManager = {
       return
     }
 
-    // View 테이블은 건너뛰기
-    if (modelName.toLowerCase().startsWith('v_')) {
-      console.log(`${modelName}: View 테이블은 복원하지 않음`)
-      return
-    }
-
-    console.log(`${modelName} 테이블 초기화 중...`)
-    await tx[modelName].deleteMany()
-
     try {
       // 스키마 정보로 필드 필터링
       const model = await getModelSchema(modelName)
+
+      // View 테이블은 건너뛰기
+      if (model.isView) {
+        console.log(`${modelName}: View 테이블은 복원하지 않음`)
+        return
+      }
+
+      console.log(`${modelName} 테이블 초기화 중...`)
+      await tx[modelName].deleteMany()
+
       const cleanedRecords = records.map(record => {
         const cleaned = {}
         for (const field of model.fields) {

@@ -18,7 +18,7 @@
     "restore": "cross-env node scripts/backup/run-restore.js",
     "prisma:pull": "prisma db pull && node scripts/zod-prisma-types/add-zod-validations.js",
     "prisma:push": "prisma db push && node scripts/prisma/push-views.js",
-    "prisma:generate": "prisma generate && node scripts/zod-prisma-types/convert-aggregate-names.js"
+    "prisma:generate": "prisma generate && node scripts/zod-prisma-types/type-error-ignore.js"
   },
   "author": "",
   "license": "ISC",
