@@ -1,7 +1,7 @@
 import type { Simplify } from 'type-fest'
 import { Service } from '@base/service'
 import { Repository } from '@base/repository'
-import { prisma } from '@lib/prisma'
+import { prisma } from '@lib/prisma'  
 import type { SearchQuery, SearchResult } from '@base/types'
 import type { CreateInputData } from '@lib/prisma'
 

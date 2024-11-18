@@ -1,48 +1,41 @@
 import { Router } from 'express'
 import { controllers } from '@controllers'
 import { validateInput } from '@middlewares/validators'
-import { z } from 'zod'
-
-import { 
-  userUncheckedCreateInputSchema as createSchema,
-  userUncheckedUpdateInputSchema as updateSchema,
-  userWhereUniqueInputSchema as uniqueKeySchema,
-  searchSchema,
-  activationSchema,
-} from '@lib/zod'
+import { schemas, searchSchema, activationSchema } from '@schemas'
 
 const router = Router()
 const controller = controllers.user
+const schema = schemas.user
 
 // Override At Service ------------------------------------------------------
 router.get('/search', 
-  validateInput({ query: z.intersection(searchSchema, activationSchema) }), 
+  validateInput({ query: searchSchema.merge(activationSchema) }), 
   controller.search
 )
 
 router.get('/check', 
-  validateInput({ query: uniqueKeySchema }), 
+  validateInput({ query: schema.primaryKey }), 
   controller.exists
 )
 
 router.patch('/change-activation', 
-  validateInput({ body: z.intersection(uniqueKeySchema, activationSchema) }), 
+  validateInput({ body: schema.primaryKey.merge(activationSchema) }), 
   controller.changeActivation
 )
 
 // Base CRUD ----------------------------------------------------------------
 router.post('/create', 
-  validateInput({ body: createSchema }), 
+  validateInput({ body: schema.createData }), 
   controller.create
 )
 
 router.patch('/update', 
-  validateInput({ body: updateSchema }), 
+  validateInput({ body: schema.updateBy('login_id') }), 
   controller.update<'login_id'>
 )
 
 router.delete('/delete', 
-  validateInput({ query: uniqueKeySchema }), 
+  validateInput({ query: schema.unique('login_id') }), 
   controller.delete<'login_id'>
 )
 

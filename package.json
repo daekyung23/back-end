@@ -1,6 +1,7 @@
 {
   "name": "crm-system",
   "version": "1.0.0",
+  "type": "module",
   "description": "Customer Relationship Management",
   "engines": {
     "node": ">=20.13.1",
@@ -10,7 +11,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cross-env NODE_ENV=production node -r ./dist/config/alias-paths.js dist/server.js",
-    "dev": "cross-env NODE_ENV=development ts-node -r tsconfig-paths/register src/server.ts",
+    "dev": "cross-env NODE_ENV=development npx tsx watch src/server.ts",
     "prebuild": "npx rimraf dist",
     "build": "npm run prisma:generate && tsc && tsc-alias",
     "watch": "tsc -w",
@@ -49,7 +50,6 @@
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.6.3",
-    "zod-prisma-types": "2.7.7"
+    "typescript": "^5.6.3"
   }
 }

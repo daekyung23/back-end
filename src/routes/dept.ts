@@ -1,32 +1,26 @@
 import { Router } from 'express'
 import { controllers } from '@controllers'
 import { validateInput } from '@middlewares/validators'
-import {
-  z,
-  deptUncheckedCreateInputSchema as createSchema,
-  deptUncheckedUpdateInputSchema as updateSchema,
-  deptWhereUniqueInputSchema as uniqueKeySchema,
-  deptSchema,
-  searchSchema,
-} from '@lib/zod'
+import { schemas, searchSchema } from '@schemas'
 
 const router = Router()
 const controller = controllers.dept
+const schema = schemas.dept
 
 // Defined At Controller & Service ------------------------------------------
 // 이거 unique 아닌데?
 router.get('/id-by-name', 
-  validateInput({ query: deptSchema.pick({ dept_name: true }) }), 
+  validateInput({ query: schema.base.pick({ dept_name: true }) }), 
   controller.getDeptIdByName
 )
 
 router.get('/name-by-id', 
-  validateInput({ query: uniqueKeySchema }), 
+  validateInput({ query: schema.primaryKey }), 
   controller.getDeptNameById
 )
 
 router.get('/children', 
-  validateInput({ query: uniqueKeySchema }), 
+  validateInput({ query: schema.primaryKey }), 
   controller.getChildDeptById
 )
 
@@ -38,7 +32,7 @@ router.get('/search',
 
 // CRUD ----------------------------------------------------------------------
 router.post('/create', 
-  validateInput({ body: createSchema }), 
+  validateInput({ body: schema.createData }), 
   controller.create
 )
 
@@ -47,12 +41,12 @@ router.get('/all',
 )
 
 router.patch('/update', 
-  validateInput({ body: z.intersection( uniqueKeySchema, updateSchema ) }), 
+  validateInput({ body: schema.updateByPrimaryKey }), 
   controller.update<'dept_id'>
 )
 
 router.delete('/delete', 
-  validateInput({ query: uniqueKeySchema }), 
+  validateInput({ query: schema.primaryKey }), 
   controller.delete<'dept_id'>
 )
 

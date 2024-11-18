@@ -1,17 +1,12 @@
 import { Router } from 'express'
 import { controllers } from '@controllers'
 import { validateInput } from '@middlewares/validators'
-import {
-  z,
-  device_driverUncheckedCreateInputSchema as createSchema,
-  device_driverUncheckedUpdateInputSchema as updateSchema,
-  device_driverWhereUniqueInputSchema as uniqueKeySchema,
-  device_driverSchema,
-  searchSchema,
-} from '@lib/zod'
+import { schemas, searchSchema } from '@schemas'
 
 const router = Router()
 const controller = controllers.deviceDriver
+const schema = schemas.deviceDriver
+
 
 // Override At Service ------------------------------------------------------
 router.get('/search', 
@@ -20,24 +15,24 @@ router.get('/search',
 )
 
 router.get('/check', 
-  validateInput({ query: device_driverSchema.pick({ device_model_id: true, printer_language: true }) }), 
+  validateInput({ query: schema.base.pick({ device_model_id: true, printer_language: true }) }), 
   controller.exists,
 )
 
 // CRUD ----------------------------------------------------------------------
 router.post('/create', 
-  validateInput({ body: createSchema }), 
+  validateInput({ body: schema.createData }), 
   controller.create
 )
 
 router.patch('/update', 
-  validateInput({ body: z.intersection( uniqueKeySchema, updateSchema ) }), 
+  validateInput({ body: schema.updateByPrimaryKey }), 
   controller.update<'device_driver_id'>
 )
 
 
 router.delete('/delete', 
-  validateInput({ query: uniqueKeySchema }), 
+  validateInput({ query: schema.primaryKey }), 
   controller.delete<'device_driver_id'>
 )
 

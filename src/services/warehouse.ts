@@ -1,7 +1,7 @@
 import { Service } from '@base/service'
 import { Repository } from '@base/repository'
 import { prisma } from '@lib/prisma'
-import type { Search } from '@lib/zod'
+import type { Search } from '@schemas'
 import type { Prisma } from '@prisma/client'
 export class WarehouseService extends Service<'warehouse', 'v_warehouse'> {
   repository = new Repository<'warehouse', 'v_warehouse'>(prisma.warehouse, prisma.v_warehouse)

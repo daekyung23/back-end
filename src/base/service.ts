@@ -12,7 +12,7 @@ import type {
 import { Repository } from '@base/repository'
 import { NotImplementedError } from '@utils/errors'
 import type { Search, SearchResult } from '@base/types'
-import type { Activation } from '@lib/zod'
+import type { Activation } from '@schemas'
 import type { Fields } from '@lib/prisma'
 
 // Service 역할: 비즈니스 로직 처리, repository 호출

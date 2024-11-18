@@ -1,41 +1,33 @@
 import { Router } from 'express'
 import { controllers } from '@controllers'
 import { validateInput } from '@middlewares/validators'
-import {
-  z,
-  consumable_modelUncheckedCreateInputSchema as createSchema,
-  consumable_modelUncheckedUpdateInputSchema as updateSchema,
-  consumable_modelWhereUniqueInputSchema as uniqueKeySchema,
-  consumable_modelSchema,
-  v_consumable_modelSchema,
-  searchSchema,
-} from '@lib/zod'
-
+import { schemas, searchSchema } from '@schemas'
+import { z } from 'zod'
 const router = Router()
 const controller = controllers.consumableModel
+const schema = schemas.consumableModel
+const v_schema = schemas.v_consumable_model
 
 // Defined At Controller & Service -------------------------------------------
 router.post('/create', 
-  validateInput({ body: z.intersection(
-    createSchema, 
-    z.object({
-      device_model_ids: z.array(v_consumable_modelSchema.shape.device_model_id)
-    })
-  ) }), 
+  validateInput({ body: 
+    schema.createData.extend({
+      device_model_ids: z.array(v_schema.base.shape.device_model_id)
+  }) }), 
   controller.createWithDeviceModelIds
 )
 
 // Override At Service -------------------------------------------------------
 router.get('/search', 
   validateInput({ query: searchSchema.extend({
-    consumable_type: consumable_modelSchema.shape.consumable_type.optional()
+    consumable_type: schema.base.shape.consumable_type.optional()
   }) }), 
   controller.search
 )
 
 // CRUD ----------------------------------------------------------------------
 router.get('/check', 
-  validateInput({ query: consumable_modelSchema.pick({ consumable_name: true }) }), 
+  validateInput({ query: schema.base.pick({ consumable_name: true }) }), 
   controller.exists
 )
 

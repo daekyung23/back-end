@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
 import { Controller } from '@base/controller'
 import { services } from '@services'
-import type { Search } from '@lib/zod'
 import type { dept } from '@prisma/client'
 
 export class DeptController extends Controller<'dept', 'v_dept'> {

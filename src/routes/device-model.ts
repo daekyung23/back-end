@@ -1,17 +1,11 @@
 import { Router } from 'express'
 import { controllers } from '@controllers'
 import { validateInput } from '@middlewares/validators'
-import {
-  z,
-  device_modelUncheckedCreateInputSchema as createSchema,
-  device_modelUncheckedUpdateInputSchema as updateSchema,
-  device_modelWhereUniqueInputSchema as uniqueKeySchema,
-  device_modelSchema,
-  searchSchema,
-} from '@lib/zod'
+import { schemas, searchSchema } from '@schemas'
 
 const router = Router()
 const controller = controllers.deviceModel
+const schema = schemas.deviceModel
 
 // Defined At Controller & Service ------------------------------------------
 router.get('/manufacturers', 
@@ -19,7 +13,7 @@ router.get('/manufacturers',
 )
 
 router.get('/models', 
-  validateInput({ query: device_modelSchema.pick({ manufacturer: true }) }), 
+  validateInput({ query: schema.base.pick({ manufacturer: true }) }), 
   controller.getModelsByManufacturer
 )
 
@@ -30,23 +24,23 @@ router.get('/search',
 )
 
 router.get('/check', 
-  validateInput({ query: device_modelSchema.pick({ model_name: true }) }), 
+  validateInput({ query: schema.base.pick({ model_name: true }) }), 
   controller.exists
 )
 
 // Base CRUD ----------------------------------------------------------------
 router.post('/create', 
-  validateInput({ body: createSchema }), 
+  validateInput({ body: schema.createData }), 
   controller.create
 )
 
 router.patch('/update', 
-  validateInput({ body: updateSchema }), 
+  validateInput({ body: schema.updateByPrimaryKey }), 
   controller.update<'device_model_id'>
 )
 
 router.delete('/delete', 
-  validateInput({ query: uniqueKeySchema }), 
+  validateInput({ query: schema.primaryKey }), 
   controller.delete<'device_model_id'>
 ) 
 

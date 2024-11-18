@@ -1,5 +1,4 @@
 import { Service } from '@base/service'
-import type { device_driver } from '@prisma/client'
 import { Repository } from '@base/repository'
 import { prisma } from '@lib/prisma'
 import type { Prisma } from '@prisma/client'

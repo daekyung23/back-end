@@ -1,7 +1,7 @@
 import { Service } from '@base/service'
 import { Repository } from '@base/repository'
 import { prisma } from '@lib/prisma'
-import { user_position } from '@prisma/client'
+import type { user_position } from '@prisma/client'
 
 const MODEL = 'user_position' as const
 export class UserPositionService extends Service<typeof MODEL> {

@@ -12,4 +12,4 @@ export class UserPositionController extends Controller<'user_position'> {
         Pick<user_position, 'position_name'>)
     res.json(result)
   }
-} 
+}  

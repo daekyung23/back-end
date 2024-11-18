@@ -1,19 +1,16 @@
 import { Router } from 'express'
 import { controllers } from '@controllers'
 import { validateInput } from '@middlewares/validators'
-
-import { 
-  user_positionWhereUniqueInputSchema as uniqueKeySchema,
-  user_positionSchema,
-} from '@lib/zod'
+import { schemas } from '@schemas'
 
 const router = Router()
 const controller = controllers.userPosition
+const schema = schemas.userPosition
 
 // Defined At Controller & Service ------------------------------------------
 // not unique
 router.get('/byName', 
-  validateInput({ query: user_positionSchema.pick({ position_name: true }) }), 
+  validateInput({ query: schema.base.pick({ position_name: true }) }), 
   controller.findOneByPositionName
 )
 
@@ -24,12 +21,12 @@ router.get('/all',
 )
 
 router.get('/byId', 
-  validateInput({ query: uniqueKeySchema }), 
+  validateInput({ query: schema.primaryKey }), 
   controller.findOneByUnique<'user_position_id'>
 )
 
 router.delete('/delete', 
-  validateInput({ query: uniqueKeySchema }), 
+  validateInput({ query: schema.primaryKey }), 
   controller.delete<'user_position_id'>
 )
 

@@ -1,54 +1,47 @@
 import { Router } from 'express'
 import { controllers } from '@controllers'
 import { validateInput } from '@middlewares/validators'
-import { 
-  z,
-  client_branchUncheckedCreateInputSchema as createSchema,
-  client_branchUncheckedUpdateInputSchema as updateSchema,
-  client_branchWhereUniqueInputSchema as uniqueKeySchema,
-  clientWhereUniqueInputSchema as clientUniqueKeySchema,
-  searchSchema,
-  activationSchema
-} from '@lib/zod'
+import { schemas, searchSchema, activationSchema } from '@schemas'
 
 const router = Router()
 const controller = controllers.clientBranch
+const schema = schemas.clientBranch
 
 // Defined At Controller & Service ------------------------------------------
 router.get('/by-client', 
-  validateInput({ query: clientUniqueKeySchema }), 
+  validateInput({ query: schema.unique('client_id') }), 
   controller.findManyByClientId
 )
 
 // Override At Service ------------------------------------------------------
 router.get('/search', 
-  validateInput({ query: z.intersection(searchSchema, activationSchema) }), 
+  validateInput({ query: searchSchema.merge(activationSchema) }), 
   controller.search
 )
 
 router.patch('/change-activation', 
-  validateInput({ body: z.intersection(uniqueKeySchema, activationSchema) }), 
+  validateInput({ body: schema.primaryKey.merge(activationSchema) }), 
   controller.changeActivation
 )
 
 // Base CRUD ----------------------------------------------------------------
 router.post('/create', 
-  validateInput({ body: createSchema }), 
+  validateInput({ body: schema.createData }), 
   controller.create
 )
 
 router.get('/by-branch-id', 
-  validateInput({ query: uniqueKeySchema }), 
+  validateInput({ query: schema.primaryKey }), 
   controller.findOneByUnique<'client_branch_id'>
 )
 
 router.patch('/update', 
-  validateInput({ body: updateSchema }), 
+  validateInput({ body: schema.updateByPrimaryKey }), 
   controller.update<'client_branch_id'>
 )
 
 router.delete('/delete', 
-  validateInput({ query: uniqueKeySchema }), 
+  validateInput({ query: schema.primaryKey }), 
   controller.delete<'client_branch_id'>
 )
 

@@ -17,9 +17,7 @@ function addZodValidations() {
       if (line.includes('@id')) {
         return `${line} /// @zod.custom.use(z.coerce.number())`
       } else if (line.includes('@default')) {
-        const defaultMatch = line.match(/@default\(([^)]+)\)/)
-        const defaultValue = defaultMatch ? defaultMatch[1] : ''
-        return `${line} /// @zod.custom.use(z.coerce.number().default(${defaultValue}))`
+        return `${line} /// @zod.custom.use(z.coerce.number().optional())`
       } else if (line.includes('?')) {
         return `${line} /// @zod.custom.use(z.coerce.number().nullable())`
       } else {

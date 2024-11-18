@@ -1,17 +1,11 @@
 import { Router } from 'express'
 import { controllers } from '@controllers'
 import { validateInput } from '@middlewares/validators'
-import { z } from 'zod'
-
-import { 
-  warehouseUncheckedCreateInputSchema as createSchema,
-  warehouseUncheckedUpdateInputSchema as updateSchema,
-  warehouseWhereUniqueInputSchema as uniqueKeySchema,
-  searchSchema,
-} from '@lib/zod'
+import { schemas, searchSchema } from '@schemas'
 
 const router = Router()
 const controller = controllers.warehouse
+const schema = schemas.warehouse
 
 // Override At Service ------------------------------------------------------
 router.get('/search', 
@@ -20,25 +14,24 @@ router.get('/search',
 )
 
 router.get('/check-duplicate', 
-  validateInput({ query: uniqueKeySchema }), 
+  validateInput({ query: schema.primaryKey }), 
   controller.exists
 )
 
 // CRUD ----------------------------------------------------------------------
 router.post('/create', 
-  validateInput({ body: createSchema }), 
+  validateInput({ body: schema.createData }), 
   controller.create
 )
 
 router.patch('/update', 
-  validateInput({ body: z.intersection( uniqueKeySchema, updateSchema ) }), 
+  validateInput({ body: schema.updateByPrimaryKey }), 
   controller.update<'warehouse_id'>
 )
 
 router.delete('/delete', 
-  validateInput({ query: uniqueKeySchema }), 
+  validateInput({ query: schema.primaryKey }), 
   controller.delete<'warehouse_id'>
 )
-
 
 export const warehouseRouter = router
