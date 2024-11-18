@@ -25,7 +25,8 @@ export class PrismaSchemaParser {
       if (!acc[row.name]) {
         acc[row.name] = {
           name: row.name,
-          fields: []
+          fields: [],
+          uniqueFields: []
         }
       }
 

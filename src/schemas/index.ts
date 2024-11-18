@@ -7,22 +7,29 @@ const parser = new PrismaSchemaParser(prisma)
 const dmmf = await parser.getDMMF()
 const models = dmmf
 
+function createSchema(tableName: string) {
+  const model = models.find((m: any) => m.name === tableName)
+  if (!model) {
+    throw new Error(`Table "${tableName}" not found in database schema`)
+  }
+  return new SchemaGenerator(model).generate()
+}
+
 export const schemas = {
-  user: new SchemaGenerator(models.find((m:any) => m.name === 'user')!).generate(),
-  v_user: new SchemaGenerator(models.find((m:any) => m.name === 'v_user')!).generate(),
-  client: new SchemaGenerator(models.find((m: any) => m.name === 'client')!).generate(),
-  v_client: new SchemaGenerator(models.find((m: any) => m.name === 'v_client')!).generate(),
-  deviceModel: new SchemaGenerator(models.find((m: any) => m.name === 'device_model')!).generate(),
-  v_device_model: new SchemaGenerator(models.find((m: any) => m.name === 'v_device_model')!).generate(),
-  clientBranch: new SchemaGenerator(models.find((m: any) => m.name === 'client_branch')!).generate(),
-  v_client_branch: new SchemaGenerator(models.find((m: any) => m.name === 'v_client_branch')!).generate(),
-  consumableModel: new SchemaGenerator(models.find((m: any) => m.name === 'consumable_model')!).generate(),
-  v_consumable_model: new SchemaGenerator(models.find((m: any) => m.name === 'v_consumable_model')!).generate(),
-  dept: new SchemaGenerator(models.find((m: any) => m.name === 'dept')!).generate(),
-  deviceDriver: new SchemaGenerator(models.find((m: any) => m.name === 'device_driver')!).generate(),
-  device: new SchemaGenerator(models.find((m: any) => m.name === 'device')!).generate(),
-  userPosition: new SchemaGenerator(models.find((m: any) => m.name === 'user_position')!).generate(),
-  warehouse: new SchemaGenerator(models.find((m: any) => m.name === 'warehouse')!).generate(),
+  user: createSchema('user'),
+  v_user: createSchema('v_user'),
+  client: createSchema('client'),
+  v_client: createSchema('v_client'),
+  deviceModel: createSchema('device_model'),
+  clientBranch: createSchema('client_branch'),
+  v_client_branch: createSchema('v_client_branch'),
+  consumableModel: createSchema('consumable_model'),
+  v_consumable_model: createSchema('v_consumable_model'),
+  dept: createSchema('dept'),
+  deviceDriver: createSchema('device_driver'),
+  device: createSchema('device'),
+  userPosition: createSchema('user_position'),
+  warehouse: createSchema('warehouse'),
 }
 export type Schemas = typeof schemas
 export * from './common'

@@ -2,7 +2,14 @@ import { z } from 'zod'
 import { PrismaModel, PrismaField } from './parser/types'
 
 export class SchemaGenerator {
-  constructor(private readonly model: PrismaModel) {}
+  private readonly model: PrismaModel
+
+  constructor(model: PrismaModel) {
+    if (!model) {
+      throw new Error('Model is required for SchemaGenerator')
+    }
+    this.model = model
+  }
 
   // 기본 필드 스키마 생성
   private generateFieldSchema(field: PrismaField): z.ZodType<any> {
@@ -36,14 +43,19 @@ export class SchemaGenerator {
   }
 
   // Primary Key 스키마
-  private generatePrimaryKeySchema(model: PrismaModel) {
-    // View 테이블은 건너뛰기
-    if (this.model.name.startsWith('v_')) {
-      return z.object({})
+  private generatePrimaryKeySchema(): z.ZodObject<any> {
+    // 모델 존재 여부 확인
+    if (!this.model) {
+      throw new Error(`Model is not initialized for SchemaGenerator`)
     }
-  
-    const primaryField = model.fields.find(f => f.isPrimary)
-    if (!primaryField) throw new Error(`No primary key found in table: ${model.name}`)
+
+    // 뷰 테이블 체크
+    if (this.model.name.startsWith('v_')) {
+      return z.object({})  // 뷰는 빈 객체 반환
+    }
+
+    const primaryField = this.model.fields.find((f: PrismaField) => f.isPrimary)
+    if (!primaryField) throw new Error(`No primary key found in table: ${this.model.name}`)
   
     return z.object({
       [primaryField.name]: this.generateFieldSchema(primaryField)
@@ -70,7 +82,7 @@ export class SchemaGenerator {
 
   // 전체 스키마 생성
   generate() {
-    const primaryKey = this.generatePrimaryKeySchema(this.model)
+    const primaryKey = this.generatePrimaryKeySchema()
     const createData = this.generateCreateSchema()
     const updateData = this.generateUpdateSchema()
 
@@ -83,23 +95,55 @@ export class SchemaGenerator {
       deleteByPrimaryKey: primaryKey,
 
       unique: (key: string) => {
-        const field = this.model.fields.find(f => f.name === key && (f.isUnique || f.isPrimary))
-        if (!field) throw new Error(`Invalid key: ${key}`)
+        const field = this.model.fields.find((f: PrismaField)  => 
+          f.name === key && (
+            f.isUnique || 
+            f.isPrimary || 
+            f.name.endsWith('_id')  // 외래키 허용
+          )
+        )
+        
+        if (!field) {
+          throw new Error(
+            `Field "${key}" in table "${this.model.name}" must be unique, primary key, or foreign key`
+          )
+        }
         
         return z.object({ [key]: this.generateFieldSchema(field) })
       },
 
-      // 특정 키로 업데이트/삭제하는 메서드
       updateBy: (key: string) => {
-        const field = this.model.fields.find(f => f.name === key && (f.isUnique || f.isPrimary))
-        if (!field) throw new Error(`Invalid key: ${key}`)
+        const field = this.model.fields.find((f: PrismaField) => 
+          f.name === key && (
+            f.isUnique || 
+            f.isPrimary || 
+            f.name.endsWith('_id')  // 외래키 허용
+          )
+        )
+        
+        if (!field) {
+          throw new Error(
+            `Field "${key}" in table "${this.model.name}" must be unique, primary key, or foreign key`
+          )
+        }
         
         return z.object({ [key]: this.generateFieldSchema(field) }).merge(updateData)
       },
 
       deleteBy: (key: string) => {
-        const field = this.model.fields.find(f => f.name === key && (f.isUnique || f.isPrimary))
-        if (!field) throw new Error(`Invalid key: ${key}`)
+        const field = this.model.fields.find((f: PrismaField) => 
+          f.name === key && (
+            f.isUnique || 
+            f.isPrimary || 
+            f.name.endsWith('_id')  // 외래키 허용
+          )
+        )
+        
+        if (!field) {
+          throw new Error(
+            `Field "${key}" in table "${this.model.name}" must be unique, primary key, or foreign key`
+          )
+        }
         
         return z.object({ [key]: this.generateFieldSchema(field) })
       }
