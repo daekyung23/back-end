@@ -37,15 +37,14 @@ flowchart TD
     Approval[결재 관리]
     System[시스템 관리]
     
-    Receiver -->|콜등록| Call
-    Call -->|작업지시| Engineer
-    Engineer -->|처리결과| Call
+    Receiver -->|1.콜등록| Call
+    Call -->|2.작업지시| Engineer
+    Engineer -->|3.처리결과| Call
     
-    Engineer -->|장비정보입력| Device
-    Device -->|현황조회| Employees
-    
-    Employees -->|결재처리| Approval
-    Approval -->|결과통보| Engineer
+    Engineer -->|1.장비정보입력| Device
+    Device -->|2.결재요청| Approval
+    Approval -->|3.결재처리| Employees
+    Employees -->|4.승인/반려| Device
     
     Admin -->|설정/관리| System
     
