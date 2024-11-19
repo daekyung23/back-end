@@ -46,7 +46,12 @@ DB_NAME_PROD=mydb
 # PRISMA
 DATABASE_URL=mysql://${DB_USER_DEV}:${DB_PASSWORD_DEV}@${DB_HOST_DEV}:${DB_PORT_DEV}/${DB_NAME_DEV}
 ```
-### 4. epd
+
+### 4. 데이터베이스 마이그레이션
+```bash
+npx prisma migrate dev
+```
+
 ### 5. 서버 실행
 ```bash
 npm run dev
