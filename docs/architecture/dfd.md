@@ -60,13 +60,11 @@ flowchart TD
     DB_Device[(장비 DB)]
     DB_Client[(고객사 DB)]
     
-    subgraph Call_Process[콜 관리 프로세스]
-        Register[1.콜 접수]
-        Check[2.장비/이력 확인]
-        Assign[3.담당자 배정]
-        Process[4.처리상태 관리]
-        Complete[5.완료 처리]
-    end
+    Register[1.콜 접수]
+    Check[2.장비/이력 확인]
+    Assign[3.담당자 배정]
+    Process[4.처리상태 관리]
+    Complete[5.완료 처리]
     
     Receiver -->|1.고객정보입력| Register
     Register -->|2.조회| DB_Client
