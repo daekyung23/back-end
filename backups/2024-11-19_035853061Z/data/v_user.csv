@@ -1,0 +1,12 @@
+user_id,user_name,login_id,mobile_num,office_num,email,modified_at,created_at,is_active,permission,dept_id,approval_role_id,position_id,dept_name,parent_dept_id
+1,관리자,admin,010-1234-5678,02-1234-5678,email@gmail.com,Thu Nov 23 2023 15:00:00 GMT+0900 (대한민국 표준시),Thu Nov 23 2023 15:00:00 GMT+0900 (대한민국 표준시),1,user,1,0,1,개발용부서,
+2,관리자,admin1,010-4321-8765,02-4321-8765,email2@gmail.com,Thu Nov 23 2023 15:00:00 GMT+0900 (대한민국 표준시),Thu Nov 23 2023 15:00:00 GMT+0900 (대한민국 표준시),1,user,1,0,1,개발용부서,
+3,차동혁,chae00001,,,,Sat Jan 13 2024 15:00:00 GMT+0900 (대한민국 표준시),Sat Jan 13 2024 15:00:00 GMT+0900 (대한민국 표준시),0,user,7,0,14,강서팀,3
+4,오대경,daekyung,010-1541-1541,02-1541-8765,daekyung23@gmail.com,Wed Nov 29 2023 15:00:00 GMT+0900 (대한민국 표준시),Wed Nov 29 2023 15:00:00 GMT+0900 (대한민국 표준시),1,user,2,0,13,개발팀,1
+5,퇴사자,unKnown,010-1541-9876,02-1541-5454,unKnown@gmail.com,Wed Nov 29 2023 15:00:00 GMT+0900 (대한민국 표준시),Wed Nov 29 2023 15:00:00 GMT+0900 (대한민국 표준시),1,user,2,0,16,개발팀,1
+6,임시유저1,user0001,010-0001-0001,031-0001-0001,user1@gmail.com,Sat Jan 13 2024 15:00:00 GMT+0900 (대한민국 표준시),Sat Jan 13 2024 15:00:00 GMT+0900 (대한민국 표준시),1,user,2,0,13,개발팀,1
+7,임시유저2,user0002,010-0002-0002,031-0002-0002,user2@email.com,Sat Jan 13 2024 15:00:00 GMT+0900 (대한민국 표준시),Sat Jan 13 2024 15:00:00 GMT+0900 (대한민국 표준시),1,user,6,0,16,강남팀,3
+8,임시유저3,user0003,010-0003-0003,031-0003-0003,user3@email.com,Sat Jan 13 2024 15:00:00 GMT+0900 (대한민국 표준시),Sat Jan 13 2024 15:00:00 GMT+0900 (대한민국 표준시),1,user,7,0,13,강서팀,3
+9,임시유저4,user0004,,,,Sat Jan 13 2024 15:00:00 GMT+0900 (대한민국 표준시),Sat Jan 13 2024 15:00:00 GMT+0900 (대한민국 표준시),0,user,7,0,12,강서팀,3
+10,임시유저5,user0005,,,,Sat Jan 13 2024 15:00:00 GMT+0900 (대한민국 표준시),Sat Jan 13 2024 15:00:00 GMT+0900 (대한민국 표준시),0,user,5,0,9,영남팀,3
+11,임시유저11,user0011,,,,Sat Jan 13 2024 15:00:00 GMT+0900 (대한민국 표준시),Sat Jan 13 2024 15:00:00 GMT+0900 (대한민국 표준시),0,user,10,0,15,3팀,3

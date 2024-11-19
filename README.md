@@ -50,7 +50,11 @@ npx prisma migrate deploy
 
 # DB 시각화 도구 실행
 npx prisma studio
+
+# 디버그 모드로 DB 스키마 가져오기
+DEBUG="prisma:*" npx prisma db pull
 ```
+
 
 ## 프로젝트 구조
 ```
