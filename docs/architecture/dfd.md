@@ -28,7 +28,6 @@ flowchart TD
     Receiver((접수자))
     Engineer((엔지니어))
     Employees((임직원))
-    Admin((관리자))
     
     DB[(데이터베이스)]
     
@@ -45,8 +44,6 @@ flowchart TD
     Device -->|2.결재요청| Approval
     Approval -->|3.결재처리| Employees
     Employees -->|4.승인/반려| Device
-    
-    Admin -->|설정/관리| System
     
     Call -->|저장/조회| DB
     Device -->|저장/조회| DB
