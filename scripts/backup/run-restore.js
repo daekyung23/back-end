@@ -1,17 +1,20 @@
-const { PrismaClient } = require('@prisma/client')
-const { execSync } = require('child_process')
-const csv = require('csv-parser')
-const fs = require('fs')
-const { readdir } = require('fs/promises')
-const path = require('path')
-const readline = require('readline')
-const { getDMMF } = require('@prisma/internals')
-const { readFileSync } = require('fs')
-const { backup } = require('./run-backup')
+import { PrismaClient } from '@prisma/client'
+import { readdir } from 'fs/promises'
+import * as fs from 'fs'
+import * as path from 'path'
+import * as readline from 'readline'
+import csv from 'csv-parser'
+import prismaInternals from '@prisma/internals'
+import { execSync } from 'child_process' 
+import backup from './run-backup.js'
 
+const { getDMMF } = prismaInternals
 let prisma = new PrismaClient()
 
-// BackupManager
+// 디버깅을 위한 로그 추가
+console.log('스크립트 시작...')
+
+// BackupManager 정의
 const BackupManager = {
   ITEMS_PER_PAGE: 10,
 
@@ -245,7 +248,7 @@ function convertFieldValue(value, type) {
   }
 }
 
-// RestoreManager
+// RestoreManager 정의
 const RestoreManager = {
   formatDate(value) {
     if (!value) return null
@@ -277,7 +280,7 @@ const RestoreManager = {
     )
     
     if (!fs.existsSync(schemaPath)) {
-      throw new Error('schema.prisma 파을 찾을  없습니다.')
+      throw new Error('schema.prisma 파일을 찾을 수 없습니다.')
     }
 
     // schema.prisma 파일 복사
@@ -444,11 +447,13 @@ const RestoreManager = {
 
 // restore 함수
 async function restore() {
+  console.log('복원 프로세스 시작...')
   let autoBackupName = null
   
   try {
     // 1. 복원할 백업 선택
     const backupDate = await BackupManager.selectBackup()
+    console.log('선택된 백업:', backupDate)
     
     // 2. 선택 후 자동 백업 생성
     console.log('\n복원 전 자동 백업 생성 중...')
@@ -486,5 +491,14 @@ async function restore() {
   }
 }
 
-// 실행
-restore()
+// 스크립트 실행
+console.log('실행 조건 확인:', import.meta.url, process.argv[1])
+if (import.meta.url === `file://${process.argv[1]}`) {
+  console.log('restore 함수 실행 시작')
+  restore().catch(error => {
+    console.error('처리되지 않은 오류:', error)
+    process.exit(1)
+  })
+}
+
+export default restore

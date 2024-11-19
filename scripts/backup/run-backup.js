@@ -1,10 +1,18 @@
-const { PrismaClient } = require('@prisma/client')
-const { createObjectCsvWriter } = require('csv-writer')
-const { getDMMF } = require('@prisma/internals')
-const fs = require('fs')
-const path = require('path')
-require('dotenv').config()
+import { PrismaClient } from '@prisma/client'
+import { createObjectCsvWriter } from 'csv-writer'
+import prismaInternals from '@prisma/internals'
+import * as fs from 'fs'
+import * as path from 'path'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
+import dotenv from 'dotenv'
 
+const { getDMMF } = prismaInternals
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+
+dotenv.config()
 const prisma = new PrismaClient()
 
 async function getModels() {
@@ -47,7 +55,12 @@ async function backup(options = {}) {
       type,
       message,
       createdBy: process.env.USER || 'unknown',
-      prismaVersion: require('@prisma/client/package.json').version,
+      prismaVersion: JSON.parse(
+        fs.readFileSync(
+          path.join(process.cwd(), 'node_modules/@prisma/client/package.json'),
+          'utf-8'
+        )
+      ).version,
       nodeVersion: process.version
     }
 
@@ -135,14 +148,14 @@ async function backup(options = {}) {
 
   } catch (error) {
     console.error('백업 실패:', error)
-    process.exit(1)
+    throw error  // 에러를 상위로 전파
   } finally {
     await prisma.$disconnect()
   }
 }
 
 // CLI에서 직접 실행시
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   const args = process.argv.slice(2)
   const message = args[0] || ''
   
@@ -152,4 +165,5 @@ if (require.main === module) {
   })
 }
 
-module.exports = { backup }
+// default export로 변경
+export default backup

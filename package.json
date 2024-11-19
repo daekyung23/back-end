@@ -15,11 +15,11 @@
     "prebuild": "npx rimraf dist",
     "build": "npm run prisma:generate && tsc && tsc-alias",
     "watch": "tsc -w",
-    "backup": "cross-env node scripts/backup/run-backup.js",
-    "restore": "cross-env node scripts/backup/run-restore.js",
-    "prisma:pull": "prisma db pull && node scripts/zod-prisma-types/add-zod-validations.js",
+    "backup": "cross-env NODE_ENV=development node scripts/backup/run-backup.js",
+    "restore": "cross-env NODE_ENV=development node scripts/backup/run-restore.js",
+    "prisma:pull": "prisma db pull",
     "prisma:push": "prisma db push && node scripts/prisma/push-views.js",
-    "prisma:generate": "prisma generate && node scripts/zod-prisma-types/type-error-ignore.js"
+    "prisma:generate": "prisma generate"
   },
   "author": "",
   "license": "ISC",
