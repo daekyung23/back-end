@@ -33,6 +33,6 @@ flowchart TD
    - 드라이버 파일 관리
 
 ## 상세 문서
-- [데이터 흐름도 (DFD)](dfd.md)
+- [데이터 흐름도 (DFD)](dfd/README.md)
 - [ERD](erd.md)
 - [API 구조](../api/README.md)
