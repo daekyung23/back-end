@@ -41,11 +41,14 @@ flowchart LR
     DB[(데이터베이스)]
     
     Req -->|1.승인요청| Process
-    Process -->|2.알림| Approver
-    Approver -->|3a.승인| Process
-    Approver -->|3b.거절| Process
-    Process -->|4.결과통보| Req
-    Process -->|5.기록| DB
+    Process -->|2.권한확인| DB
+    DB -->|3.역할정보| Process
+    Process -->|4.알림| Approver
+    Approver -->|5a.승인| Process
+    Approver -->|5b.거절| Process
+    Process -->|6.상태저장| DB
+    Process -->|7.결과통보| Req
+    DB -->|8.이력조회| Process
 ```
 
 ## 4. 장비 관리 프로세스 (Level 2)
