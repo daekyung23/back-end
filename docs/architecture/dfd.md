@@ -1,7 +1,7 @@
 # 데이터 흐름도 (DFD)
 
 
-## Level 0: 컨텍스트 다이어그램
+## 1. Level 0: 컨텍스트 다이어그램
 
 ```mermaid
 flowchart TD
@@ -21,23 +21,39 @@ flowchart TD
     System -->|결재요청/통계| Employees
     System -->|관리정보| Admin
 ```
+## 2. Level 1: 주요 프로세스
 
-## 2. 주요 프로세스 (Level 1)
-
-```mermaid
+"""mermaid
 flowchart TD
-    User((사용자))
-    Auth[인증 서비스]
-    Process[비즈니스 로직]
+    Receiver((접수자))
+    Engineer((엔지니어))
+    Employees((임직원))
+    Admin((관리자))
+    
     DB[(데이터베이스)]
     
-    User --> |1.로그인| Auth
-    Auth --> |2.토큰| User
-    User --> |3.API요청| Process
-    Process --> |4.조회| DB
-    DB --> |5.결과| Process
-    Process --> |6.응답| User
-```
+    Call[콜 관리]
+    Device[장비 관리]
+    Approval[결재 관리]
+    System[시스템 관리]
+    
+    Receiver -->|콜등록| Call
+    Call -->|작업지시| Engineer
+    Engineer -->|처리결과| Call
+    
+    Engineer -->|장비정보입력| Device
+    Device -->|현황조회| Employees
+    
+    Employees -->|결재처리| Approval
+    Approval -->|결과통보| Engineer
+    
+    Admin -->|설정/관리| System
+    
+    Call -->|저장/조회| DB
+    Device -->|저장/조회| DB
+    Approval -->|저장/조회| DB
+    System -->|저장/조회| DB
+"""
 
 ## 3. 승인 프로세스 (Level 2)
 
