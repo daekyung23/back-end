@@ -419,7 +419,7 @@ model user {
   email                                                      String?                 @db.VarChar(100)
   modified_at                                                DateTime?               @db.Timestamp(0)
   dept_id                                                    Int
-  approval_role_id                                           Int
+  approval_role_id                                           Int?
   position_id                                                Int
   created_at                                                 DateTime                @db.Timestamp(0)
   is_active                                                  Int                     @default(1) @db.TinyInt
@@ -432,7 +432,7 @@ model user {
   device_install_info                                        device_install_info[]
   inspection_approval_inspection_approval_approver_idTouser  inspection_approval[]   @relation("inspection_approval_approver_idTouser")
   inspection_approval_inspection_approval_requester_idTouser inspection_approval[]   @relation("inspection_approval_requester_idTouser")
-  approval_role                                              approval_role           @relation(fields: [approval_role_id], references: [role_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_approval_role1")
+  approval_role                                              approval_role?          @relation(fields: [approval_role_id], references: [role_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_approval_role1")
   dept                                                       dept                    @relation(fields: [dept_id], references: [dept_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_dept1")
   user_position                                              user_position           @relation(fields: [position_id], references: [user_position_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_user_position1")
   user_role_assignment                                       user_role_assignment[]
@@ -505,7 +505,7 @@ view v_client_branch {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_consumable_model {
-  compatibility_id    String @db.VarChar(23) @id
+  compatibility_id    String  @id @db.VarChar(23)
   consumable_model_id Int?
   manufacturer        String? @db.VarChar(100)
   consumable_name     String? @db.VarChar(100)
@@ -517,7 +517,7 @@ view v_consumable_model {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_dept {
-  dept_id   BigInt  @default(0) @id
+  dept_id   BigInt  @id @default(0)
   dept_1_id String  @default("") @db.VarChar(20)
   dept_1    String  @default("") @db.VarChar(100)
   dept_2_id String? @db.VarChar(20)
@@ -528,7 +528,7 @@ view v_dept {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_device {
-  device_id              Int     @id
+  device_id              Int      @id
   device_model_id        Int
   owner_dept_id          Int
   mgmt_dept_id           Int
@@ -553,7 +553,6 @@ view v_device {
   has_shelf              BigInt?
 }
 
-
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_device_driver {
   device_driver_id     Int     @id
@@ -568,7 +567,7 @@ view v_device_driver {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_user {
-  user_id          Int     @id
+  user_id          Int               @id
   user_name        String            @db.VarChar(45)
   login_id         String            @db.VarChar(45)
   mobile_num       String?           @db.VarChar(20)
