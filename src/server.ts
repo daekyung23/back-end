@@ -11,6 +11,10 @@ import errorHandler from '@middlewares/error-handler'
 import routes from '@routes'
 import { initBigIntJson } from '@config/bigint.config'
 
+// 서버 시작 부분에 추가
+console.log('Current DATABASE_URL:', process.env.DATABASE_URL);
+console.log('Current NODE_ENV:', process.env.NODE_ENV);
+
 initBigIntJson()
 const app = express()
 

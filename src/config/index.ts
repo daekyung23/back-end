@@ -1,33 +1,70 @@
 import { config as dotenvConfig } from 'dotenv'
 
-dotenvConfig()
+// 환경 설정 파일 로드
+const envFile = process.env.NODE_ENV === 'production' 
+  ? '.env.production' 
+  : '.env.development';
 
-interface DBConfig {
-  host: string | undefined
-  port: number
-  user: string | undefined
-  password: string | undefined
-  database: string | undefined
+dotenvConfig({ path: envFile });
+
+// 로깅 설정 인터페이스
+interface LogConfig {
+  enabled: boolean
+  request: boolean
+  requestBody: boolean
+  response: boolean
+  responseBody: boolean
 }
 
+// DB 설정 인터페이스
+interface DBConfig {
+  host: string
+  port: number
+  user: string
+  password: string
+  database: string
+}
+
+// 전체 설정 인터페이스
 interface Config {
-  nodeEnv: string | undefined
-  port: string | undefined
+  nodeEnv: string
+  port: string
+  logging: LogConfig
   db: DBConfig
 }
+// 설정값 검증 함수
+const env = (key: string): string => {
+  const value = process.env[key]
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${key}`)
+  }
+  return value
+}
 
-const isDev = process.env.NODE_ENV !== "production"
-
+// 설정 객체 생성
 const config: Config = {
-  nodeEnv: process.env.NODE_ENV,
-  port: process.env.PORT,
-  db: {
-    host: isDev ? process.env.DB_HOST_DEV : process.env.DB_HOST_PROD,
-    port: parseInt((isDev ? process.env.DB_PORT_DEV : process.env.DB_PORT_PROD) || '3306'),
-    user: isDev ? process.env.DB_USER_DEV : process.env.DB_USER_PROD,
-    password: isDev ? process.env.DB_PASSWORD_DEV : process.env.DB_PASSWORD_PROD,
-    database: isDev ? process.env.DB_NAME_DEV : process.env.DB_NAME_PROD,
+  nodeEnv: env('NODE_ENV'),
+  port: env('PORT'),
+  logging: {
+    enabled: env('ENABLE_LOGGING') === 'true',
+    request: env('ENABLE_REQUEST_LOGGING') === 'true',
+    requestBody: env('ENABLE_REQUEST_BODY_LOGGING') === 'true',
+    response: env('ENABLE_RESPONSE_LOGGING') === 'true',
+    responseBody: env('ENABLE_RESPONSE_BODY_LOGGING') === 'true',
   },
+  db: {
+    host: env('DB_HOST'),
+    port: parseInt(env('DB_PORT')),
+    user: env('DB_USER'),
+    password: env('DB_PASSWORD'),
+    database: env('DB_NAME'),
+  },
+}
+
+// DATABASE_URL 생성 함수
+export const getPrismaDatabaseUrl = (): string => {
+  const { host, port, user, password, database } = config.db
+  return `mysql://${user}:${password}@${host}:${port}/${database}`
 }
 
 export default config
