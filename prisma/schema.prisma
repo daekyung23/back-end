@@ -419,7 +419,7 @@ model user {
   email                                                      String?                 @db.VarChar(100)
   modified_at                                                DateTime?               @db.Timestamp(0)
   dept_id                                                    Int
-  approval_role_id                                           Int
+  approval_role_id                                           Int?
   position_id                                                Int
   created_at                                                 DateTime                @db.Timestamp(0)
   is_active                                                  Int                     @default(1) @db.TinyInt
@@ -432,7 +432,7 @@ model user {
   device_install_info                                        device_install_info[]
   inspection_approval_inspection_approval_approver_idTouser  inspection_approval[]   @relation("inspection_approval_approver_idTouser")
   inspection_approval_inspection_approval_requester_idTouser inspection_approval[]   @relation("inspection_approval_requester_idTouser")
-  approval_role                                              approval_role           @relation(fields: [approval_role_id], references: [role_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_approval_role1")
+  approval_role                                              approval_role?          @relation(fields: [approval_role_id], references: [role_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_approval_role1")
   dept                                                       dept                    @relation(fields: [dept_id], references: [dept_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_dept1")
   user_position                                              user_position           @relation(fields: [position_id], references: [user_position_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_user_position1")
   user_role_assignment                                       user_role_assignment[]
