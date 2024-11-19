@@ -28,13 +28,21 @@ cp .env.example .env
 }
 ```
 
-## Database 관련 명령어
+# 프론트 개발시 사용 명령어
 ```bash
+# DB에 스키마 반영
+npm run prisma:push
+
+# DB백업 복구
+npm run restore
+
+# DB 시각화 도구 실행
+npx prisma studio
+```
+
+# 백엔드 개발 전용
 # Prisma 스키마 생성
 npx prisma init
-
-# DB에서 스키마 가져오기
-npx prisma db pull
 
 # Prisma 클라이언트 생성
 npx prisma generate
@@ -48,11 +56,12 @@ npx prisma migrate dev
 # 프로덕션 마이그레이션 실행
 npx prisma migrate deploy
 
-# DB 시각화 도구 실행
-npx prisma studio
 
 # 디버그 모드로 DB 스키마 가져오기
 DEBUG="prisma:*" npx prisma db pull
+
+# DB에서 스키마 가져오기
+npx prisma db pull
 ```
 
 
