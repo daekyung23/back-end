@@ -1,6 +1,6 @@
-const { readFileSync, readdirSync } = require('fs')
-const { join } = require('path')
-const { PrismaClient } = require('@prisma/client')
+import { readFileSync, readdirSync } from 'fs'
+import { join } from 'path'
+import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
