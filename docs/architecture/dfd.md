@@ -1,6 +1,7 @@
 # 데이터 흐름도 (DFD)
 
 ## 1. 컨텍스트 다이어그램 (Level 0)
+
 ```mermaid
 flowchart TD
     User[사용자] --> |요청/응답| System[프린터 관리 시스템]
@@ -9,6 +10,7 @@ flowchart TD
 ```
 
 ## 2. 주요 프로세스 (Level 1)
+
 ```mermaid
 flowchart TD
     User[사용자] --> |1. 로그인| Auth[인증]
@@ -20,6 +22,7 @@ flowchart TD
 ```
 
 ## 3. 승인 프로세스 (Level 2)
+
 ```mermaid
 flowchart LR
     Req[요청자] -->|1. 승인요청| Process[승인프로세스]
@@ -31,6 +34,7 @@ flowchart LR
 ```
 
 ## 4. 장비 관리 프로세스 (Level 2)
+
 ```mermaid
 flowchart TD
     Device[프린터] -->|1. 상태보고| Monitor[모니터링]
