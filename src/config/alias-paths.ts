@@ -1,7 +1,11 @@
-import { register } from 'tsconfig-paths'
-import { readFileSync } from 'fs'
-import { join } from 'path'
-import { parse as parseJsonc } from 'jsonc-parser'
+import { register } from 'tsconfig-paths';
+import { readFileSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import { parse as parseJsonc } from 'jsonc-parser';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const tsconfig = parseJsonc(
   readFileSync(join(__dirname, '../../tsconfig.json'), 'utf-8')

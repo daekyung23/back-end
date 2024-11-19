@@ -5,7 +5,7 @@ import {
   getValidFieldCount, 
   formatErrorStack,
   formatResponseBody 
-} from './formatter'
+} from './formatter.js'
 
 dotenv.config()
 

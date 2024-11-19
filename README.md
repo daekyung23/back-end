@@ -1,4 +1,31 @@
+# 프린터 관리 시스템
+
+## 📚 시스템 개요
+프린터 자산관리 및 유지보수를 위한 통합 관리 시스템입니다.
+
+## 🚀 시작하기
+- [설치 가이드](docs/getting-started.md)
+- [환경 설정](docs/setup.md)
+
+## 📂 시스템 구조
+- [아키텍처](docs/architecture/README.md)
+  - [데이터 흐름도](docs/architecture/dfd.md)
+  - [ERD](docs/architecture/erd.md)
+
+## 📌 주요 기능
+- [사용자 관리](docs/features/user-management.md)
+- [장비 관리](docs/features/device-management.md)
+- [승인 프로세스](docs/features/approval-process.md)
+
+## 🛠 개발 가이드
+- [코딩 컨벤션](docs/dev/conventions.md)
+- [API 문서](docs/api/README.md)
+- [테스트 가이드](docs/dev/testing.md)
+
+
 # 프로젝트 설정 가이드
+
+```
 
 ## 환경 설정
 ```bash
@@ -8,63 +35,6 @@ npm install
 # 환경변수 설정
 cp .env.example .env
 ```
-
-## Path Aliases
-```json
-{
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"],
-      "@config/*": ["src/config/*"],
-      "@entities/*": ["src/entities/*"],
-      "@services/*": ["src/services/*"],
-      "@controllers/*": ["src/controllers/*"],
-      "@middlewares/*": ["src/middlewares/*"],
-      "@utils/*": ["src/utils/*"],
-      "@database/*": ["src/database/*"]
-    }
-  }
-}
-```
-
-# 프론트 개발시 사용 명령어
-```bash
-# DB에 스키마 반영
-npm run prisma:push
-
-# DB백업 복구
-npm run restore
-
-# DB 시각화 도구 실행
-npx prisma studio
-```
-
-# 백엔드 개발 전용
-```bash
-# Prisma 스키마 생성
-npx prisma init
-
-# Prisma 클라이언트 생성
-npx prisma generate
-
-# 마이그레이션 생성 (SQL 수동 추가용)
-npx prisma migrate dev --create-only --name [마이그레이션_이름]
-
-# 마이그레이션 실행
-npx prisma migrate dev
-
-# 프로덕션 마이그레이션 실행
-npx prisma migrate deploy
-
-
-# 디버그 모드로 DB 스키마 가져오기
-DEBUG="prisma:*" npx prisma db pull
-
-# DB에서 스키마 가져오기
-npx prisma db pull
-```
-
 
 ## 프로젝트 구조
 ```
@@ -84,6 +54,44 @@ npx prisma db pull
 │   └── migrations/     # 마이그레이션 파일들
 ├── docs/              # 문서
 └── scripts/           # 유틸리티 스크립트
+```
+
+
+# 프론트 개발시 사용 명령어
+```bash
+# DB에 스키마 반영
+npm run prisma:push
+
+# DB백업 복구
+npm run restore
+
+# DB 시각화 도구 실행
+npx prisma studio
+```
+
+# 백엔드 개발 전용 명령어
+```bash
+# Prisma 스키마 생성
+npx prisma init
+
+# Prisma 클라이언트 생성
+npx prisma generate
+
+# 마이그레이션 생성 (SQL 수동 추가용)
+npx prisma migrate dev --create-only --name [마이그레이션_이름]
+
+# 마이그레이션 실행
+npx prisma migrate dev
+
+# 프로덕션 마이그레이션 실행
+npx prisma migrate deploy
+
+# DB에서 스키마 가져오기
+npx prisma db pull
+
+# 디버그 모드로 DB 스키마 가져오기
+DEBUG="prisma:*" npx prisma db pull
+
 ```
 
 ## NPM Scripts
@@ -129,9 +137,6 @@ npm run docs:generate
 
 ## 환경변수 예시
 ```env
-# Database
-DATABASE_URL="mysql://user:password@localhost:3306/mydb"
-
 # LOGGING
 ENABLE_LOGGING=true
 ENABLE_REQUEST_LOGGING=true

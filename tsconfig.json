@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "es2022",
+    "module": "ES2022",
     "moduleResolution": "Bundler",
     "lib": ["ES2022"],
     "esModuleInterop": true,
@@ -21,7 +21,7 @@
     "rootDir": "./src",
     "baseUrl": "./src",
     "paths": {
-      "@*": ["./*"],
+      "@*": ["*"],
       "@prisma/client": ["../node_modules/.prisma/client"],
     }
   },

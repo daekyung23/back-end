@@ -10,11 +10,11 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cross-env NODE_ENV=production node -r ./dist/config/alias-paths.js dist/server.js",
+    "start": "cross-env NODE_ENV=production node dist/server.js",
     "dev": "cross-env NODE_ENV=development npx tsx watch src/server.ts",
     "prebuild": "npx rimraf dist",
-    "build": "npm run prisma:generate && tsc && tsc-alias",
-    "watch": "tsc -w",
+    "build": "npm run prisma:generate && rollup -c",
+    "watch": "rollup -c -w",
     "backup": "cross-env NODE_ENV=development node scripts/backup/run-backup.js",
     "restore": "cross-env NODE_ENV=development node scripts/backup/run-restore.js",
     "prisma:pull": "prisma db pull",
@@ -41,15 +41,20 @@
   "devDependencies": {
     "@prisma/internals": "^5.1.1",
     "@prisma/sdk": "^4.0.0",
+    "@rollup/plugin-commonjs": "^28.0.1",
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "@rollup/plugin-typescript": "^12.1.1",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.9.0",
     "minimist": "^1.2.8",
     "nodemon": "^3.0.2",
     "prisma": "^5.1.1",
+    "rollup": "^4.27.3",
     "ts-node": "^10.9.2",
     "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
+    "tslib": "^2.8.1",
     "typescript": "^5.6.3"
   }
 }
