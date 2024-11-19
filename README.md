@@ -41,6 +41,7 @@ npx prisma studio
 ```
 
 # 백엔드 개발 전용
+```bash
 # Prisma 스키마 생성
 npx prisma init
 
