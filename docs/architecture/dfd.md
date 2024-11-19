@@ -20,6 +20,8 @@ flowchart TD
     System -->|작업지시/이력| Engineer
     System -->|결재요청/통계| Employees
     System -->|관리정보| Admin
+
+    click System "https://github.com/daekyung23/back-end/docs/system-overview.md" "시스템 설명 보기"
 ```
 ## 2. 통합 관리 시스템 (Level 1)
 
@@ -49,7 +51,7 @@ flowchart TD
     Approval -->|저장/조회| DB
 ```
 
-## 3. 승인 프로세스 (Level 2)
+## 3. 콜 관리 (Level 2)
 ```mermaid
 flowchart TD
     Receiver((접수자))
