@@ -35,12 +35,16 @@ FLUSH PRIVILEGES;
 ```
 
 ### Prisma 설정
-1. 스키마 생성:
+1. 스키마 적용:
 ```bash
-npx prisma init
+# DB 동기화
+npm run prisma:push
+
+# Prisma 클라이언트 생성
+npm run prisma:generate
 ```
 
-2. 모델 정의 후 마이그레이션:
+### Backup Data 적용
 ```bash
-npx prisma migrate dev --name init
+npm run restore
 ```
