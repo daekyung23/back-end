@@ -23,7 +23,7 @@ flowchart TD
 ```
 ## 2. Level 1: 주요 프로세스
 
-"""mermaid
+```mermaid
 flowchart TD
     Receiver((접수자))
     Engineer((엔지니어))
@@ -53,7 +53,7 @@ flowchart TD
     Device -->|저장/조회| DB
     Approval -->|저장/조회| DB
     System -->|저장/조회| DB
-"""
+```
 
 ## 3. 승인 프로세스 (Level 2)
 
