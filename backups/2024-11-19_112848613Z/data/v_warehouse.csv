@@ -1,0 +1,4 @@
+warehouse_id,warehouse_name,mgmt_dept_id,mgmt_dept_name,mgmt_parent_dept_id
+1,강남창고,6,강남팀,3
+2,가산창고,7,강서팀,3
+4,강북창고,8,강북팀,3

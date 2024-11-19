@@ -7,9 +7,16 @@ import csv from 'csv-parser'
 import prismaInternals from '@prisma/internals'
 import { execSync } from 'child_process' 
 import backup from './run-backup.js'
+import { config } from '../config.js' 
 
 const { getDMMF } = prismaInternals
-let prisma = new PrismaClient()
+let prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: config.db.url
+    }
+  }
+})
 
 // 디버깅을 위한 로그 추가
 console.log('스크립트 시작...')
@@ -489,6 +496,11 @@ async function restore() {
     
     process.exit(1)
   }
+}
+
+if (process.env.NODE_ENV === undefined) {
+  console.error('NODE_ENV가 설정되지 않았습니다.')
+  process.exit(1)
 }
 
 // 스크립트 실행

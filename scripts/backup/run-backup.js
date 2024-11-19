@@ -5,15 +5,20 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
-import dotenv from 'dotenv'
+import { config } from '../config.js'
 
 const { getDMMF } = prismaInternals
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
-dotenv.config()
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: config.db.url
+    }
+  }
+})
 
 async function getModels() {
   // Prisma 모델만 필터링
@@ -152,6 +157,11 @@ async function backup(options = {}) {
   } finally {
     await prisma.$disconnect()
   }
+}
+
+if (process.env.NODE_ENV === undefined) {
+  console.error('NODE_ENV가 설정되지 않았습니다.')
+  process.exit(1)
 }
 
 // CLI에서 직접 실행시

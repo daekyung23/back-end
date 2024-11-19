@@ -1,11 +1,18 @@
 import { readFileSync, readdirSync } from 'fs'
 import { join } from 'path'
 import { PrismaClient } from '@prisma/client'
+import dotenv from 'dotenv'
+import { config } from '../config.js'
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({
+  datasources: {
+    db: { url: config.db.url }
+} })
+
 
 async function pushViews() {
   try {
+    console.log(`Using DATABASE_URL: ${process.env.DATABASE_URL}`)
     // 1. 기존 view 목록 조회
     const views = await prisma.$queryRaw`
       SELECT TABLE_NAME 

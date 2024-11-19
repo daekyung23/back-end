@@ -1,0 +1,1 @@
+device_id,device_model_id,owner_dept_id,mgmt_dept_id,serial,regi_date,mac,last_inspection_log_id,last_location_log_id,status_id,model_name,manufacturer,owner_dept_name,mgmt_dept_name,location_id,warehouse_id,warehouse_name,client_branch_id,client_branch_name,status_name,has_fax,has_desk,has_shelf
