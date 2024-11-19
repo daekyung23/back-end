@@ -1,7 +1,7 @@
 # 데이터 흐름도 (DFD)
 
 
-## 1. Level 0: 컨텍스트 다이어그램
+## 1. 컨텍스트 다이어그램 (level 0)
 
 ```mermaid
 flowchart TD
@@ -21,7 +21,7 @@ flowchart TD
     System -->|결재요청/통계| Employees
     System -->|관리정보| Admin
 ```
-## 2. Level 1: 주요 프로세스
+## 2. 통합 관리 시스템 (Level 1)
 
 ```mermaid
 flowchart TD
@@ -50,23 +50,40 @@ flowchart TD
 ```
 
 ## 3. 승인 프로세스 (Level 2)
-
 ```mermaid
-flowchart LR
-    Req((요청자))
-    Process[승인처리]
-    Approver((승인자))
-    DB[(데이터베이스)]
+flowchart TD
+    Receiver((접수자))
+    Engineer((엔지니어))
+    Employees((임직원))
     
-    Req -->|1.승인요청| Process
-    Process -->|2.권한확인| DB
-    DB -->|3.역할정보| Process
-    Process -->|4.알림| Approver
-    Approver -->|5a.승인| Process
-    Approver -->|5b.거절| Process
-    Process -->|6.상태저장| DB
-    Process -->|7.결과통보| Req
-    DB -->|8.이력조회| Process
+    DB_Call[(콜 DB)]
+    DB_Device[(장비 DB)]
+    DB_Client[(고객사 DB)]
+    
+    subgraph Call_Process[콜 관리 프로세스]
+        Register[1.콜 접수]
+        Check[2.장비/이력 확인]
+        Assign[3.담당자 배정]
+        Process[4.처리상태 관리]
+        Complete[5.완료 처리]
+    end
+    
+    Receiver -->|1.고객정보입력| Register
+    Register -->|2.조회| DB_Client
+    Register -->|3.장비확인| DB_Device
+    Register -->|4.콜등록| DB_Call
+    
+    Check -->|5.이력조회| DB_Call
+    Check -->|6.장비정보| DB_Device
+    
+    Assign -->|7.엔지니어배정| Engineer
+    Engineer -->|8.상태갱신| Process
+    
+    Process -->|9.처리상태저장| DB_Call
+    Engineer -->|10.완료보고| Complete
+    Complete -->|11.결과저장| DB_Call
+    
+    Employees -->|모니터링| Process
 ```
 
 ## 4. 장비 관리 프로세스 (Level 2)
