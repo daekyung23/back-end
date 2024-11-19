@@ -34,7 +34,6 @@ flowchart TD
     Call[콜 관리]
     Device[장비 관리]
     Approval[결재 관리]
-    System[시스템 관리]
     
     Receiver -->|1.콜등록| Call
     Call -->|2.작업지시| Engineer
@@ -48,7 +47,6 @@ flowchart TD
     Call -->|저장/조회| DB
     Device -->|저장/조회| DB
     Approval -->|저장/조회| DB
-    System -->|저장/조회| DB
 ```
 
 ## 3. 승인 프로세스 (Level 2)
