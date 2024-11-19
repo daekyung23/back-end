@@ -3,32 +3,22 @@
 
 ## Level 0: 컨텍스트 다이어그램
 
-# 데이터 흐름도 (DFD)
-
-## Level 0: 컨텍스트 다이어그램
-
 ```mermaid
 flowchart TD
-    User((일반사용자))
     Receiver((접수자))
     Engineer((엔지니어))
-    TeamLead((팀장))
-    Director((대표))
+    Employees((임직원))
     Admin((관리자))
     System[통합 관리 시스템]
     
     Receiver -->|콜등록/분배| System
-    User -->|장비조회/승인요청| System
     Engineer -->|점검/설치/수리 정보입력| System
-    TeamLead -->|결재/업무관리| System
-    Director -->|경영정보확인| System
+    Employees -->|결재/업무관리| System
     Admin -->|시스템관리| System
     
-    System -->|알림/결과| User
     System -->|콜현황/이력| Receiver
     System -->|작업지시/이력| Engineer
-    System -->|결재요청/통계| TeamLead
-    System -->|현황/통계| Director
+    System -->|결재요청/통계| Employees
     System -->|관리정보| Admin
 ```
 
