@@ -1,17 +1,28 @@
 # 데이터 흐름도 (DFD)
 
-## 1. 컨텍스트 다이어그램 (Level 0)
+
+## Level 0: 컨텍스트 다이어그램
 
 ```mermaid
 flowchart TD
-    User((사용자))
-    Admin((관리자))
-    Device((프린터))
+    subgraph Actors
+        User((일반사용자))
+        Admin((관리자))
+        Tech((기술지원))
+        Device((프린터))
+    end
+    
     System[프린터 관리 시스템]
     
-    User --> |요청/응답| System
-    Admin --> |관리/설정| System
-    Device --> |상태/로그| System
+    User -->|장비조회/요청| System
+    Admin -->|시스템관리/승인| System
+    Tech -->|장비점검/설치| System
+    Device -->|상태/로그전송| System
+    
+    System -->|알림/결과| User
+    System -->|현황/통계| Admin
+    System -->|작업지시/이력| Tech
+    System -->|설정/제어| Device
 ```
 
 ## 2. 주요 프로세스 (Level 1)
