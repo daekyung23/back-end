@@ -40,7 +40,7 @@
     "prisma:migrate": "docker compose -f docker-compose.dev.yml exec app npm run raw:prisma:migrate",
     "prisma:pull:dev": "docker compose -f docker-compose.dev.yml exec app npm run raw:prisma:pull:dev ",
     "prisma:push:dev": "docker compose -f docker-compose.dev.yml exec app npm run raw:prisma:push:dev",
-    "prisma:generate:dev": "docker compose -f docker-compose.dev.yml exec app npm run raw:prisma:generate:dev",
+    "prisma:generate:dev": "DATABASE_URL=\"mysql://${DB_USER}:${DB_PASSWORD}@localhost:${DB_PORT}/${DB_NAME}\" npm run raw:prisma:generate:dev",
     "prisma:pull:prod": "docker compose -f docker-compose.prod.yml exec app npm run raw:prisma:pull:prod",
     "prisma:push:prod": "docker compose -f docker-compose.prod.yml exec app npm run raw:prisma:push:prod",
     "prisma:generate:prod": "docker compose -f docker-compose.prod.yml exec app npm run raw:prisma:generate:prod",

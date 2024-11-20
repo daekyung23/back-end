@@ -28,6 +28,8 @@ export const schemas = {
   dept: createSchema('dept'),
   deviceDriver: createSchema('device_driver'),
   device: createSchema('device'),
+  sido: createSchema('sido'),
+  sigungu: createSchema('sigungu'),
   userPosition: createSchema('user_position'),
   warehouse: createSchema('warehouse'),
 }

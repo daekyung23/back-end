@@ -468,7 +468,7 @@ model warehouse {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_client {
-  client_id                     Int     @id
+  client_id                     Int     @id @default(0)
   client_name                   String  @default("") @db.VarChar(45)
   parent_client_id              Int?
   default_client_branch_rate_id BigInt  @default(0)
@@ -481,7 +481,7 @@ view v_client {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_client_branch {
-  client_branch_id      Int     @id
+  client_branch_id      Int     @id @default(0)
   client_branch_name    String  @db.VarChar(100)
   client_id             Int
   sigungu_id            Int
@@ -501,14 +501,14 @@ view v_client_branch {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_consumable_model {
-  compatibility_id    String  @id @db.VarChar(23)
-  consumable_model_id Int?
+  compatibility_id    String @id @db.VarChar(23)
+  consumable_model_id Int?    @default(0)
   manufacturer        String? @db.VarChar(100)
   consumable_name     String? @db.VarChar(100)
   consumable_type     String? @db.VarChar(100)
   model_manufacturer  String? @db.VarChar(100)
   model_name          String? @db.VarChar(100)
-  device_model_id     Int?
+  device_model_id     Int?    @default(0)
 }
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
@@ -524,7 +524,7 @@ view v_dept {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_device {
-  device_id              Int      @id
+  device_id              Int      @id @default(0)
   device_model_id        Int
   owner_dept_id          Int
   mgmt_dept_id           Int
@@ -538,10 +538,10 @@ view v_device {
   manufacturer           String?  @db.VarChar(100)
   owner_dept_name        String?  @db.VarChar(100)
   mgmt_dept_name         String?  @db.VarChar(100)
-  location_id            Int?
-  warehouse_id           Int?
+  location_id            Int?     @default(0)
+  warehouse_id           Int?     @default(0)
   warehouse_name         String?  @db.VarChar(100)
-  client_branch_id       Int?
+  client_branch_id       Int?     @default(0)
   client_branch_name     String?  @db.VarChar(100)
   status_name            String?  @db.VarChar(45)
   has_fax                BigInt?
@@ -551,7 +551,7 @@ view v_device {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_device_driver {
-  device_driver_id     Int     @id
+  device_driver_id     Int     @id @default(0)
   device_model_id      Int
   driver_manufacturer  String? @db.VarChar(100)
   printer_language     String? @db.VarChar(45)
@@ -563,7 +563,7 @@ view v_device_driver {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_user {
-  user_id          Int               @id
+  user_id          Int               @id @default(0)
   user_name        String            @db.VarChar(45)
   login_id         String            @db.VarChar(45)
   mobile_num       String?           @db.VarChar(20)
@@ -574,7 +574,7 @@ view v_user {
   is_active        Int               @default(1) @db.TinyInt
   permission       v_user_permission @default(user)
   dept_id          Int
-  approval_role_id Int
+  approval_role_id Int?
   position_id      Int
   dept_name        String?           @db.VarChar(100)
   parent_dept_id   Int?
@@ -582,11 +582,19 @@ view v_user {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_warehouse {
-  warehouse_id        Int     @id
+  warehouse_id        Int     @id @default(0)
   warehouse_name      String  @db.VarChar(100)
   mgmt_dept_id        Int
   mgmt_dept_name      String? @db.VarChar(100)
   mgmt_parent_dept_id Int?
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view v_sido {
+  sido_id      Int @id
+  sido_name    String? @db.VarChar(45)
+  sigungu_id   Int?
+  sigungu_name String? @db.VarChar(45)
 }
 
 enum location_location_type {

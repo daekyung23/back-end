@@ -6,11 +6,13 @@ import { ConsumableModelService } from './consumable-model'
 import { DeptService } from './dept'
 import { DeviceDriverService } from './device-driver'
 import { WarehouseService } from './warehouse'
+import { SidoService } from './sido'
 import { SigunguService } from './sigungu'
 import { UserService } from './user'
 import { UserPositionService } from './user-position'
 import { DeviceModelService } from './device-model'
 import { DeviceService } from './device'
+
 export const services = {
   clientBranch: new ClientBranchService(prisma.client_branch, prisma.v_client_branch),
   client: new ClientService(prisma.client, prisma.v_client),
@@ -18,6 +20,7 @@ export const services = {
   dept: new DeptService(prisma.dept, prisma.v_dept),
   deviceDriver: new DeviceDriverService(prisma.device_driver, prisma.v_device_driver),
   warehouse: new WarehouseService(prisma.warehouse, prisma.v_warehouse),
+  sido: new SidoService(prisma.sido, prisma.v_sido),
   sigungu: new SigunguService(prisma.sigungu, undefined),
   user: new UserService(prisma.user, prisma.v_user),
   userPosition: new UserPositionService(prisma.user_position, undefined),
