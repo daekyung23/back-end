@@ -305,7 +305,7 @@ const restoreSchema = async (backupDate) => {
   const schemaPath = path.join(BACKUP_ROOT, backupDate, 'schema.prisma')
 
   fs.copyFileSync(schemaPath, PRISMA_SCHEMA_PATH)
-  execSync('npm run prisma:generate:dev', { stdio: 'inherit' })
+  execSync('npm run raw:prisma:generate:dev', { stdio: 'inherit' })
   console.log('스키마 복원 완료')
 }
 
