@@ -1,5 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
+  binaryTargets = ["linux-musl-arm64-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
   previewFeatures = ["views"]
 }
 
@@ -178,13 +179,13 @@ model device_approval {
   sub_approval_id                                            Int?
   requester_id                                               Int
   request_at                                                 DateTime             @db.Timestamp(0)
-  approver_role_id                                           Int
+  approver_role_id                                           Int?
   origin_location_id                                         Int?
   destination_location_id                                    Int?
-  approver_id                                                Int?
+  approver_id                                                Int
   approve_at                                                 DateTime?            @db.Timestamp(0)
   is_approved                                                Int?                 @db.TinyInt
-  approval_role                                              approval_role        @relation(fields: [approver_role_id], references: [role_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_approval_approver_group1")
+  approval_role                                              approval_role?        @relation(fields: [approver_role_id], references: [role_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_approval_approver_group1")
   device_approval                                            device_approval?     @relation("device_approvalTodevice_approval", fields: [sub_approval_id], references: [approval_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_approval_device_approval1")
   other_device_approval                                      device_approval[]    @relation("device_approvalTodevice_approval")
   device_approval_type                                       device_approval_type @relation(fields: [approval_type_id], references: [approval_type_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_approval_device_approval_type1")
@@ -574,7 +575,7 @@ view v_user {
   is_active        Int               @default(1) @db.TinyInt
   permission       v_user_permission @default(user)
   dept_id          Int
-  approval_role_id Int
+  approval_role_id Int?
   position_id      Int
   dept_name        String?           @db.VarChar(100)
   parent_dept_id   Int?
