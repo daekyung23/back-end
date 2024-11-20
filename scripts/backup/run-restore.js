@@ -6,223 +6,285 @@ import * as readline from 'readline'
 import csv from 'csv-parser'
 import prismaInternals from '@prisma/internals'
 import { execSync } from 'child_process' 
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
 import backup from './run-backup.js'
 import { config } from '../config.js' 
 
+// 상수 정의
+const ITEMS_PER_PAGE = 10
+const TRANSACTION_TIMEOUT = 1000 * 60 * 5
+const CSV_NULL = '\\N'  // MySQL dump 스타일
+
+// 경로 처리 유틸리티
+const normalizePath = pathStr => path.normalize(pathStr)
+const resolveRoot = (...paths) => normalizePath(path.resolve(process.cwd(), ...paths))
+const normalizeFileUrl = url => {
+  if (!url) return ''
+  return url.startsWith('file://')
+    ? fileURLToPath(url)
+    : fileURLToPath(`file://${url}`)
+}
+
+// 파일명 처리 유틸리티
+const safeFileName = name => name
+  .replace(/[:<>"/\\|?*]/g, '_')
+  .replace(/[:.]/g, '')
+  .replace('T', '_')
+  .split('.')[0]
+
+
+// 기본 경로 설정
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+const PROJECT_ROOT = normalizePath(process.cwd())
+const BACKUP_ROOT = resolveRoot('backups')
+const PRISMA_ROOT = resolveRoot('prisma')
+const PRISMA_SCHEMA_PATH = resolveRoot('prisma', 'schema.prisma')
+
+// 파일 관련 상수
+const BOM = '\ufeff'
+const CSV_ENCODING = 'utf8'
+const FILE_MODES = {
+  DIR: { recursive: true },
+  READ: { encoding: CSV_ENCODING }
+}
+
+// Prisma 초기화
 const { getDMMF } = prismaInternals
-let prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: config.db.url
-    }
+
+// 파일 처리 함수들
+const readJsonFile = filePath => {
+  try {
+    return JSON.parse(fs.readFileSync(filePath, FILE_MODES.READ))
+  } catch {
+    return null
   }
+}
+
+const copyDirectory = (src, dest) => {
+  fs.mkdirSync(dest, FILE_MODES.DIR)
+  const entries = fs.readdirSync(src, { withFileTypes: true })
+  
+  entries.forEach(entry => {
+    const srcPath = path.join(src, entry.name)
+    const destPath = path.join(dest, entry.name)
+    
+    entry.isDirectory()
+      ? copyDirectory(srcPath, destPath)
+      : fs.copyFileSync(srcPath, destPath)
+  })
+}
+
+const readCsvRecords = csvPath => new Promise((resolve, reject) => {
+  const records = []
+  fs.createReadStream(csvPath)
+    .pipe(csv({
+      mapValues: ({ header, value }) => {
+        // 빈 값 처리
+        if (!value || value.trim() === '') return null
+        // 날짜 처리
+        if (header.includes('_at')) return formatDate(value)
+        return value
+      },
+      skipEmptyLines: true
+    }))
+    .on('data', data => {
+      // 모든 필드가 null인 레코드는 제외
+      const hasValue = Object.values(data).some(v => v !== null && v !== '')
+      if (hasValue) records.push(data)
+    })
+    .on('end', () => {
+      // 빈 레코드 제거 후 남은 레코드 수 출력
+      const validRecords = records.filter(record => 
+        Object.values(record).some(v => v !== null && v !== '')
+      )
+      console.log(`  총 ${validRecords.length}개 유효 레코드 읽음\n`)
+      resolve(validRecords)
+    })
+    .on('error', reject)
 })
 
-// 디버깅을 위한 로그 추가
-console.log('스크립트 시작...')
+const formatDate = value => {
+  if (!value) return null
+  if (!value.includes('GMT')) return value
+  
+  try {
+    const date = new Date(value)
+    return date.toISOString().slice(0, 19).replace('T', ' ')
+  } catch (e) {
+    console.error('날짜 변환 실패:', value)
+    return value
+  }
+}
 
-// BackupManager 정의
-const BackupManager = {
-  ITEMS_PER_PAGE: 10,
-
-  async getBackupList() {
-    const backupsDir = path.join(process.cwd(), 'backups')
-    const dirs = await readdir(backupsDir)
-    
-    const backups = await Promise.all(
-      dirs.map(async dir => {
-        try {
-          const infoPath = path.join(backupsDir, dir, 'backup-info.json')
-          const info = JSON.parse(fs.readFileSync(infoPath, 'utf8'))
-          return {
-            name: dir,
-            ...info
-          }
-        } catch {
-          return null
-        }
-      })
-    )
-
-    return backups
-      .filter(Boolean)
-      .sort((a, b) => b.timestamp.localeCompare(a.timestamp))
-  },
-
-  async selectBackup() {
-    const backups = await this.getBackupList()
-    if (backups.length === 0) {
-      throw new Error('사용 가능한 백업이 없습니다.')
-    }
-
-    const answer = await this.promptUser(backups)
-    return this.validateAndGetBackup(answer, backups)
-  },
-
-  async promptUser(backups) {
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout
+const getBackupList = async () => {
+  console.log('백업 디렉토리 경로:', BACKUP_ROOT)
+  const dirs = await readdir(BACKUP_ROOT)
+  console.log('발견된 백업 디렉토리들:', dirs)
+  const backups = await Promise.all(
+    dirs.map(async dir => {
+      const infoPath = path.join(BACKUP_ROOT, dir, 'backup-info.json')
+      console.log('정보 파일 경로:', infoPath)
+      const info = readJsonFile(infoPath)
+      console.log('읽은 정보:', info)
+      return info ? { name: dir, ...info } : null
     })
+  )
+  
+  return backups
+    .filter(Boolean)
+    .sort((a, b) => b.timestamp.localeCompare(a.timestamp))
+}
 
-    let currentPage = 0
-    const totalPages = Math.ceil(backups.length / this.ITEMS_PER_PAGE)
+const displayBackupList = (backups, currentPage) => {
+  console.clear()
+  console.log('\n사용 가능한 백업 목록:')
+  
+  const start = currentPage * ITEMS_PER_PAGE
+  const end = Math.min(start + ITEMS_PER_PAGE, backups.length)
+  
+  backups.slice(start, end).forEach((backup, i) => {
+    console.log(`${start + i + 1}. [${backup.type}] ${backup.name}`)
+    console.log(`   시간: ${backup.timestamp}`)
+    console.log(`   메시지: ${backup.message || '(없음)'}`)
+    console.log(`   생성자: ${backup.createdBy}\n`)
+  })
+
+  const totalPages = Math.ceil(backups.length / ITEMS_PER_PAGE)
+  console.log(`\n페이지 ${currentPage + 1}/${totalPages}`)
+  console.log('\n명령어: [숫자] 선택, n 다음, p 이전, q 종료')
+}
+
+const handleUserInput = (answer, currentPage, totalPages) => {
+  if (answer === 'q') return { exit: true }
+  if (answer === 'n' && currentPage < totalPages - 1) return { page: currentPage + 1 }
+  if (answer === 'p' && currentPage > 0) return { page: currentPage - 1 }
+  
+  const selection = parseInt(answer)
+  if (selection > 0) return { selection: answer }
+  
+  return { invalid: true }
+}
+
+const selectBackup = async () => {
+  const backups = await getBackupList()
+  if (!backups.length) throw new Error('사용 가능한 백업이 없습니다.')
+
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  })
+
+  let currentPage = 0
+  const totalPages = Math.ceil(backups.length / ITEMS_PER_PAGE)
+
+  while (true) {
+    displayBackupList(backups, currentPage)
+    const answer = await new Promise(resolve => rl.question('\n입력: ', resolve))
+    const result = handleUserInput(answer.toLowerCase(), currentPage, totalPages)
+
+    if (result.exit) {
+      rl.close()
+      process.exit(0)
+    }
     
-    while (true) {
-      console.clear()
-      console.log('\n사용 가능한 백업 목록:')
-      
-      const start = currentPage * this.ITEMS_PER_PAGE
-      const end = Math.min(start + this.ITEMS_PER_PAGE, backups.length)
-      
-      backups.slice(start, end).forEach((backup, i) => {
-        console.log(`${start + i + 1}. [${backup.type}] ${backup.name}`)
-        console.log(`   시간: ${backup.timestamp}`)
-        console.log(`   메시지: ${backup.message || '(없음)'}`)
-        console.log(`   생성자: ${backup.createdBy}\n`)
-      })
+    if (result.selection) {
+      rl.close()
+      const index = parseInt(result.selection) - 1
+      if (index >= 0 && index < backups.length) return backups[index].name
+      console.log('\n잘못된 선택입니다.')
+    }
+    
+    if (result.page !== undefined) {
+      currentPage = result.page
+      continue
+    }
 
-      console.log(`\n페이지 ${currentPage + 1}/${totalPages}`)
-      console.log('\n명령어:')
-      console.log('숫자 입력: 해당 백업 선택')
-      console.log('n: 다음 페이지')
-      console.log('p: 이전 페이')
-      console.log('q: 종료')
-
-      const answer = await new Promise(resolve => {
-        rl.question('\n입력: ', resolve)
-      })
-
-      if (answer.toLowerCase() === 'q') {
-        rl.close()
-        process.exit(0)
-      }
-      
-      if (answer.toLowerCase() === 'n' && currentPage < totalPages - 1) {
-        currentPage++
-        continue
-      }
-      
-      if (answer.toLowerCase() === 'p' && currentPage > 0) {
-        currentPage--
-        continue
-      }
-
-      const selection = parseInt(answer)
-      if (!isNaN(selection) && selection > 0 && selection <= backups.length) {
-        rl.close()
-        return answer
-      }
-
-      console.log('\n잘못된 입력입니다. 다시 시도해주세요.')
+    if (result.invalid) {
+      console.log('\n잘못된 입력입니다.')
       await new Promise(resolve => setTimeout(resolve, 1500))
-    }
-  },
-
-  validateAndGetBackup(answer, backups) {
-    const index = parseInt(answer) - 1
-    if (isNaN(index) || index < 0 || index >= backups.length) {
-      throw new Error('잘못된 선택입니다.')
-    }
-    return backups[index].name
-  },
-
-  async validateBackupStructure(backupDate) {
-    const backupDir = path.join(process.cwd(), 'backups', backupDate)
-    
-    console.log('\n백업 구조 확인중...')
-    const files = await readdir(backupDir)
-    console.log('발견된 디렉토리/파일들:', files)
-    
-    // 필요한 파일들 체크
-    const required = ['schema.prisma', 'data']
-    const missing = required.filter(file => !files.includes(file))
-    
-    if (missing.length > 0) {
-      throw new Error(`필수 파일/디렉토리가 없습니다: ${missing.join(', ')}`)
-    }
-  },
-
-  async createAutoBackup() {
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '')
-    const backupName = `${timestamp}_auto_before_restore`
-    
-    try {
-      await backup({
-        name: backupName,
-        type: 'AUTO_BEFORE_RESTORE',
-        message: '복원 작업 전 자동 백업',
-        createdBy: 'SYSTEM'
-      })
-      
-      return backupName
-    } catch (error) {
-      console.error('자동 백업 생성 실패:', error)
-      throw new Error('자동 백업 생성에 실패했습니다. 복원을 진행할 수 없습니다.')
-    }
-  },
-
-  async restore(backupDate) {
-    try {
-      const selectedBackup = await this.selectBackup()
-      console.log(`\n${selectedBackup} 백업 복원 시작`)
-      
-      // 백업 정보 읽기
-      const infoPath = path.join(
-        process.cwd(),
-        'backups',
-        selectedBackup,
-        'backup-info.json'
-      )
-      
-      const backupInfo = JSON.parse(fs.readFileSync(infoPath, 'utf8'))
-      console.log('\n백업 정보:')
-      console.log(`타입: ${backupInfo.type}`)
-      console.log(`생성 시간: ${backupInfo.timestamp}`)
-      console.log(`메시지: ${backupInfo.message || '(없음)'}`)
-      console.log(`생성자: ${backupInfo.createdBy}`)
-
-      // 구조 검증
-      await this.validateBackupStructure(selectedBackup)
-      
-      // 복원 진행
-      await RestoreManager.restore(selectedBackup)
-
-    } catch (error) {
-      console.error('복원 중 오류 발생:', error)
-      throw error
-    }
-  },
-
-  async deleteBackup(backupName) {
-    try {
-      const backupDir = path.join(process.cwd(), 'backups', backupName)
-      if (fs.existsSync(backupDir)) {
-        fs.rmSync(backupDir, { recursive: true, force: true })
-        console.log(`자동 백업 삭제 완료: ${backupName}`)
-      }
-    } catch (error) {
-      console.error('자동 백업 삭제 실패:', error)
     }
   }
 }
 
-async function getModelSchema(modelName) {
+const validateBackupStructure = async backupDate => {
+  const backupDir = path.join(BACKUP_ROOT, backupDate)
+  const files = await readdir(backupDir)
+  
+  console.log('\n백업 구조 확인중...')
+  console.log('발견된 파일들:', files)
+  
+  const required = ['schema.prisma', 'data', 'backup-info.json', 'views']
+  const missing = required.filter(file => !files.includes(file))
+  
+  if (missing.length) throw new Error(`필수 파일 누락: ${missing.join(', ')}`)
+}
+
+const createAutoBackup = async () => {
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '')
+  const backupName = `${timestamp}_auto_before_restore`
+  
   try {
-    const schemaPath = path.join(process.cwd(), 'prisma/schema.prisma')
-    const schema = fs.readFileSync(schemaPath, 'utf-8')
+    await backup({
+      name: backupName,
+      type: 'AUTO_BEFORE_RESTORE',
+      message: '복원 작업 전 자동 백업',
+      createdBy: 'SYSTEM'
+    })
+    return backupName
+  } catch (error) {
+    console.error('자동 백업 실패:', error)
+    throw new Error('자동 백업 실패로 복원 불가')
+  }
+}
+
+const deleteBackup = async backupName => {
+  const backupDir = path.join(BACKUP_ROOT, backupName)
+  if (!fs.existsSync(backupDir)) return
+
+  try {
+    fs.rmSync(backupDir, { recursive: true, force: true })
+    console.log(`자동 백업 삭제 완료: ${backupName}`)
+  } catch (error) {
+    console.error('자동 백업 삭제 실패:', error)
+  }
+}
+
+const convertFieldValue = (value, field) => {
+  // null 처리
+  if (value === CSV_NULL) {
+    return null
+  }
+
+  // 필드 타입에 따른 변환
+  switch (field.type) {
+    case 'Int':
+      return value === null ? null : parseInt(value) || 0
+    case 'Float':
+      return value === null ? null : parseFloat(value) || 0
+    case 'Boolean':
+      return value === '1' || value === 'true' || value === true ? 1 : 0
+    case 'DateTime':
+      return value === null ? null : new Date(value)
+    default:
+      return value
+  }
+}
+
+
+// 스키마 관련 함수들
+const getModelSchema = async modelName => {
+  try {
+    const schema = fs.readFileSync(PRISMA_SCHEMA_PATH, FILE_MODES.READ)
     const dmmf = await getDMMF({ datamodel: schema })
     
-    // 대소문자 구분 없이 모델 찾기
     const model = dmmf.datamodel.models.find(
       m => m.name.toLowerCase() === modelName.toLowerCase()
     )
     
-    if (!model) {
-      throw new Error(`Model ${modelName} not found in schema`)
-    }
+    if (!model) throw new Error(`Model ${modelName} not found`)
 
-    // view 여부 확인
     const modelDefinition = schema
       .split('\n')
       .find(line => line.trim().startsWith(`model ${model.name}`) || 
@@ -233,280 +295,185 @@ async function getModelSchema(modelName) {
       isView: modelDefinition?.trim().startsWith('view') || false
     }
   } catch (error) {
-    console.error(`스키마 정보 가져오기 실패 (${modelName}):`, error)
+    console.error(`스키마 정보 조회 실패 (${modelName}):`, error)
     throw error
   }
 }
 
-function convertFieldValue(value, type) {
-  if (value === null || value === undefined) return null
-  
-  switch(type) {
-    case 'Int':
-      return parseInt(value)
-    case 'Float': 
-      return parseFloat(value)
-    case 'Boolean':
-      return value === 'true'
-    case 'DateTime':
-      return new Date(value)
-    default:
-      return value
-  }
+// 복원 실행 함수들
+const restoreSchema = async (backupDate) => {
+  const schemaPath = path.join(BACKUP_ROOT, backupDate, 'schema.prisma')
+
+  fs.copyFileSync(schemaPath, PRISMA_SCHEMA_PATH)
+  execSync('npm run prisma:generate:dev', { stdio: 'inherit' })
+  console.log('스키마 복원 완료')
 }
 
-// RestoreManager 정의
-const RestoreManager = {
-  formatDate(value) {
-    if (!value) return null
+const restoreTable = async (tx, modelName, records) => {
+  if (!records?.length) return
+  
+  try {
+    const model = await getModelSchema(modelName)
     
-    try {
-      if (value.includes('GMT')) {
-        const date = new Date(value)
-        return date.toISOString().slice(0, 19).replace('T', ' ')
-      }
-    } catch (e) {
-      console.error('날짜 변환 실패:', value)
-    }
-    return value
-  },
-
-  async getModelFields(modelName) {
-    const models = await getModelSchema()
-    const model = models.find(m => m.name === modelName)
-    if (!model) throw new Error(`Model ${modelName} not found in schema`)
-    return model.fields
-  },
-
-  async restoreSchema(backupDate) {
-    const schemaPath = path.join(
-      process.cwd(),
-      'backups',
-      backupDate,
-      'schema.prisma'
-    )
-    
-    if (!fs.existsSync(schemaPath)) {
-      throw new Error('schema.prisma 파일을 찾을 수 없습니다.')
-    }
-
-    // schema.prisma 파일 복사
-    fs.copyFileSync(
-      schemaPath,
-      path.join(process.cwd(), 'prisma/schema.prisma')
-    )
-    
-    // Prisma Client 재생성
-    console.log('Prisma Client 재생성 중...')
-    execSync('npx prisma generate', { stdio: 'inherit' })
-    
-    // Prisma Client 재초기화
-    await prisma.$disconnect()
-    prisma = new PrismaClient()
-    
-    console.log('스키마 복원 완료')
-  },
-
-  async restoreData(backupDate) {
-    try {
-      await prisma.$transaction(async (tx) => {
-        console.log('트랜잭션 시작...')
-        
-        // 외래키 제약 해제
-        await tx.$executeRawUnsafe('SET FOREIGN_KEY_CHECKS = 0;')
-
-        const dataDir = path.join(process.cwd(), 'backups', backupDate, 'data')
-        const files = await readdir(dataDir)
-
-        // 각 테이블별 데이터 복원
-        for (const file of files) {
-          if (!file.endsWith('.csv')) continue
-          
-          const modelName = file.replace('.csv', '')
-          const records = await this.readCsvFile(path.join(dataDir, file))
-          await this.restoreTable(tx, modelName, records)
-        }
-
-        // 외래키 제약 복원
-        await tx.$executeRawUnsafe('SET FOREIGN_KEY_CHECKS = 1;')
-      }, {
-        timeout: 1000 * 60 * 5,
-        maxWait: 1000 * 60 * 5,
-        isolationLevel: 'Serializable'
-      })
-
-      console.log('복원 성공')
-    } catch (error) {
-      console.error('복원 실패:', error)
-      throw error
-    }
-  },
-
-  async restoreTable(tx, modelName, records) {
-    if (!records || records.length === 0) {
-      console.log(`${modelName}: 복원할 데이터 없음`)
+    if (model.isView) {
+      console.log(`${modelName}는 View이므로 복원하지 않습니다.`)
       return
     }
 
-    try {
-      // 스키마 정보로 필드 필터링
-      const model = await getModelSchema(modelName)
-
-      // View 테이블은 건너뛰기
-      if (model.isView) {
-        console.log(`${modelName}: View 테이블은 복원하지 않음`)
-        return
-      }
-
-      console.log(`${modelName} 테이블 초기화 중...`)
-      await tx[modelName].deleteMany()
-
-      const cleanedRecords = records.map(record => {
-        const cleaned = {}
-        for (const field of model.fields) {
-          if (field.kind === 'scalar' && record[field.name] !== undefined) {
-            cleaned[field.name] = convertFieldValue(record[field.name], field.type)
-          }
-        }
-        return cleaned
-      })
-
-      await tx[modelName].createMany({
-        data: cleanedRecords,
-        skipDuplicates: true
-      })
-    } catch (error) {
-      console.error(`${modelName} 복원 중 오류:`, error)
-      throw error
-    }
-  },
-
-  async readCsvFile(csvPath) {
-    const records = []
-    const fileStream = fs.createReadStream(csvPath)
+    // 스칼라 필드만 추출
+    const scalarFields = model.fields
+      .filter(field => !field.relationName && !field.isList)
+      .map(field => field.name)
     
-    return new Promise((resolve, reject) => {
-      fileStream
-        .pipe(csv({
-          mapValues: ({ header, value }) => {
-            if (!value || value.trim() === '') return null
-            if (header.includes('_at')) return this.formatDate(value)
-            return value
-          },
-          skipEmptyLines: true  // 빈 줄 건너뛰기
-        }))
-        .on('data', data => {
-          // 모든 필드가 null인 레코드는 제외
-          const hasValue = Object.values(data).some(v => v !== null)
-          if (hasValue) {
-            records.push(data)
-          }
-        })
-        .on('end', () => {
-          console.log(`  총 ${records.length}개 레코드 읽음\n`)
-          resolve(records)
-        })
-        .on('error', reject)
-    })
-  },
-
-  async restoreViews(backupDate) {
-    const viewsBackupDir = path.join(
-      process.cwd(),
-      'backups',
-      backupDate,
-      'views'
-    )
-
-    if (fs.existsSync(viewsBackupDir)) {
-      console.log('\nView 정의 복원 중...')
+    const cleanedRecords = records.map(record => {
+      const cleaned = {}
       
-      // prisma/views 디렉토리로 복사
-      const prismaViewsDir = path.join(process.cwd(), 'prisma', 'views')
-      
-      const copyDir = (src, dest) => {
-        fs.mkdirSync(dest, { recursive: true })
-        const entries = fs.readdirSync(src, { withFileTypes: true })
-        
-        for (const entry of entries) {
-          const srcPath = path.join(src, entry.name)
-          const destPath = path.join(dest, entry.name)
-          
-          if (entry.isDirectory()) {
-            copyDir(srcPath, destPath)
-          } else {
-            fs.copyFileSync(srcPath, destPath)
-          }
+      // 스칼라 필드만 복사
+      scalarFields.forEach(fieldName => {
+        if (record[fieldName] === CSV_NULL) {
+          cleaned[fieldName] = null
+        } else if (record[fieldName] === '') {
+          cleaned[fieldName] = ''
+        } else {
+          cleaned[fieldName] = convertFieldValue(record[fieldName], 
+            model.fields.find(f => f.name === fieldName))
         }
-      }
+      })
 
-      copyDir(viewsBackupDir, prismaViewsDir)
-      console.log('View 정의 복원 완료')
-    }
-  },
+      return cleaned
+    })
 
-  async restore(backupDate) {
-    await this.restoreSchema(backupDate)
-    await this.restoreData(backupDate)
-    await this.restoreViews(backupDate)
+    await tx[modelName].createMany({
+      data: cleanedRecords,
+      skipDuplicates: true
+    })
+
+  } catch (error) {
+    console.error(`${modelName} 복원 실패:`, error)
+    throw error
   }
 }
 
-// restore 함수
-async function restore() {
+const restoreData = async (backupDate, prisma) => {
+  const dataDir = path.join(BACKUP_ROOT, backupDate, 'data')
+  const files = await readdir(dataDir)
+
+  try {
+    await prisma.$transaction(async tx => {
+      console.log('트랜잭션 시작...')
+      await tx.$executeRawUnsafe('SET FOREIGN_KEY_CHECKS = 0;')
+
+      for (const file of files) {
+        if (!file.endsWith('.csv')) continue
+        
+        const modelName = file.replace('.csv', '')
+        const records = await readCsvRecords(path.join(dataDir, file))
+        await restoreTable(tx, modelName, records)
+      }
+
+      await tx.$executeRawUnsafe('SET FOREIGN_KEY_CHECKS = 1;')
+    }, {
+      timeout: TRANSACTION_TIMEOUT,
+      maxWait: TRANSACTION_TIMEOUT,
+      isolationLevel: 'Serializable'
+    })
+
+    console.log('데이터 복원 성공')
+  } catch (error) {
+    console.error('데이터 복원 실패:', error)
+    throw error
+  }
+}
+
+const restoreViewDefinitions = async (backupDate, prisma) => {
+  const viewsBackupDir = path.join(BACKUP_ROOT, backupDate, 'views')
+  if (!fs.existsSync(viewsBackupDir)) return
+
+  console.log('\nView 정의 복원 중...')
+  const prismaViewsDir = path.join(PRISMA_ROOT, 'views')
+  copyDirectory(viewsBackupDir, prismaViewsDir)
+  console.log('View 정의 복원 완료')
+}
+
+const restoreViews = async() => {
+  execSync('node scripts/prisma/push-views.js', { stdio: 'inherit' })
+}
+
+const handleRestoreError = async (error, autoBackupName, prisma) => {
+  console.error('복원 실패:', error)
+  
+  if (!autoBackupName) return
+  
+  console.log('\n자동 백업으로 복구 시도...')
+  try {
+    await restoreSchema(autoBackupName)
+    await restoreData(autoBackupName, prisma)
+    await restoreViewDefinitions(autoBackupName)
+    await restoreViews()
+    console.log('자동 백업으로 복구 완료')
+    await deleteBackup(autoBackupName)
+  } catch (rollbackError) {
+    console.error('자동 백업 복구 실패:', rollbackError)
+    console.error('데이터베이스가 일관되지 않은 상태일 수 있습니다.')
+  }
+}
+
+// 메인 복원 함수
+const restore = async () => {
   console.log('복원 프로세스 시작...')
   let autoBackupName = null
+  let prisma = null 
   
   try {
-    // 1. 복원할 백업 선택
-    const backupDate = await BackupManager.selectBackup()
+    const backupDate = await selectBackup()
     console.log('선택된 백업:', backupDate)
     
-    // 2. 선택 후 자동 백업 생성
-    console.log('\n복원 전 자동 백업 생성 중...')
-    autoBackupName = await BackupManager.createAutoBackup()
+    console.log('\n복원 전 자동 백업 생성...')
+    //백업 실행
+
+    autoBackupName = await createAutoBackup()
+
     console.log(`자동 백업 생성 완료: ${autoBackupName}`)
 
-    // 3. 복원 시도
     console.log(`\n${backupDate} 백업 복원 시작`)
-    await BackupManager.validateBackupStructure(backupDate)
-    await RestoreManager.restore(backupDate)
+    await validateBackupStructure(backupDate)
+    await restoreSchema(backupDate)
+
+    prisma = new PrismaClient({
+      datasources: { db: { url: config.db.url } }
+    })
+    await restoreData(backupDate, prisma)
+    await restoreViewDefinitions(backupDate)
+    await restoreViews()
     
-    // 4. 복원 성공시 자동 백업 삭제
     if (autoBackupName) {
-      await BackupManager.deleteBackup(autoBackupName)
+      await deleteBackup(autoBackupName)
       console.log('자동 백업 삭제 완료')
     }
     
     console.log('\n복원 완료')
     
   } catch (error) {
-    // 5. 복원 실패시 자동 백업으로 복구
-    if (autoBackupName) {
-      console.log('\n자동 백업으로 복구를 시도합니다...')
-      try {
-        await RestoreManager.restore(autoBackupName)
-        console.log('복구 실패: 자동 백업으로 복구 완료')
-        await BackupManager.deleteBackup(autoBackupName)
-      } catch (rollbackError) {
-        console.error('복구 실패: 자동 백업 복구 실패:', rollbackError)
-        console.error('데이터베이스가 일관되지 않은 상태일 수 있습니다.')
-      }
-    }
-    
+    await handleRestoreError(error, autoBackupName, prisma)
     process.exit(1)
+  } finally {
+    // 복원 작업 완료 후 항상 연결 종료
+    await prisma.$disconnect()
   }
 }
 
-if (process.env.NODE_ENV === undefined) {
+// 환경 검증
+if (!process.env.NODE_ENV) {
   console.error('NODE_ENV가 설정되지 않았습니다.')
   process.exit(1)
 }
 
 // 스크립트 실행
-console.log('실행 조건 확인:', import.meta.url, process.argv[1])
-if (import.meta.url === `file://${process.argv[1]}`) {
-  console.log('restore 함수 실행 시작')
+const scriptPath = normalizeFileUrl(import.meta.url)
+const normalizedArgv = normalizeFileUrl(process.argv[1])
+
+if (scriptPath === normalizedArgv) {
+  console.log('restore 실행 시작')
   restore().catch(error => {
     console.error('처리되지 않은 오류:', error)
     process.exit(1)

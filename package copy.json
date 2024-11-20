@@ -10,24 +10,15 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-
-    "clean:start": "npm run docker:clean && docker compose -f docker-compose.prod.yml up -d --build",
-    "start": "docker compose -f docker-compose.prod.yml up -d",
-    "stop": "docker compose -f docker-compose.prod.yml down",
-    "log": "docker compose -f docker-compose.prod.yml logs -f",
-    "restart": "docker compose -f docker-compose.prod.yml restart",
-    "status": "docker stats",
-
-    "dev": "docker compose -f docker-compose.dev.yml up",
-    "dev:stop": "docker compose -f docker-compose.dev.yml down",
-
-    "docker:clean": "docker ps -aq | xargs -r docker rm && docker system prune -af",
-    "serve:dev": "dotenv -e .env.development -- npx tsx watch src/server.ts",
-    "serve:prod": "dotenv -e .env.production -- node dist/server.js",
-    "build": "npm run prisma:generate:prod && rollup -c",
-    "build:dev": "docker compose -f docker-compose.dev.yml build --no-cache --progress=plain",
+    "start": "dotenv -e .env.production -- pm2 start ecosystem.config.cjs", 
+    "stop": "pm2 stop server",
+    "log": "pm2 logs server",
+    "restart": "pm2 restart server",
+    "status": "pm2 status",
+    "dev": "dotenv -e .env.development -- npx tsx watch src/server.ts",
     "prebuild": "npx rimraf dist",
-
+    "build": "npm run prisma:generate:prod && rollup -c",
+    "watch": "rollup -c -w",
     "backup:dev": "dotenv -e .env.development -- node scripts/backup/run-backup.js",
     "restore:dev": "dotenv -e .env.development -- node scripts/backup/run-restore.js",
     "backup:prod": "dotenv -e .env.production -- node scripts/backup/run-backup.js",

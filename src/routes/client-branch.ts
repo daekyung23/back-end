@@ -10,7 +10,7 @@ const schema = schemas.clientBranch
 // Defined At Controller & Service ------------------------------------------
 router.get('/by-client', 
   validateInput({ query: schema.unique('client_id') }), 
-  controller.findManyByClientId
+  controller.findManyByClientId,
 )
 
 // Override At Service ------------------------------------------------------

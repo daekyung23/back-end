@@ -1,0 +1,15 @@
+services:
+  app:
+    container_name: crm-server-dev
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    ports:
+      - "3001:3001"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    env_file:
+      - .env.development
+    extra_hosts:
+      - "host.docker.internal:host-gateway" 

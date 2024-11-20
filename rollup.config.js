@@ -8,8 +8,7 @@ export default {
     dir: 'dist',
     format: 'es',
     sourcemap: true,
-    preserveModules: true,       // 모듈 구조 유지
-    preserveModulesRoot: 'src'   // src를 루트로 사용
+    preserveModules: false,       // 모듈 구조 유지
   },
   plugins: [
     resolve({

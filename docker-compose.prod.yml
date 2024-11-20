@@ -1,0 +1,16 @@
+services:
+  app:
+    container_name: crm-server-prod
+    build:
+      context: .
+      dockerfile: docker/prod/Dockerfile
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./logs:/app/logs
+      - ./backup:/app/backup
+    env_file:
+      - .env.production
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway" 

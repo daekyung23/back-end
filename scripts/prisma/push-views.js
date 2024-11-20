@@ -9,7 +9,6 @@ const prisma = new PrismaClient({
     db: { url: config.db.url }
 } })
 
-
 async function pushViews() {
   try {
     console.log(`Using DATABASE_URL: ${process.env.DATABASE_URL}`)
