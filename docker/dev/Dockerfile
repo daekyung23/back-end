@@ -9,4 +9,4 @@ RUN npm install
 
 EXPOSE 3001
 
-CMD ["npm", "run", "serve:dev"]
+CMD ["npm", "run", "raw:dev:start"]
