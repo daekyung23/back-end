@@ -368,6 +368,30 @@ const restoreData = async (backupDate, prisma) => {
         
         const modelName = file.replace('.csv', '')
         const records = await readCsvRecords(path.join(dataDir, file))
+
+        // _prisma_migrations 테이블 특별 처리
+        if (modelName === '_prisma_migrations') {
+          await tx.$executeRawUnsafe('TRUNCATE TABLE _prisma_migrations;')
+          for (const record of records) {
+            await tx.$executeRawUnsafe(`
+              INSERT INTO _prisma_migrations 
+              (id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            `, [
+              record.id,
+              record.checksum,
+              record.finished_at,
+              record.migration_name,
+              record.logs,
+              record.rolled_back_at,
+              record.started_at,
+              parseInt(record.applied_steps_count)
+            ])
+          }
+          continue
+        }
+
+        // 일반 테이블 처리
         await restoreTable(tx, modelName, records)
       }
 

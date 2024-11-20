@@ -1,0 +1,617 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["views"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model approval_role {
+  role_id              Int                    @id @default(autoincrement())
+  role_name            String                 @db.VarChar(45)
+  upper_role_id        Int?
+  approval_role        approval_role?         @relation("approval_roleToapproval_role", fields: [upper_role_id], references: [role_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_approval_role_approval_role1")
+  other_approval_role  approval_role[]        @relation("approval_roleToapproval_role")
+  device_approval      device_approval[]
+  inspection_approval  inspection_approval[]
+  user                 user[]
+  user_role_assignment user_role_assignment[]
+
+  @@index([upper_role_id], map: "fk_approval_role_approval_role1_idx")
+}
+
+model call {
+  call_id                     Int                     @id @default(autoincrement())
+  call_type_id                Int
+  client_branch_id            Int
+  requester_name              String                  @db.VarChar(50)
+  requester_num               String                  @db.VarChar(20)
+  requester_black_consumer    Int                     @default(0) @db.TinyInt
+  device_id                   Int?
+  detail                      String                  @db.VarChar(200)
+  state                       String                  @db.VarChar(45)
+  received_at                 DateTime                @db.Timestamp(0)
+  receiver_id                 Int
+  transferred_at              DateTime?               @db.Timestamp(0)
+  transferred_dept_id         Int?
+  assigner_id                 Int?
+  completed_at                DateTime?               @db.Timestamp(0)
+  call_type                   call_type               @relation(fields: [call_type_id], references: [call_type_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_call_call_type1")
+  client_branch               client_branch           @relation(fields: [client_branch_id], references: [client_branch_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_call_client_branch1")
+  dept                        dept?                   @relation(fields: [transferred_dept_id], references: [dept_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_call_dept1")
+  device                      device?                 @relation(fields: [device_id], references: [device_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_call_device1")
+  user_call_receiver_idTouser user                    @relation("call_receiver_idTouser", fields: [receiver_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_call_user1")
+  user_call_assigner_idTouser user?                   @relation("call_assigner_idTouser", fields: [assigner_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_call_user2")
+  device_inspection_log       device_inspection_log[]
+
+  @@index([call_type_id], map: "fk_call_call_type1_idx")
+  @@index([client_branch_id], map: "fk_call_client_branch1_idx")
+  @@index([transferred_dept_id], map: "fk_call_dept1_idx")
+  @@index([device_id], map: "fk_call_device1_idx")
+  @@index([receiver_id], map: "fk_call_user1_idx")
+  @@index([assigner_id], map: "fk_call_user2_idx")
+}
+
+model call_type {
+  call_type_id        Int         @id @default(autoincrement())
+  call_type_name      String      @db.VarChar(50)
+  parent_call_type_id Int?
+  call                call[]
+  call_type           call_type?  @relation("call_typeTocall_type", fields: [parent_call_type_id], references: [call_type_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_call_type_call_type1")
+  other_call_type     call_type[] @relation("call_typeTocall_type")
+
+  @@index([parent_call_type_id], map: "fk_call_type_call_type1_idx")
+}
+
+model client {
+  client_id                     Int             @id @default(autoincrement())
+  parent_client_id              Int?
+  default_client_branch_rate_id Int?
+  client_name                   String          @db.VarChar(45)
+  remote_support                Int?            @db.TinyInt
+  push_alert                    Int?            @db.TinyInt
+  is_active                     Int             @default(1) @db.TinyInt
+  client                        client?         @relation("clientToclient", fields: [parent_client_id], references: [client_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_client_client1")
+  other_client                  client[]        @relation("clientToclient")
+  client_rate                   client_rate?    @relation(fields: [default_client_branch_rate_id], references: [client_rate_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_client_client_branch_rate1")
+  client_branch                 client_branch[]
+
+  @@index([parent_client_id], map: "fk_client_client1_idx")
+  @@index([default_client_branch_rate_id], map: "fk_client_client_branch_rate1_idx")
+}
+
+model client_branch {
+  client_branch_id      Int         @id @default(autoincrement())
+  sigungu_id            Int
+  mgmt_dept_id          Int
+  client_id             Int
+  client_branch_name    String      @db.VarChar(100)
+  client_branch_rate_id Int
+  branch_mgr_name       String?     @db.VarChar(45)
+  branch_mgr_mobile_num String?     @db.VarChar(45)
+  branch_mgr_office_num String?     @db.VarChar(45)
+  branch_mgr_email      String?     @db.VarChar(45)
+  is_active             Int         @default(1) @db.TinyInt
+  remote_support        Int         @default(0) @db.TinyInt
+  push_alert            Int         @default(0) @db.TinyInt
+  call                  call[]
+  client                client      @relation(fields: [client_id], references: [client_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_client_branch_client1")
+  client_rate           client_rate @relation(fields: [client_branch_rate_id], references: [client_rate_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_client_branch_client_branch_rate1")
+  dept                  dept        @relation(fields: [mgmt_dept_id], references: [dept_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_client_branch_dept1")
+  sigungu               sigungu     @relation(fields: [sigungu_id], references: [sigungu_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_client_branch_sigungu1")
+  location              location[]
+
+  @@index([client_id], map: "fk_client_branch_client1_idx")
+  @@index([client_branch_rate_id], map: "fk_client_branch_client_branch_rate1_idx")
+  @@index([mgmt_dept_id], map: "fk_client_branch_dept1_idx")
+  @@index([sigungu_id], map: "fk_client_branch_sigungu1_idx")
+}
+
+model client_rate {
+  client_rate_id Int             @id @default(autoincrement())
+  rate_type      String          @db.VarChar(10)
+  rate_detail    String?         @db.VarChar(45)
+  client         client[]
+  client_branch  client_branch[]
+}
+
+model consumable_model {
+  consumable_model_id             Int                               @id @default(autoincrement())
+  manufacturer                    String                            @db.VarChar(100)
+  consumable_name                 String                            @db.VarChar(100)
+  consumable_type                 String                            @db.VarChar(100)
+  device_consumable_compatibility device_consumable_compatibility[]
+}
+
+model dept {
+  dept_id                           Int             @id @default(autoincrement())
+  parent_dept_id                    Int?
+  dept_name                         String          @db.VarChar(100)
+  call                              call[]
+  client_branch                     client_branch[]
+  dept                              dept?           @relation("deptTodept", fields: [parent_dept_id], references: [dept_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_dept_dept1")
+  other_dept                        dept[]          @relation("deptTodept")
+  device_device_owner_dept_idTodept device[]        @relation("device_owner_dept_idTodept")
+  device_device_mgmt_dept_idTodept  device[]        @relation("device_mgmt_dept_idTodept")
+  user                              user[]
+  warehouse                         warehouse[]
+
+  @@index([parent_dept_id], map: "fk_dept_dept1_idx")
+}
+
+model device {
+  device_id                                                                  Int                     @id @default(autoincrement())
+  device_model_id                                                            Int
+  owner_dept_id                                                              Int
+  mgmt_dept_id                                                               Int
+  serial                                                                     String                  @db.VarChar(50)
+  regi_date                                                                  DateTime                @db.Date
+  mac                                                                        String                  @db.VarChar(50)
+  last_inspection_log_id                                                     Int?
+  last_location_log_id                                                       Int?
+  status_id                                                                  Int
+  call                                                                       call[]
+  dept_device_owner_dept_idTodept                                            dept                    @relation("device_owner_dept_idTodept", fields: [owner_dept_id], references: [dept_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_dept1")
+  dept_device_mgmt_dept_idTodept                                             dept                    @relation("device_mgmt_dept_idTodept", fields: [mgmt_dept_id], references: [dept_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_dept2")
+  device_status                                                              device_status           @relation(fields: [status_id], references: [status_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_device_condition1")
+  device_location_log_device_last_location_log_idTodevice_location_log       device_location_log?    @relation("device_last_location_log_idTodevice_location_log", fields: [last_location_log_id], references: [device_location_log_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_device_location_log1")
+  device_inspection_log_device_last_inspection_log_idTodevice_inspection_log device_inspection_log?  @relation("device_last_inspection_log_idTodevice_inspection_log", fields: [last_inspection_log_id], references: [device_inspection_log_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_device_log1")
+  device_model                                                               device_model            @relation(fields: [device_model_id], references: [device_model_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_device_model1")
+  device_inspection_log_device_inspection_log_device_idTodevice              device_inspection_log[] @relation("device_inspection_log_device_idTodevice")
+  device_install_info                                                        device_install_info?
+  device_location_log_device_location_log_device_idTodevice                  device_location_log[]   @relation("device_location_log_device_idTodevice")
+  device_option                                                              device_option[]
+
+  @@index([owner_dept_id], map: "fk_device_dept1_idx")
+  @@index([mgmt_dept_id], map: "fk_device_dept2_idx")
+  @@index([status_id], map: "fk_device_device_condition1_idx")
+  @@index([last_location_log_id], map: "fk_device_device_location_log1_idx")
+  @@index([device_model_id], map: "fk_device_device_model1_idx")
+  @@index([last_inspection_log_id], map: "fk_device_inspection_log1_idx")
+}
+
+model device_approval {
+  approval_id                                                Int                  @id @default(autoincrement())
+  approval_type_id                                           Int
+  sub_approval_id                                            Int?
+  requester_id                                               Int
+  request_at                                                 DateTime             @db.Timestamp(0)
+  approver_role_id                                           Int
+  origin_location_id                                         Int?
+  destination_location_id                                    Int?
+  approver_id                                                Int?
+  approve_at                                                 DateTime?            @db.Timestamp(0)
+  is_approved                                                Int?                 @db.TinyInt
+  approval_role                                              approval_role        @relation(fields: [approver_role_id], references: [role_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_approval_approver_group1")
+  device_approval                                            device_approval?     @relation("device_approvalTodevice_approval", fields: [sub_approval_id], references: [approval_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_approval_device_approval1")
+  other_device_approval                                      device_approval[]    @relation("device_approvalTodevice_approval")
+  device_approval_type                                       device_approval_type @relation(fields: [approval_type_id], references: [approval_type_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_approval_device_approval_type1")
+  location_device_approval_origin_location_idTolocation      location?            @relation("device_approval_origin_location_idTolocation", fields: [origin_location_id], references: [location_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_approval_location1")
+  location_device_approval_destination_location_idTolocation location?            @relation("device_approval_destination_location_idTolocation", fields: [destination_location_id], references: [location_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_approval_location2")
+  user_device_approval_requester_idTouser                    user                 @relation("device_approval_requester_idTouser", fields: [requester_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_approval_user1")
+  user_device_approval_approver_idTouser                     user?                @relation("device_approval_approver_idTouser", fields: [approver_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_approval_user2")
+
+  @@index([approver_role_id], map: "fk_approval_approver_group1_idx")
+  @@index([sub_approval_id], map: "fk_device_approval_device_approval1_idx")
+  @@index([approval_type_id], map: "fk_device_approval_device_approval_type1_idx")
+  @@index([origin_location_id], map: "fk_device_approval_location1_idx")
+  @@index([destination_location_id], map: "fk_device_approval_location2_idx")
+  @@index([requester_id], map: "fk_device_approval_user1_idx")
+  @@index([approver_id], map: "fk_device_approval_user2_idx")
+}
+
+model device_approval_type {
+  approval_type_id   Int               @id @default(autoincrement())
+  approval_type_name String            @db.VarChar(45)
+  device_approval    device_approval[]
+}
+
+model device_consumable_compatibility {
+  device_model_id     Int
+  consumable_model_id Int
+  consumable_model    consumable_model @relation(fields: [consumable_model_id], references: [consumable_model_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_consumable_model_has_device_model_consumable_model1")
+  device_model        device_model     @relation(fields: [device_model_id], references: [device_model_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_consumable_model_has_device_model_device_model1")
+
+  @@id([device_model_id, consumable_model_id])
+  @@index([consumable_model_id], map: "fk_consumable_model_has_device_model_consumable_model1_idx")
+  @@index([device_model_id], map: "fk_consumable_model_has_device_model_device_model1_idx")
+}
+
+model device_driver {
+  device_driver_id     Int          @id @default(autoincrement())
+  device_model_id      Int
+  manufacturer         String?      @db.VarChar(100)
+  printer_language     String?      @db.VarChar(45)
+  install_file_address String?      @db.VarChar(200)
+  device_model         device_model @relation(fields: [device_model_id], references: [device_model_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_driver_device_model1")
+
+  @@index([device_model_id], map: "fk_driver_device_model1_idx")
+}
+
+model device_inspection_log {
+  device_inspection_log_id                                    Int                           @id @default(autoincrement())
+  device_id                                                   Int
+  inspector_id                                                Int
+  inspection_date                                             DateTime                      @db.Date
+  visit_type                                                  String                        @db.VarChar(45)
+  call_id                                                     Int?
+  FL                                                          Int?
+  FS                                                          Int?
+  BL                                                          Int?
+  BS                                                          Int?
+  toner_count_YE                                              Int?
+  toner_count_MA                                              Int?
+  toner_count_CY                                              Int?
+  toner_count_BK                                              Int?
+  toner_stock_YE                                              Int?
+  toner_stock_MA                                              Int?
+  toner_stock_CY                                              Int?
+  toner_stock_BK                                              Int?
+  toner_deliver_YE                                            Int?
+  toner_deliver_CY                                            Int?
+  toner_deliver_MA                                            Int?
+  toner_deliver_BK                                            Int?
+  drum_count_YE                                               Int?
+  drum_count_MA                                               Int?
+  drum_count_CY                                               Int?
+  drum_count_BK                                               Int?
+  drum_replacement_detail                                     String?                       @db.VarChar(50)
+  status                                                      device_inspection_log_status?
+  device_device_last_inspection_log_idTodevice_inspection_log device[]                      @relation("device_last_inspection_log_idTodevice_inspection_log")
+  device_device_inspection_log_device_idTodevice              device                        @relation("device_inspection_log_device_idTodevice", fields: [device_id], references: [device_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_history_device")
+  user                                                        user                          @relation(fields: [inspector_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_inspection_log_user1")
+  call                                                        call?                         @relation(fields: [call_id], references: [call_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_log_call1")
+  inspection_approval                                         inspection_approval[]
+
+  @@index([device_id], map: "fk_device_history_device_idx")
+  @@index([inspector_id], map: "fk_device_inspection_log_user1_idx")
+  @@index([call_id], map: "fk_device_log_call1_idx")
+}
+
+model device_install_info {
+  device_id    Int     @id @default(autoincrement())
+  installer_id Int
+  mgmt_num     String  @db.VarChar(50)
+  ip_address   String? @db.VarChar(50)
+  subnet_mask  String? @db.VarChar(50)
+  gateway      String? @db.VarChar(50)
+  dns1         String? @db.VarChar(50)
+  dns2         String? @db.VarChar(50)
+  device       device  @relation(fields: [device_id], references: [device_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_install_info_device1")
+  user         user    @relation(fields: [installer_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_install_info_user1")
+
+  @@index([device_id], map: "fk_device_install_info_device1_idx")
+  @@index([installer_id], map: "fk_device_install_info_user1_idx")
+}
+
+model device_location_log {
+  device_location_log_id                                  Int      @id @default(autoincrement())
+  device_id                                               Int
+  location_date                                           DateTime @db.Date
+  location_id                                             Int
+  location_detail                                         String?  @db.VarChar(200)
+  device_device_last_location_log_idTodevice_location_log device[] @relation("device_last_location_log_idTodevice_location_log")
+  device_device_location_log_device_idTodevice            device   @relation("device_location_log_device_idTodevice", fields: [device_id], references: [device_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_location_log_device1")
+  location                                                location @relation(fields: [location_id], references: [location_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_location_log_location1")
+
+  @@index([device_id], map: "fk_device_location_log_device1_idx")
+  @@index([location_id], map: "fk_device_location_log_location1_idx")
+}
+
+model device_model {
+  device_model_id                 Int                               @id @default(autoincrement())
+  model_name                      String                            @db.VarChar(100)
+  manufacturer                    String                            @db.VarChar(100)
+  color_support                   Int                               @db.TinyInt
+  device                          device[]
+  device_consumable_compatibility device_consumable_compatibility[]
+  device_driver                   device_driver[]
+  device_option_compatibility     device_option_compatibility[]
+}
+
+model device_option {
+  device_option_id      Int                         @id @default(autoincrement())
+  option_model_id       Int
+  serial                String?                     @db.VarChar(50)
+  is_active             Int                         @default(1) @db.TinyInt
+  location_type         device_option_location_type
+  location_warehouse_id Int?
+  location_device_id    Int?
+  device                device?                     @relation(fields: [location_device_id], references: [device_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_option_device1")
+  option_model          option_model                @relation(fields: [option_model_id], references: [option_model_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_option_device_option_model1")
+  warehouse             warehouse?                  @relation(fields: [location_warehouse_id], references: [warehouse_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_option_warehouse1")
+
+  @@index([location_device_id], map: "fk_device_option_device1_idx")
+  @@index([option_model_id], map: "fk_device_option_device_option_model1_idx")
+  @@index([location_warehouse_id], map: "fk_device_option_warehouse1_idx")
+}
+
+model device_option_compatibility {
+  device_model_id Int
+  option_model_id Int
+  device_model    device_model @relation(fields: [device_model_id], references: [device_model_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_option_model_has_device_model_device_model1")
+  option_model    option_model @relation(fields: [option_model_id], references: [option_model_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_device_option_model_has_device_model_device_option_model1")
+
+  @@id([device_model_id, option_model_id])
+  @@index([device_model_id], map: "fk_device_option_model_has_device_model_device_model1_idx")
+  @@index([option_model_id], map: "fk_device_option_model_has_device_model_device_option_model_idx")
+}
+
+model device_status {
+  status_id   Int      @id @default(autoincrement())
+  status_name String   @db.VarChar(45)
+  device      device[]
+}
+
+model inspection_approval {
+  approval_id                                 Int                   @id @default(autoincrement())
+  requester_id                                Int
+  request_at                                  DateTime              @db.Timestamp(0)
+  approver_role_id                            Int?
+  device_inspection_log_id                    Int
+  approver_id                                 Int?
+  approved_at                                 DateTime?             @db.Timestamp(0)
+  is_approved                                 Int?                  @db.TinyInt
+  approval_role                               approval_role?        @relation(fields: [approver_role_id], references: [role_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_inspection_approval_approval_role1")
+  device_inspection_log                       device_inspection_log @relation(fields: [device_inspection_log_id], references: [device_inspection_log_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_inspection_approval_device_inspection_log1")
+  user_inspection_approval_approver_idTouser  user?                 @relation("inspection_approval_approver_idTouser", fields: [approver_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_inspection_approval_user1")
+  user_inspection_approval_requester_idTouser user                  @relation("inspection_approval_requester_idTouser", fields: [requester_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_inspection_approval_user2")
+
+  @@index([approver_role_id], map: "fk_inspection_approval_approval_role1_idx")
+  @@index([device_inspection_log_id], map: "fk_inspection_approval_device_inspection_log1_idx")
+  @@index([approver_id], map: "fk_inspection_approval_user1_idx")
+  @@index([requester_id], map: "fk_inspection_approval_user2_idx")
+}
+
+model location {
+  location_id                                                       Int                    @id @default(autoincrement())
+  location_type                                                     location_location_type
+  warehouse_id                                                      Int?
+  client_branch_id                                                  Int?
+  device_approval_device_approval_origin_location_idTolocation      device_approval[]      @relation("device_approval_origin_location_idTolocation")
+  device_approval_device_approval_destination_location_idTolocation device_approval[]      @relation("device_approval_destination_location_idTolocation")
+  device_location_log                                               device_location_log[]
+  client_branch                                                     client_branch?         @relation(fields: [client_branch_id], references: [client_branch_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_location_client_branch1")
+  warehouse                                                         warehouse?             @relation(fields: [warehouse_id], references: [warehouse_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_location_warehouse1")
+
+  @@index([client_branch_id], map: "fk_location_client_branch1_idx")
+  @@index([warehouse_id], map: "fk_location_warehouse1_idx")
+}
+
+model option_model {
+  option_model_id             Int                           @id @default(autoincrement())
+  option_model_name           String                        @db.VarChar(100)
+  option_type                 String                        @db.VarChar(45)
+  manufacturer                String                        @db.VarChar(100)
+  device_option               device_option[]
+  device_option_compatibility device_option_compatibility[]
+}
+
+model sido {
+  sido_id   Int       @id
+  sido_name String?   @db.VarChar(45)
+  sigungu   sigungu[]
+}
+
+model sigungu {
+  sigungu_id    Int             @id
+  sigungu_name  String          @db.VarChar(45)
+  sido_id       Int
+  client_branch client_branch[]
+  sido          sido            @relation(fields: [sido_id], references: [sido_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_sigungu_sido1")
+
+  @@index([sido_id], map: "fk_sigungu_sido1_idx")
+}
+
+model user {
+  user_id                                                    Int                     @id @default(autoincrement())
+  user_name                                                  String                  @db.VarChar(45)
+  login_id                                                   String                  @unique(map: "login_id_UNIQUE") @db.VarChar(45)
+  password                                                   String                  @db.VarChar(50)
+  mobile_num                                                 String?                 @db.VarChar(20)
+  office_num                                                 String?                 @db.VarChar(20)
+  email                                                      String?                 @db.VarChar(100)
+  modified_at                                                DateTime?               @db.Timestamp(0)
+  dept_id                                                    Int
+  approval_role_id                                           Int?
+  position_id                                                Int
+  created_at                                                 DateTime                @db.Timestamp(0)
+  is_active                                                  Int                     @default(1) @db.TinyInt
+  permission                                                 user_permission         @default(user)
+  call_call_receiver_idTouser                                call[]                  @relation("call_receiver_idTouser")
+  call_call_assigner_idTouser                                call[]                  @relation("call_assigner_idTouser")
+  device_approval_device_approval_requester_idTouser         device_approval[]       @relation("device_approval_requester_idTouser")
+  device_approval_device_approval_approver_idTouser          device_approval[]       @relation("device_approval_approver_idTouser")
+  device_inspection_log                                      device_inspection_log[]
+  device_install_info                                        device_install_info[]
+  inspection_approval_inspection_approval_approver_idTouser  inspection_approval[]   @relation("inspection_approval_approver_idTouser")
+  inspection_approval_inspection_approval_requester_idTouser inspection_approval[]   @relation("inspection_approval_requester_idTouser")
+  approval_role                                              approval_role?          @relation(fields: [approval_role_id], references: [role_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_approval_role1")
+  dept                                                       dept                    @relation(fields: [dept_id], references: [dept_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_dept1")
+  user_position                                              user_position           @relation(fields: [position_id], references: [user_position_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_user_position1")
+  user_role_assignment                                       user_role_assignment[]
+
+  @@index([approval_role_id], map: "fk_user_approval_role1_idx")
+  @@index([dept_id], map: "fk_user_dept1_idx")
+  @@index([position_id], map: "fk_user_user_position1_idx")
+}
+
+model user_position {
+  user_position_id Int    @id @default(autoincrement())
+  position_name    String @db.VarChar(45)
+  user             user[]
+}
+
+model user_role_assignment {
+  role_id       Int
+  approver_id   Int
+  approval_role approval_role @relation(fields: [role_id], references: [role_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_approver_group_has_user_approver_group1")
+  user          user          @relation(fields: [approver_id], references: [user_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_approver_group_has_user_user1")
+
+  @@id([role_id, approver_id])
+  @@index([role_id], map: "fk_approver_group_has_user_approver_group1_idx")
+  @@index([approver_id], map: "fk_approver_group_has_user_user1_idx")
+}
+
+model warehouse {
+  warehouse_id   Int             @id @default(autoincrement())
+  warehouse_name String          @db.VarChar(100)
+  mgmt_dept_id   Int
+  device_option  device_option[]
+  location       location[]
+  dept           dept            @relation(fields: [mgmt_dept_id], references: [dept_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_warehouse_dept1")
+
+  @@index([mgmt_dept_id], map: "fk_warehouse_dept1_idx")
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view v_client {
+  client_id                     Int     @id
+  client_name                   String  @default("") @db.VarChar(45)
+  parent_client_id              Int?
+  default_client_branch_rate_id BigInt  @default(0)
+  is_active                     Int     @default(0)
+  parent_client_name            String? @db.VarChar(45)
+  client_rate                   String? @db.VarChar(10)
+  rate_detail                   String? @db.VarChar(45)
+  branch_count                  BigInt  @default(0)
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view v_client_branch {
+  client_branch_id      Int     @id
+  client_branch_name    String  @db.VarChar(100)
+  client_id             Int
+  sigungu_id            Int
+  mgmt_dept_id          Int
+  client_branch_rate_id Int
+  branch_mgr_name       String? @db.VarChar(45)
+  branch_mgr_mobile_num String? @db.VarChar(45)
+  branch_mgr_office_num String? @db.VarChar(45)
+  branch_mgr_email      String? @db.VarChar(45)
+  is_active             Int     @default(1) @db.TinyInt
+  remote_support        Int     @default(0) @db.TinyInt
+  push_alert            Int     @default(0) @db.TinyInt
+  client_name           String? @db.VarChar(45)
+  sigungu_name          String? @db.VarChar(45)
+  sido_name             String? @db.VarChar(45)
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view v_consumable_model {
+  compatibility_id    String  @id @db.VarChar(23)
+  consumable_model_id Int?
+  manufacturer        String? @db.VarChar(100)
+  consumable_name     String? @db.VarChar(100)
+  consumable_type     String? @db.VarChar(100)
+  model_manufacturer  String? @db.VarChar(100)
+  model_name          String? @db.VarChar(100)
+  device_model_id     Int?
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view v_dept {
+  dept_id   BigInt  @id @default(0)
+  dept_1_id String  @default("") @db.VarChar(20)
+  dept_1    String  @default("") @db.VarChar(100)
+  dept_2_id String? @db.VarChar(20)
+  dept_2    String? @db.VarChar(100)
+  dept_3_id String? @db.VarChar(20)
+  dept_3    String? @db.VarChar(100)
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view v_device {
+  device_id              Int      @id
+  device_model_id        Int
+  owner_dept_id          Int
+  mgmt_dept_id           Int
+  serial                 String   @db.VarChar(50)
+  regi_date              DateTime @db.Date
+  mac                    String   @db.VarChar(50)
+  last_inspection_log_id Int?
+  last_location_log_id   Int?
+  status_id              Int
+  model_name             String?  @db.VarChar(100)
+  manufacturer           String?  @db.VarChar(100)
+  owner_dept_name        String?  @db.VarChar(100)
+  mgmt_dept_name         String?  @db.VarChar(100)
+  location_id            Int?
+  warehouse_id           Int?
+  warehouse_name         String?  @db.VarChar(100)
+  client_branch_id       Int?
+  client_branch_name     String?  @db.VarChar(100)
+  status_name            String?  @db.VarChar(45)
+  has_fax                BigInt?
+  has_desk               BigInt?
+  has_shelf              BigInt?
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view v_device_driver {
+  device_driver_id     Int     @id
+  device_model_id      Int
+  driver_manufacturer  String? @db.VarChar(100)
+  printer_language     String? @db.VarChar(45)
+  install_file_address String? @db.VarChar(200)
+  model_manufacturer   String? @db.VarChar(100)
+  model_name           String? @db.VarChar(100)
+  color_support        Int?    @db.TinyInt
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view v_user {
+  user_id          Int               @id
+  user_name        String            @db.VarChar(45)
+  login_id         String            @db.VarChar(45)
+  mobile_num       String?           @db.VarChar(20)
+  office_num       String?           @db.VarChar(20)
+  email            String?           @db.VarChar(100)
+  modified_at      DateTime?         @db.Timestamp(0)
+  created_at       DateTime          @db.Timestamp(0)
+  is_active        Int               @default(1) @db.TinyInt
+  permission       v_user_permission @default(user)
+  dept_id          Int
+  approval_role_id Int
+  position_id      Int
+  dept_name        String?           @db.VarChar(100)
+  parent_dept_id   Int?
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view v_warehouse {
+  warehouse_id        Int     @id
+  warehouse_name      String  @db.VarChar(100)
+  mgmt_dept_id        Int
+  mgmt_dept_name      String? @db.VarChar(100)
+  mgmt_parent_dept_id Int?
+}
+
+enum location_location_type {
+  warehouse
+  client_branch
+}
+
+enum device_option_location_type {
+  warehouse
+  device
+}
+
+enum user_permission {
+  user
+  manager
+  admin
+}
+
+enum device_inspection_log_status {
+  normal
+  pending
+}
+
+enum v_user_permission {
+  user
+  manager
+  admin
+}

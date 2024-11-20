@@ -1,8 +1,0 @@
-{
-  "timestamp": "2024-11-20T10:27:45.441Z",
-  "type": "AUTO_BEFORE_RESTORE",
-  "message": "복원 작업 전 자동 백업",
-  "createdBy": "unknown",
-  "prismaVersion": "5.1.1",
-  "nodeVersion": "v20.13.1"
-}

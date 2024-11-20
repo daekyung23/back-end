@@ -70,13 +70,49 @@ const prisma = new PrismaClient({
   datasources: { db: { url: config.db.url } }
 })
 
-const getModels = async () => Object.keys(prisma)
-  .filter(key => {
-    if (key.startsWith('$')) return false
-    if (typeof prisma[key] !== 'object') return false
-    if (!prisma[key]) return false
-    return typeof prisma[key].findMany === 'function'
-  })
+const getModels = async () => {
+  // 스키마에서 view 정보 가져오기
+  const schema = fs.readFileSync(PRISMA_SCHEMA_PATH, FILE_MODES.FILE)
+  const dmmf = await getDMMF({ datamodel: schema })
+  
+  // view 목록 생성
+  const viewNames = dmmf.datamodel.models
+    .filter(model => {
+      const modelDefinition = schema
+        .split('\n')
+        .find(line => line.trim().startsWith(`model ${model.name}`) || 
+                      line.trim().startsWith(`view ${model.name}`))
+      return modelDefinition?.trim().startsWith('view')
+    })
+    .map(model => model.name.toLowerCase())
+
+  // view를 제외한 모델 반환
+  return Object.keys(prisma)
+    .filter(key => {
+      if (key.startsWith('$')) return false
+      if (typeof prisma[key] !== 'object') return false
+      if (!prisma[key]) return false
+      if (viewNames.includes(key.toLowerCase())) return false
+      return typeof prisma[key].findMany === 'function'
+    })
+}
+
+// migrations 백업 함수를 별도로 분리
+const backupMigrations = async (dataDir) => {
+  const migrations = await prisma.$queryRaw`SELECT * FROM _prisma_migrations`
+  await createCsvFile('_prisma_migrations', {
+    fields: [
+      { name: 'id' },
+      { name: 'checksum' },
+      { name: 'finished_at' },
+      { name: 'migration_name' },
+      { name: 'logs' },
+      { name: 'rolled_back_at' },
+      { name: 'started_at' },
+      { name: 'applied_steps_count' }
+    ]
+  }, migrations, dataDir)
+}
 
 const createMetadata = (type, message) => ({
   timestamp: new Date().toISOString(),
@@ -187,6 +223,8 @@ async function backup({
     console.log('데이터 백업 시작...')
     const models = await getModels()
     const dataDir = path.join(backupDir, BACKUP_DATA_DIR)
+
+    await backupMigrations(dataDir)
     
     const schema = fs.readFileSync(PRISMA_SCHEMA_PATH, FILE_MODES.FILE)
     const dmmf = await getDMMF({ datamodel: schema })

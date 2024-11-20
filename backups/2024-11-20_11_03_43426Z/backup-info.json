@@ -1,0 +1,8 @@
+{
+  "timestamp": "2024-11-20T11:03:43.427Z",
+  "type": "MANUAL",
+  "message": "첫 마이그레이션 백업",
+  "createdBy": "unknown",
+  "prismaVersion": "5.1.1",
+  "nodeVersion": "v20.13.1"
+}

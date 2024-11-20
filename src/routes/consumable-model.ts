@@ -31,18 +31,16 @@ router.get('/check',
   controller.exists
 )
 
-// //unique key가 없음.
-// router.patch('/update', 
-//   validateInput({ body: z.intersection( uniqueKeySchema, updateSchema ) }), 
-//   controller.update<'consumable_model_id'>
-// )
+//unique key가 없음.
+router.patch('/update', 
+  validateInput({ body: schema.updateByPrimaryKey }), 
+  controller.update<'consumable_model_id'>
+)
 
-// //unique key가 없음.
-// router.delete('/delete', 
-//   validateInput({ query: uniqueKeySchema }), 
-//   controller.delete<'consumable_model_id'>
-// )
-
-
+//unique key가 없음.
+router.delete('/delete', 
+  validateInput({ query: schema.primaryKey }), 
+  controller.delete<'consumable_model_id'>
+)
 
 export const consumableModelRouter = router
