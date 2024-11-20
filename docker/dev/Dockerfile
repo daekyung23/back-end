@@ -6,6 +6,7 @@ RUN npm install -g tsx
 
 COPY package*.json ./
 RUN npm install
+RUN npm run raw:dev:build
 
 EXPOSE 3001
 
