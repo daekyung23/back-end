@@ -4,6 +4,7 @@ import { Repository } from '@base/repository'
 import { prisma } from '@lib/prisma'  
 import type { SearchQuery, SearchResult } from '@base/types'
 import type { CreateInputData } from '@lib/prisma'
+import { log } from '@utils/log'
 
 const MODEL = 'consumable_model' as const
 const VIEW = 'v_consumable_model' as const
@@ -42,6 +43,8 @@ export class ConsumableModelService extends Service<typeof MODEL, typeof VIEW> {
       const consumableModel = await tx.consumable_model.create({
         data: consumableData
       })
+
+      log(consumableModel)
       // 2. 호환성 정보 생성
       await tx.device_consumable_compatibility.createMany({
         data: device_model_ids.map(device_model_id => ({
