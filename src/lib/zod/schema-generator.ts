@@ -64,15 +64,23 @@ export class SchemaGenerator {
 
   // 생성 스키마
   generateCreateSchema(): z.ZodObject<any> {
-    const shape: z.ZodRawShape = {}
+    const requiredShape: z.ZodRawShape = {}
+    const optionalShape: z.ZodRawShape = {}
     
     this.model.fields
-      .filter((f: PrismaField) => !f.isPrimary && !f.hasDefaultValue)
+      .filter((f: PrismaField) => !f.isPrimary)
       .forEach((field: PrismaField) => {
-        shape[field.name] = this.generateFieldSchema(field)
+        if (field.hasDefaultValue || !field.isRequired) {
+          optionalShape[field.name] = this.generateFieldSchema(field)
+        } else {
+          requiredShape[field.name] = this.generateFieldSchema(field)
+        }
       })
 
-    return z.object(shape)
+    return z.object({ 
+      ...requiredShape, 
+      ...optionalShape 
+    })
   }
 
   // 수정 스키마
