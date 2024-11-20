@@ -6,7 +6,7 @@ export interface PrismaField {
   isPrimary: boolean
   isUnique: boolean
   hasDefaultValue: boolean
-  isList: boolean
+  defaultValue: any
 }
 
 // Prisma 모델 전체를 정의하는 인터페이스

@@ -14,11 +14,6 @@ export class SchemaGenerator {
   // 기본 필드 스키마 생성
   private generateFieldSchema(field: PrismaField): z.ZodType<any> {
     let schema = this.getBaseTypeSchema(field)
-    
-    if (field.isList) {
-      schema = z.array(schema)
-    }
-    
     return field.isRequired ? schema : schema.optional()
   }
 
@@ -71,7 +66,7 @@ export class SchemaGenerator {
       .filter((f: PrismaField) => !f.isPrimary)
       .forEach((field: PrismaField) => {
         if (field.hasDefaultValue || !field.isRequired) {
-          optionalShape[field.name] = this.generateFieldSchema(field)
+          optionalShape[field.name] = this.generateFieldSchema(field).optional()
         } else {
           requiredShape[field.name] = this.generateFieldSchema(field)
         }
@@ -79,7 +74,7 @@ export class SchemaGenerator {
 
     return z.object({ 
       ...requiredShape, 
-      ...optionalShape 
+      ...optionalShape
     })
   }
 

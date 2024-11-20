@@ -12,7 +12,8 @@ export class PrismaSchemaParser {
         c.DATA_TYPE as field_type,
         c.IS_NULLABLE as nullable,
         c.COLUMN_KEY as key_type,
-        c.ORDINAL_POSITION as position
+        c.ORDINAL_POSITION as position,
+        c.COLUMN_DEFAULT as default_value
       FROM information_schema.COLUMNS c
       WHERE c.TABLE_SCHEMA = DATABASE()
       ORDER BY c.TABLE_NAME, c.ORDINAL_POSITION
@@ -36,8 +37,8 @@ export class PrismaSchemaParser {
         isRequired: row.nullable === 'NO',
         isPrimary: row.key_type === 'PRI',
         isUnique: row.key_type === 'UNI',
-        hasDefaultValue: false,
-        isList: false
+        hasDefaultValue: row.default_value !== null,
+        defaultValue: row.default_value,
       } as PrismaField)
 
       return acc
