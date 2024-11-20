@@ -5,11 +5,11 @@ import { validateInput } from '@middlewares/validators'
 
 const router = Router()
 const controller = controllers.sido
-const schema = schemas.sido
+const v_schema = schemas.v_sido
 
 // Defined At Controller & Service ------------------------------------------
 router.get('/by-sigungu-id/:sigungu_id', 
-  validateInput({ params: schema.base.pick({ sigungu_id: true }) }),
+  validateInput({ params: v_schema.base.pick({ sigungu_id: true }) }),
   controller.getSidoBySigunguId
 )
 
