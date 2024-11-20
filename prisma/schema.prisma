@@ -579,7 +579,7 @@ view v_user {
   is_active        Int               @default(1) @db.TinyInt
   permission       v_user_permission @default(user)
   dept_id          Int
-  approval_role_id Int
+  approval_role_id Int?
   position_id      Int
   dept_name        String?           @db.VarChar(100)
   parent_dept_id   Int?
