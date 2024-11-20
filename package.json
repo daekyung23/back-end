@@ -37,12 +37,12 @@
     "raw:prod:backup": "dotenv -e .env.production -- node scripts/backup/run-backup.js",
     "raw:prod:restore": "dotenv -e .env.production -- node scripts/backup/run-restore.js",
     
-    "prisma:pull:dev": "docker compose -f docker-compose.dev.yml exec npm run raw:prisma:pull:dev ",
-    "prisma:push:dev": "docker compose -f docker-compose.dev.yml exec npm run raw:prisma:push:dev",
-    "prisma:generate:dev": "docker compose -f docker-compose.dev.yml exec npm run raw:prisma:generate:dev",
-    "prisma:pull:prod": "docker compose -f docker-compose.prod.yml exec npm run raw:prisma:pull:prod",
-    "prisma:push:prod": "docker compose -f docker-compose.prod.yml exec npm run raw:prisma:push:prod",
-    "prisma:generate:prod": "docker compose -f docker-compose.prod.yml exec npm run raw:prisma:generate:prod",
+    "prisma:pull:dev": "docker compose -f docker-compose.dev.yml exec app npm run raw:prisma:pull:dev ",
+    "prisma:push:dev": "docker compose -f docker-compose.dev.yml exec app npm run raw:prisma:push:dev",
+    "prisma:generate:dev": "docker compose -f docker-compose.dev.yml exec app npm run raw:prisma:generate:dev",
+    "prisma:pull:prod": "docker compose -f docker-compose.prod.yml exec app npm run raw:prisma:pull:prod",
+    "prisma:push:prod": "docker compose -f docker-compose.prod.yml exec app npm run raw:prisma:push:prod",
+    "prisma:generate:prod": "docker compose -f docker-compose.prod.yml exec app npm run raw:prisma:generate:prod",
 
     "raw:prisma:pull:dev": "dotenv -e .env.development -- prisma db pull",
     "raw:prisma:pull:prod": "dotenv -e .env.production -- prisma db pull",
