@@ -27,9 +27,9 @@
     "dev:test": "echo \"Error: no test specified\" && exit 1",
 
     "raw:dev:start": "dotenv -e .env.development -- npx tsx watch src/server.ts",
-    "raw:dev:build": "npm run prisma:generate:dev && rollup -c",
+    "raw:dev:build": "npm run raw:prisma:generate:dev && rollup -c",
     "raw:start": "dotenv -e .env.production -- node dist/server.js",
-    "raw:build": "npm run prisma:generate:prod && rollup -c",
+    "raw:build": "npm run raw:prisma:generate:prod && rollup -c",
     "prebuild": "npx rimraf dist",
 
     "raw:dev:backup": "dotenv -e .env.development -- node scripts/backup/run-backup.js",
