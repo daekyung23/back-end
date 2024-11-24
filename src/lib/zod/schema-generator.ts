@@ -25,7 +25,14 @@ export class SchemaGenerator {
           ? z.string().email()
           : z.string()
       case 'Int':
-        return z.coerce.number().int()
+        // null, "null" 인 경우 null로 처리. 기타 coercion 처리.
+        return z.preprocess(
+          (val) => {
+            if (val === null || val === 'null') return null;
+            return Number(val);
+          },
+          z.number().int()
+        )
       case 'Float':
         return z.coerce.number()
       case 'Boolean':
