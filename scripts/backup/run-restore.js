@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url'
 import { dirname } from 'path'
 import backup from './run-backup.js'
 import { config } from '../config.js' 
+import { createWriteStream } from 'fs'
 
 // 상수 정의
 const ITEMS_PER_PAGE = 10
@@ -32,7 +33,6 @@ const safeFileName = name => name
   .replace(/[:.]/g, '')
   .replace('T', '_')
   .split('.')[0]
-
 
 // 기본 경로 설정
 const __filename = fileURLToPath(import.meta.url)
@@ -80,11 +80,8 @@ const readCsvRecords = csvPath => new Promise((resolve, reject) => {
   const records = []
   fs.createReadStream(csvPath)
     .pipe(csv({
+      mapHeaders: ({ header }) => header.replace(BOM, ''),
       mapValues: ({ header, value }) => {
-        // 빈 값 처리
-        if (!value || value.trim() === '') return null
-        // 날짜 처리
-        if (header.includes('_at')) return formatDate(value)
         return value
       },
       skipEmptyLines: true
@@ -99,7 +96,6 @@ const readCsvRecords = csvPath => new Promise((resolve, reject) => {
       const validRecords = records.filter(record => 
         Object.values(record).some(v => v !== null && v !== '')
       )
-      console.log(`  총 ${validRecords.length}개 유효 레코드 읽음\n`)
       resolve(validRecords)
     })
     .on('error', reject)
@@ -251,22 +247,20 @@ const deleteBackup = async backupName => {
   }
 }
 
-const convertFieldValue = (value, field) => {
-  // null 처리
-  if (value === CSV_NULL) {
-    return null
-  }
-
+const convertFieldValue = (value, fieldType) => {
+  if (value === CSV_NULL) return null
   // 필드 타입에 따른 변환
-  switch (field.type) {
+  switch (fieldType) {
     case 'Int':
-      return value === null ? null : parseInt(value) || 0
+      return parseInt(value) || -1
     case 'Float':
-      return value === null ? null : parseFloat(value) || 0
+      return  parseFloat(value) || -1
     case 'Boolean':
       return value === '1' || value === 'true' || value === true ? 1 : 0
     case 'DateTime':
-      return value === null ? null : new Date(value)
+      return new Date(value).toISOString().slice(0, 19).replace('T', ' ')
+    case 'String':
+      return value
     default:
       return value
   }
@@ -289,7 +283,7 @@ const getModelSchema = async modelName => {
       .split('\n')
       .find(line => line.trim().startsWith(`model ${model.name}`) || 
                     line.trim().startsWith(`view ${model.name}`))
-    
+
     return {
       ...model,
       isView: modelDefinition?.trim().startsWith('view') || false
@@ -314,40 +308,23 @@ const restoreTable = async (tx, modelName, records) => {
   
   try {
     const model = await getModelSchema(modelName)
+    if (model.isView) return
     
-    if (model.isView) {
-      console.log(`${modelName}는 View이므로 복원하지 않습니다.`)
-      return
-    }
-
-    // 스칼라 필드만 추출
-    const scalarFields = model.fields
-      .filter(field => !field.relationName && !field.isList)
-      .map(field => field.name)
-    
-    const cleanedRecords = records.map(record => {
-      const cleaned = {}
+    for (const record of records) {
+      const fields = model.fields
+        .filter(field => field.kind === 'scalar' || field.kind === 'enum')
       
-      // 스칼라 필드만 복사
-      scalarFields.forEach(fieldName => {
-        if (record[fieldName] === CSV_NULL) {
-          cleaned[fieldName] = null
-        } else if (record[fieldName] === '') {
-          cleaned[fieldName] = ''
-        } else {
-          cleaned[fieldName] = convertFieldValue(record[fieldName], 
-            model.fields.find(f => f.name === fieldName))
-        }
-      })
-
-      return cleaned
-    })
-
-    await tx[modelName].createMany({
-      data: cleanedRecords,
-      skipDuplicates: true
-    })
-
+      const fieldNames = fields.map(f => f.name).join(', ')
+      const placeholders = fields.map(() => '?').join(', ')
+      const values = fields.map(field => 
+        convertFieldValue(record[field.name], field.type)
+      )
+        
+      await tx.$executeRawUnsafe(
+        `INSERT IGNORE INTO ${modelName} (${fieldNames}) VALUES (${placeholders})`,
+        ...values
+      )
+    }
   } catch (error) {
     console.error(`${modelName} 복원 실패:`, error)
     throw error
@@ -358,10 +335,11 @@ const restoreData = async (backupDate, prisma) => {
   const dataDir = path.join(BACKUP_ROOT, backupDate, 'data')
   const files = await readdir(dataDir)
 
-  try {
-    await prisma.$transaction(async tx => {
-      console.log('트랜잭션 시작...')
-      await tx.$executeRawUnsafe('SET FOREIGN_KEY_CHECKS = 0;')
+  await prisma.$transaction(async tx => {
+    console.log('트랜잭션 시작...')
+
+    try {
+      await tx.$executeRawUnsafe('SET FOREIGN_KEY_CHECKS=0;')
 
       for (const file of files) {
         if (!file.endsWith('.csv')) continue
@@ -377,36 +355,37 @@ const restoreData = async (backupDate, prisma) => {
               INSERT INTO _prisma_migrations 
               (id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count)
               VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            `, [
-              record.id,
-              record.checksum,
-              record.finished_at,
-              record.migration_name,
-              record.logs,
-              record.rolled_back_at,
-              record.started_at,
-              parseInt(record.applied_steps_count)
-            ])
+            `,
+              convertFieldValue(record.id, 'String'),
+              convertFieldValue(record.checksum, 'String'),
+              convertFieldValue(record.finished_at, 'DateTime'),
+              convertFieldValue(record.migration_name, 'String'),
+              convertFieldValue(record.logs, 'String'),
+              convertFieldValue(record.rolled_back_at, 'DateTime'),
+              convertFieldValue(record.started_at, 'DateTime'),
+              convertFieldValue(record.applied_steps_count, 'Int')
+            )
           }
           continue
         }
 
         // 일반 테이블 처리
         await restoreTable(tx, modelName, records)
+        }
+
+        // 모든 데이터 복구 후 foreign key check 활성화
+        await tx.$executeRawUnsafe('SET FOREIGN_KEY_CHECKS=1;')
+        console.log('데이터 복원 성공')
+      } catch (error) {
+        await tx.$executeRawUnsafe('SET FOREIGN_KEY_CHECKS=1;')
+        console.error('데이터 복원 실패:', error)
+        throw error
       }
-
-      await tx.$executeRawUnsafe('SET FOREIGN_KEY_CHECKS = 1;')
-    }, {
-      timeout: TRANSACTION_TIMEOUT,
-      maxWait: TRANSACTION_TIMEOUT,
-      isolationLevel: 'Serializable'
-    })
-
-    console.log('데이터 복원 성공')
-  } catch (error) {
-    console.error('데이터 복원 실패:', error)
-    throw error
-  }
+  }, {
+    timeout: TRANSACTION_TIMEOUT,
+    maxWait: TRANSACTION_TIMEOUT,
+    isolationLevel: 'Serializable'
+  })
 }
 
 const restoreViewDefinitions = async (backupDate, prisma) => {
@@ -442,9 +421,53 @@ const handleRestoreError = async (error, autoBackupName, prisma) => {
   }
 }
 
+// 로그 관련 상수 추가
+const LOG_DIR = resolveRoot('logs')
+const getLogPath = () => path.join(LOG_DIR, `restore_${new Date().toISOString().replace(/[:.]/g, '')}.log`)
+
+// 로그 유틸리티 함수 추가
+const setupLogging = () => {
+  // 로그 디렉토리 생성
+  if (!fs.existsSync(LOG_DIR)) {
+    fs.mkdirSync(LOG_DIR, FILE_MODES.DIR)
+  }
+
+  const logPath = getLogPath()
+  const logStream = createWriteStream(logPath, { flags: 'a' })
+  
+  // 기존 console.log를 저장
+  const originalConsoleLog = console.log
+  const originalConsoleError = console.error
+
+  // console.log 재정의
+  console.log = (...args) => {
+    const message = args.map(arg => 
+      typeof arg === 'object' ? JSON.stringify(arg, null, 2) : arg
+    ).join(' ')
+    
+    logStream.write(message + '\n')
+    originalConsoleLog.apply(console, args)
+  }
+
+  // console.error 재정의
+  console.error = (...args) => {
+    const message = args.map(arg => 
+      typeof arg === 'object' ? JSON.stringify(arg, null, 2) : arg
+    ).join(' ')
+    
+    logStream.write(`[ERROR] ${message}\n`)
+    originalConsoleError.apply(console, args)
+  }
+
+  return { logPath, logStream }
+}
+
 // 메인 복원 함수
 const restore = async () => {
+  const { logPath, logStream } = setupLogging()
   console.log('복원 프로세스 시작...')
+  console.log('로그 파일 경로:', logPath)
+  
   let autoBackupName = null
   let prisma = null 
   
@@ -472,7 +495,6 @@ const restore = async () => {
     
     if (autoBackupName) {
       await deleteBackup(autoBackupName)
-      console.log('자동 백업 삭제 완료')
     }
     
     console.log('\n복원 완료')
@@ -481,8 +503,8 @@ const restore = async () => {
     await handleRestoreError(error, autoBackupName, prisma)
     process.exit(1)
   } finally {
-    // 복원 작업 완료 후 항상 연결 종료
-    await prisma.$disconnect()
+    await prisma?.$disconnect()
+    logStream.end()  // 로그 스트림 종료
   }
 }
 

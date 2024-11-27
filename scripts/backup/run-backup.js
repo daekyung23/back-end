@@ -230,7 +230,6 @@ async function backup({
     const dmmf = await getDMMF({ datamodel: schema })
 
     for (const model of models) {
-      console.log(`${model} 테이블 백업 중...`)
       const data = await prisma[model].findMany()
       const modelInfo = dmmf.datamodel.models.find(m => m.name === model)
       await createCsvFile(model, modelInfo, data, dataDir)

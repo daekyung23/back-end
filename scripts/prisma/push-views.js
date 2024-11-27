@@ -22,9 +22,8 @@ async function pushViews() {
     // 2. 기존 view 모두 삭제
     for (const view of views) {
       await prisma.$executeRawUnsafe(`DROP VIEW IF EXISTS ${view.TABLE_NAME}`)
-      console.log(`Dropped view: ${view.TABLE_NAME}`)
     }
-
+    console.log('All views dropped successfully!')
     // 3. SQL 파일들 읽어서 view 재생성
     const sqlDir = join(process.cwd(), 'prisma/views/mydb')
     const sqlFiles = readdirSync(sqlDir).filter(file => file.endsWith('.sql'))
@@ -35,13 +34,11 @@ async function pushViews() {
         await prisma.$executeRawUnsafe(
           `CREATE VIEW ${file.replace('.sql', '')} AS ${sql}`
         )
-        console.log(`Created view from: ${file}`)
       } catch (error) {
         console.error(`Error creating view ${file}:`, error)
         throw error
       }
     }
-
     console.log('All views recreated successfully!')
   } catch (error) {
     console.error('Error pushing views:', error)

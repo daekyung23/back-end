@@ -1,9 +1,0 @@
-client_branch_id,client_branch_name,client_id,sigungu_id,mgmt_dept_id,client_branch_rate_id,branch_mgr_name,branch_mgr_mobile_num,branch_mgr_office_num,branch_mgr_email,is_active,remote_support,push_alert,client_name,sigungu_name,sido_name
-1,이마트 자양점,1005,155,8,1,홍길동,010-1234-1234,031-1234-1234,abc@email.com,1,1,1,이마트,광진구,서울특별시
-2,이마트 왕십리점,1005,165,8,1,홍길서,010-4321-4321,031-2345-2345,def@email.com,1,1,0,이마트,성동구,서울특별시
-3,이마트 충주점,1005,263,12,1,홍길남,010-5678-5678,031-5678-5678,ghi@email.com,1,0,1,이마트,충주시,충청북도
-4,이마트 제천점,1005,254,12,1,홍길북,010-8765-8765,02-1234-5678,de123f@email.com,1,0,0,이마트,제천시,충청북도
-5,GS슈퍼 충주용산점,1009,263,12,1,동길,010-1234-5678,,abc123@email.com,1,1,1,GS슈퍼,충주시,충청북도
-6,GS슈퍼 상왕십리역점,1009,165,8,1,서길,010-5678-1234,,def456@email.com,1,1,0,GS슈퍼,성동구,서울특별시
-7,하이마트 청량리롯데마트점,101512,160,8,1,북길,010-4321-8765,,abc546@email.com,1,0,1,서울강북지사,동대문구,서울특별시
-8,하이마트 탄금점,101520,263,12,1,남길,,,def789@email.com,0,0,0,충북지사,충주시,충청북도
