@@ -1,5 +1,4 @@
 import { Prisma,PrismaClient } from '@prisma/client'
-import type { Simplify } from 'type-fest'
 
 export type Models = Prisma.TypeMap['model']
 export type ModelName = keyof Models
@@ -32,11 +31,11 @@ export type FindUniqueInput<M extends ModelName> = FindUniqueWhere<M>
 export type FindManyInput<M extends ModelName> = FindManyWhere<M>
 export type UpdateInputUnique<M extends ModelName> = UpdateWhere<M> 
 export type UpdateInputData<M extends ModelName> = UpdateArgs<M>['data']
+// prisma의 findUnique, delete, unique method는 unique key만 받지만, 그 타입에 대해서 명시 되어있지 않음.
 export type DeleteInput<M extends ModelName> = DeleteWhere<M>
 
 export type UncheckedUpdateInput<M extends ModelName> =
   UpdateInputUnique<M> & 
   UpdateInputData<M>
-
 
 export type { Prisma, PrismaClient } from '@prisma/client'

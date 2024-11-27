@@ -1,0 +1,8 @@
+{
+  "timestamp": "2024-11-27T10:40:23.707Z",
+  "type": "MANUAL",
+  "message": "device_location_log 생성 전",
+  "createdBy": "unknown",
+  "prismaVersion": "5.1.1",
+  "nodeVersion": "v20.13.1"
+}

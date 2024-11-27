@@ -1,6 +1,6 @@
 import { Service } from '@base/service'
 import { Repository } from '@base/repository'
-import { prisma } from '@lib/prisma'
+import { prisma, CreateInputData, DeleteInput } from '@lib/prisma'
 import type { Activation } from '@schemas'
 import type { client_branch } from '@prisma/client'
 import type { SearchQuery, SearchResult } from '@base/types'
@@ -16,7 +16,7 @@ export class ClientBranchService extends Service<typeof MODEL, typeof VIEW> {
   findManyByClientId = async (query: Simplify<Pick<client_branch, 'client_id'>>) => {
     return this.repository.findMany({ where: query })
   }
-  
+
   // Override ------------------------------------------------------------------
   override search = async (query: Simplify<SearchQuery<typeof VIEW>>): 
     Promise<SearchResult<typeof MODEL, typeof VIEW>> => {
@@ -50,5 +50,30 @@ export class ClientBranchService extends Service<typeof MODEL, typeof VIEW> {
     const { [uniqueKey]: uniqueValue, is_active } = body
     const updated = await this.repository.update({ where: { [uniqueKey]: uniqueValue }, data: { is_active } })
     return { [MODEL]: updated } 
+  }
+
+  // CRUD override ------------------------------------------------------------
+  override create = async (data: CreateInputData<typeof MODEL>) => {
+    return await prisma.$transaction(async (tx) => {
+      const client_branch = await tx.client_branch.create({ data });
+      
+      await tx.location.create({
+        data: {
+          location_type: 'client_branch',
+          client_branch_id: client_branch.client_branch_id
+        }
+      });
+      return { client_branch };
+    });
+  }
+
+  override delete = async<U extends keyof DeleteInput<typeof MODEL>>(
+    where: Record<U, DeleteInput<typeof MODEL>[U]>
+  ) => {
+    return await prisma.$transaction(async (tx) => {
+      const client_branch_id = (where as { client_branch_id: number }).client_branch_id;
+      await tx.location.deleteMany({ where: { client_branch_id } });
+      await tx.client_branch.delete({ where: { client_branch_id } });
+    });
   }
 }

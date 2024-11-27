@@ -1,0 +1,8 @@
+{
+  "timestamp": "2024-11-27T10:36:14.959Z",
+  "type": "MANUAL",
+  "message": "location 데이터 입력 후",
+  "createdBy": "unknown",
+  "prismaVersion": "5.1.1",
+  "nodeVersion": "v20.13.1"
+}
