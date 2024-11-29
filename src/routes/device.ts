@@ -6,10 +6,22 @@ import { schemas, searchSchema } from '@schemas'
 const router = Router()
 const controller = controllers.device
 const schema = schemas.device
+const v_schema = schemas.v_device
 
 // Override At Service ------------------------------------------------------
 router.get('/search', 
-  validateInput({ query: searchSchema }), 
+  validateInput({ query: searchSchema.merge(
+    v_schema.base.pick({ 
+      manufacturer: true,
+      device_model_id: true,
+      root_client_id: true,
+      status_id: true,
+      warehouse_id: true,
+      has_fax: true,
+      has_desk: true,
+      has_shelf: true,
+    }).partial()
+  ) }), 
   controller.search
 )
 

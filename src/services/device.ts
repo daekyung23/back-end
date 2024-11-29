@@ -12,7 +12,7 @@ export class DeviceService extends Service<typeof MODEL, typeof VIEW> {
   // Override ------------------------------------------------------------------
   override search = async (query: Simplify<SearchQuery<typeof VIEW>>): 
     Promise<SearchResult<typeof MODEL, typeof VIEW>> => {
-    const { search_term, page } = query  
+    const { search_term, page, ...rest } = query  
     const take = 10
     const skip = (page - 1) * take
     const where = {
@@ -21,6 +21,7 @@ export class DeviceService extends Service<typeof MODEL, typeof VIEW> {
         { serial: { contains: search_term } },
         { client_branch_name: { contains: search_term } },
       ],
+      ...rest
     }
     const [items, total] = await Promise.all([
       this.repository.findMany({ where, skip, take }),

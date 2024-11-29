@@ -289,7 +289,7 @@ model device_install_info {
 model device_location_log {
   device_location_log_id                                  Int      @id @default(autoincrement())
   device_id                                               Int
-  location_date                                           DateTime @db.Date
+  location_date                                           DateTime @db.DateTime
   location_id                                             Int
   location_detail                                         String?  @db.VarChar(200)
   device_device_last_location_log_idTodevice_location_log device[] @relation("device_last_location_log_idTodevice_location_log")
@@ -544,6 +544,9 @@ view v_device {
   client_branch_id       Int?     @default(0)
   client_branch_name     String?  @db.VarChar(100)
   status_name            String?  @db.VarChar(45)
+  root_client_id         Int?
+  root_client_name       String?  @db.VarChar(45)
+  client_depth           BigInt?
   has_fax                BigInt?
   has_desk               BigInt?
   has_shelf              BigInt?
@@ -591,10 +594,21 @@ view v_warehouse {
 
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_sido {
-  sido_id      Int @id
+  sido_id      Int     @id
   sido_name    String? @db.VarChar(45)
   sigungu_id   Int?
   sigungu_name String? @db.VarChar(45)
+}
+
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view v_client_hierarchy {
+  client_id        Int    @id
+  client_name      String? @db.VarChar(45)
+  parent_client_id Int?
+  root_client_id   Int?
+  root_client_name String? @db.VarChar(45)
+  depth            BigInt?
+  path             String? @db.VarChar(200)
 }
 
 enum location_location_type {

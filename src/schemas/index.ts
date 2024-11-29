@@ -28,6 +28,7 @@ export const schemas = {
   dept: createSchema('dept'),
   deviceDriver: createSchema('device_driver'),
   device: createSchema('device'),
+  v_device: createSchema('v_device'),
   sido: createSchema('sido'),
   v_sido: createSchema('v_sido'),
   sigungu: createSchema('sigungu'),
