@@ -12,9 +12,14 @@ const v_schema = schemas.v_consumable_model
 router.post('/create', 
   validateInput({ body: 
     schema.createData.extend({
-      device_model_ids: z.array(v_schema.base.shape.device_model_id)
+      device_model_ids: z.array(schema.base.shape.device_model_id)
   }) }), 
   controller.createWithDeviceModelIds
+)
+
+router.get('/compatibility/:consumable_model_id', 
+  validateInput({ params: v_schema.base.pick({ consumable_model_id: true }) }), 
+  controller.getCompatibilityByConsumableModelId
 )
 
 // Override At Service -------------------------------------------------------
@@ -23,6 +28,11 @@ router.get('/search',
     consumable_type: schema.base.shape.consumable_type.optional()
   }) }), 
   controller.search
+)
+
+router.delete('/delete', 
+  validateInput({ query: schema.primaryKey }), 
+  controller.delete<'consumable_model_id'>
 )
 
 // CRUD ----------------------------------------------------------------------
@@ -35,12 +45,6 @@ router.get('/check',
 router.patch('/update', 
   validateInput({ body: schema.updateByPrimaryKey }), 
   controller.update<'consumable_model_id'>
-)
-
-//unique key가 없음.
-router.delete('/delete', 
-  validateInput({ query: schema.primaryKey }), 
-  controller.delete<'consumable_model_id'>
 )
 
 export const consumableModelRouter = router
