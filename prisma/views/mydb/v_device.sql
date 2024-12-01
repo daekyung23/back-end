@@ -58,35 +58,33 @@ FROM
                   (
                     (
                       (
-                        (
-                          `mydb`.`device` `d`
-                          LEFT JOIN `mydb`.`device_model` `dm` ON((`d`.`device_model_id` = `dm`.`device_model_id`))
-                        )
-                        LEFT JOIN `mydb`.`dept` `od` ON((`d`.`owner_dept_id` = `od`.`dept_id`))
+                        `mydb`.`device` `d`
+                        LEFT JOIN `mydb`.`device_model` `dm` ON((`d`.`device_model_id` = `dm`.`device_model_id`))
                       )
-                      LEFT JOIN `mydb`.`dept` `md` ON((`d`.`mgmt_dept_id` = `md`.`dept_id`))
+                      LEFT JOIN `mydb`.`dept` `od` ON((`d`.`owner_dept_id` = `od`.`dept_id`))
                     )
-                    LEFT JOIN `mydb`.`device_location_log` `dl` ON(
-                      (
-                        `d`.`last_location_log_id` = `dl`.`device_location_log_id`
-                      )
+                    LEFT JOIN `mydb`.`dept` `md` ON((`d`.`mgmt_dept_id` = `md`.`dept_id`))
+                  )
+                  LEFT JOIN `mydb`.`device_location_log` `dl` ON(
+                    (
+                      `d`.`last_location_log_id` = `dl`.`device_location_log_id`
                     )
                   )
-                  LEFT JOIN `mydb`.`location` `l` ON((`dl`.`location_id` = `l`.`location_id`))
                 )
-                LEFT JOIN `mydb`.`warehouse` `w` ON((`l`.`warehouse_id` = `w`.`warehouse_id`))
+                LEFT JOIN `mydb`.`location` `l` ON((`dl`.`location_id` = `l`.`location_id`))
               )
-              LEFT JOIN `mydb`.`client_branch` `cb` ON(
-                (`l`.`client_branch_id` = `cb`.`client_branch_id`)
-              )
+              LEFT JOIN `mydb`.`warehouse` `w` ON((`l`.`warehouse_id` = `w`.`warehouse_id`))
             )
-            LEFT JOIN `mydb`.`device_status` `ds` ON((`d`.`status_id` = `ds`.`status_id`))
+            LEFT JOIN `mydb`.`client_branch` `cb` ON(
+              (`l`.`client_branch_id` = `cb`.`client_branch_id`)
+            )
           )
-          LEFT JOIN `mydb`.`device_option` `do` ON((`d`.`device_id` = `do`.`location_device_id`))
+          LEFT JOIN `mydb`.`device_status` `ds` ON((`d`.`status_id` = `ds`.`status_id`))
         )
-        LEFT JOIN `mydb`.`option_model` `om` ON(
-          (`do`.`device_option_id` = `om`.`option_model_id`)
-        )
+        LEFT JOIN `mydb`.`device_option` `do` ON((`d`.`device_id` = `do`.`location_device_id`))
+      )
+      LEFT JOIN `mydb`.`option_model` `om` ON(
+        (`do`.`device_option_id` = `om`.`option_model_id`)
       )
     )
     LEFT JOIN `mydb`.`v_client_hierarchy` `v_ch` ON((`cb`.`client_id` = `mydb`.`v_ch`.`client_id`))

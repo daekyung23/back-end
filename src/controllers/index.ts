@@ -9,6 +9,7 @@ import { services } from '@services'
 import { UserPositionController } from './user-position'
 import { DeviceModelController } from './device-model'
 import { ConsumableModelController } from './consumable-model'
+import { DeviceLocationLogController } from './device-location-log'
 
 export const DefinedAtControllerAndService = {
   clientBranch: new ClientBranchController(prisma.client_branch, prisma.v_client_branch),
@@ -19,6 +20,7 @@ export const DefinedAtControllerAndService = {
   userPosition: new UserPositionController(prisma.user_position, undefined),
   deviceModel: new DeviceModelController(prisma.device_model),
   consumableModel: new ConsumableModelController(prisma.consumable_model, prisma.v_consumable_model),
+  deviceLocationLog: new DeviceLocationLogController(prisma.device_location_log, prisma.v_device_location_log),
 }
 
 export const OverrideAtService = {

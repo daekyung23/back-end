@@ -289,7 +289,7 @@ model device_install_info {
 model device_location_log {
   device_location_log_id                                  Int      @id @default(autoincrement())
   device_id                                               Int
-  location_date                                           DateTime @db.DateTime
+  location_date                                           DateTime @db.DateTime(0)
   location_id                                             Int
   location_detail                                         String?  @db.VarChar(200)
   device_device_last_location_log_idTodevice_location_log device[] @relation("device_last_location_log_idTodevice_location_log")
@@ -539,9 +539,9 @@ view v_device {
   owner_dept_name        String?  @db.VarChar(100)
   mgmt_dept_name         String?  @db.VarChar(100)
   location_id            Int?     @default(0)
+  client_branch_id       Int?
   warehouse_id           Int?     @default(0)
   warehouse_name         String?  @db.VarChar(100)
-  client_branch_id       Int?     @default(0)
   client_branch_name     String?  @db.VarChar(100)
   status_name            String?  @db.VarChar(45)
   root_client_id         Int?
@@ -611,6 +611,23 @@ view v_client_hierarchy {
   path             String? @db.VarChar(200)
 }
 
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view v_device_location_log {
+  device_location_log_id Int                                  @id @default(0)
+  device_id              Int
+  location_date          DateTime                             @db.DateTime(0)
+  location_id            Int
+  location_detail        String?                              @db.VarChar(200)
+  location_type          v_device_location_log_location_type?
+  warehouse_id           Int?                                 @default(0)
+  warehouse_name         String?                              @db.VarChar(100)
+  client_branch_id       Int?                                 @default(0)
+  client_branch_name     String?                              @db.VarChar(100)
+  root_client_id         Int?
+  root_client_name       String?                              @db.VarChar(45)
+  client_depth           BigInt?
+}
+
 enum location_location_type {
   warehouse
   client_branch
@@ -630,6 +647,11 @@ enum user_permission {
 enum device_inspection_log_status {
   normal
   pending
+}
+
+enum v_device_location_log_location_type {
+  warehouse
+  client_branch
 }
 
 enum v_user_permission {

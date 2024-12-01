@@ -34,6 +34,7 @@ export const schemas = {
   sigungu: createSchema('sigungu'),
   userPosition: createSchema('user_position'),
   warehouse: createSchema('warehouse'),
+  deviceLocationLog: createSchema('device_location_log'),
 }
 export type Schemas = typeof schemas
 export * from './common'

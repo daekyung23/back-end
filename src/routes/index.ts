@@ -10,6 +10,7 @@ import { sigunguRouter } from './sigungu'
 import { userRouter } from './user'
 import { userPositionRouter } from './user-position'
 import { warehouseRouter } from './warehouse'
+import { deviceLocationLogRouter } from './device-location-log'
 
 export default {
   client: clientRouter,
@@ -23,5 +24,6 @@ export default {
   sigungu: sigunguRouter,
   user: userRouter,
   userPosition: userPositionRouter,
-  warehouse: warehouseRouter
+  warehouse: warehouseRouter,
+  deviceLocationLog: deviceLocationLogRouter
 }

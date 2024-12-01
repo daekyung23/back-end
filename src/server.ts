@@ -37,6 +37,7 @@ app.use('/sigungu', routes.sigungu)
 app.use('/user', routes.user)
 app.use('/user-position', routes.userPosition)
 app.use('/warehouse', routes.warehouse)
+app.use('/device-location-log', routes.deviceLocationLog)
 
 // Prisma 연결 테스트 및 서버 시작
 async function bootstrap() {

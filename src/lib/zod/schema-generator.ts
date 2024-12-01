@@ -38,7 +38,7 @@ export class SchemaGenerator {
       case 'Boolean':
         return z.boolean()
       case 'DateTime':
-        return z.coerce.date()
+        return z.string().datetime()
       default:
         return z.any()
     }
