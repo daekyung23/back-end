@@ -628,6 +628,18 @@ view v_device_location_log {
   client_depth           BigInt?
 }
 
+/// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+view v_option_model {
+  compatibility_id   String  @id @db.VarChar(23)
+  option_model_id    Int?    @default(0)
+  manufacturer       String? @db.VarChar(100)
+  option_model_name  String? @db.VarChar(100)
+  option_type        String? @db.VarChar(45)
+  model_manufacturer String? @db.VarChar(100)
+  model_name         String? @db.VarChar(100)
+  device_model_id    Int?    @default(0)
+}
+
 enum location_location_type {
   warehouse
   client_branch

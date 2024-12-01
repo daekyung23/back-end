@@ -252,9 +252,9 @@ const convertFieldValue = (value, fieldType) => {
   // 필드 타입에 따른 변환
   switch (fieldType) {
     case 'Int':
-      return parseInt(value) || -1
+      return parseInt(value) || 0
     case 'Float':
-      return  parseFloat(value) || -1
+      return  parseFloat(value) || 0
     case 'Boolean':
       return value === '1' || value === 'true' || value === true ? 1 : 0
     case 'DateTime':

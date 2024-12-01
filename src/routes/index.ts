@@ -11,6 +11,7 @@ import { userRouter } from './user'
 import { userPositionRouter } from './user-position'
 import { warehouseRouter } from './warehouse'
 import { deviceLocationLogRouter } from './device-location-log'
+import { optionModelRouter } from './option-model'
 
 export default {
   client: clientRouter,
@@ -25,5 +26,6 @@ export default {
   user: userRouter,
   userPosition: userPositionRouter,
   warehouse: warehouseRouter,
-  deviceLocationLog: deviceLocationLogRouter
+  deviceLocationLog: deviceLocationLogRouter,
+  optionModel: optionModelRouter
 }
