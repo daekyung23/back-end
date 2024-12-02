@@ -345,11 +345,12 @@ const restoreData = async (backupDate, prisma) => {
         if (!file.endsWith('.csv')) continue
         
         const modelName = file.replace('.csv', '')
+        const backtickModelName = `\`${modelName}\``
         const records = await readCsvRecords(path.join(dataDir, file))
+        await tx.$executeRawUnsafe(`TRUNCATE TABLE ${backtickModelName};`)
 
         // _prisma_migrations 테이블 특별 처리
         if (modelName === '_prisma_migrations') {
-          await tx.$executeRawUnsafe('TRUNCATE TABLE _prisma_migrations;')
           for (const record of records) {
             await tx.$executeRawUnsafe(`
               INSERT INTO _prisma_migrations 
@@ -368,19 +369,17 @@ const restoreData = async (backupDate, prisma) => {
           }
           continue
         }
-
         // 일반 테이블 처리
         await restoreTable(tx, modelName, records)
-        }
-
-        // 모든 데이터 복구 후 foreign key check 활성화
-        await tx.$executeRawUnsafe('SET FOREIGN_KEY_CHECKS=1;')
-        console.log('데이터 복원 성공')
-      } catch (error) {
-        await tx.$executeRawUnsafe('SET FOREIGN_KEY_CHECKS=1;')
-        console.error('데이터 복원 실패:', error)
-        throw error
       }
+      // 모든 데이터 복구 후 foreign key check 활성화
+      await tx.$executeRawUnsafe('SET FOREIGN_KEY_CHECKS=1;')
+      console.log('데이터 복원 성공')
+    } catch (error) {
+      await tx.$executeRawUnsafe('SET FOREIGN_KEY_CHECKS=1;')
+      console.error('데이터 복원 실패:', error)
+      throw error
+    }
   }, {
     timeout: TRANSACTION_TIMEOUT,
     maxWait: TRANSACTION_TIMEOUT,

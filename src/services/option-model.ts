@@ -46,7 +46,7 @@ export class OptionModelService extends Service<typeof MODEL, typeof VIEW> {
     const where = {
       OR: [
         { manufacturer: { contains: search_term } },
-        { option_name: { contains: search_term } },
+        { option_model_name: { contains: search_term } },
       ],
       option_type
     }

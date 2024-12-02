@@ -1,0 +1,8 @@
+{
+  "timestamp": "2024-12-02T08:15:21.121Z",
+  "type": "MANUAL",
+  "message": "device model, warehouse 중복 제거",
+  "createdBy": "unknown",
+  "prismaVersion": "5.1.1",
+  "nodeVersion": "v20.13.1"
+}
