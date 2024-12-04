@@ -1,0 +1,8 @@
+{
+  "timestamp": "2024-12-04T00:36:53.138Z",
+  "type": "MANUAL",
+  "message": "중복 데이터 제거",
+  "createdBy": "unknown",
+  "prismaVersion": "5.1.1",
+  "nodeVersion": "v20.13.1"
+}
