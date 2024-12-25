@@ -13,6 +13,7 @@ SELECT
   `dm`.`manufacturer` AS `manufacturer`,
   `od`.`dept_name` AS `owner_dept_name`,
   `md`.`dept_name` AS `mgmt_dept_name`,
+  `l`.`location_type` AS `location_type`,
   `l`.`location_id` AS `location_id`,
   `l`.`client_branch_id` AS `client_branch_id`,
   `w`.`warehouse_id` AS `warehouse_id`,
