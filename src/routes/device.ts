@@ -38,7 +38,7 @@ router.get('/search',
 //   controller.create
 // )
 
-router.get('by-id',
+router.get('/by-id',
   validateInput({ query: schema.primaryKey }),
   controller.findOneByUnique<'device_id'>
 )
