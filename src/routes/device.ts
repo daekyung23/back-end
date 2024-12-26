@@ -38,6 +38,11 @@ router.get('/search',
 //   controller.create
 // )
 
+router.get('by-id',
+  validateInput({ query: schema.primaryKey }),
+  controller.findOneByUnique<'device_id'>
+)
+
 router.patch('/update', 
   validateInput({ body: schema.updateByPrimaryKey }), 
   controller.update<'device_id'>
