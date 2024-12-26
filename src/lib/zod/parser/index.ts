@@ -13,7 +13,8 @@ export class PrismaSchemaParser {
         c.IS_NULLABLE as nullable,
         c.COLUMN_KEY as key_type,
         c.ORDINAL_POSITION as position,
-        c.COLUMN_DEFAULT as default_value
+        c.COLUMN_DEFAULT as default_value,
+        c.EXTRA as extra
       FROM information_schema.COLUMNS c
       WHERE c.TABLE_SCHEMA = DATABASE()
       ORDER BY c.TABLE_NAME, c.ORDINAL_POSITION
@@ -39,6 +40,7 @@ export class PrismaSchemaParser {
         isUnique: row.key_type === 'UNI',
         hasDefaultValue: row.default_value !== null,
         defaultValue: row.default_value,
+        isAutoIncrement: row.extra?.toLowerCase().includes('auto_increment')
       } as PrismaField)
 
       return acc

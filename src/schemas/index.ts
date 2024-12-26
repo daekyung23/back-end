@@ -37,6 +37,9 @@ export const schemas = {
   deviceLocationLog: createSchema('device_location_log'),
   optionModel: createSchema('option_model'),
   v_option_model: createSchema('v_option_model'),
+  deviceOption: createSchema('device_option'),
+  v_device_option: createSchema('v_device_option'),
+  deviceInstallInfo: createSchema('device_install_info'),
 }
 export type Schemas = typeof schemas
 export * from './common'

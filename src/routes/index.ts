@@ -12,6 +12,8 @@ import { userPositionRouter } from './user-position'
 import { warehouseRouter } from './warehouse'
 import { deviceLocationLogRouter } from './device-location-log'
 import { optionModelRouter } from './option-model'
+import { deviceOptionRouter } from './device-option'
+import { deviceInstallInfoRouter } from './device-install-info'
 
 export default {
   client: clientRouter,
@@ -27,5 +29,7 @@ export default {
   userPosition: userPositionRouter,
   warehouse: warehouseRouter,
   deviceLocationLog: deviceLocationLogRouter,
-  optionModel: optionModelRouter
+  optionModel: optionModelRouter,
+  deviceOption: deviceOptionRouter,
+  deviceInstallInfo: deviceInstallInfoRouter
 }

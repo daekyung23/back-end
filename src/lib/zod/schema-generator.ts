@@ -70,8 +70,10 @@ export class SchemaGenerator {
     const optionalShape: z.ZodRawShape = {}
     
     this.model.fields
-      .filter((f: PrismaField) => !f.isPrimary)
       .forEach((field: PrismaField) => {
+        if (field.isPrimary && field.isAutoIncrement) {
+          return
+        }
         if (field.hasDefaultValue || !field.isRequired) {
           optionalShape[field.name] = this.generateFieldSchema(field).optional()
         } else {

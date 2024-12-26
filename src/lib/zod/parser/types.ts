@@ -7,6 +7,7 @@ export interface PrismaField {
   isUnique: boolean
   hasDefaultValue: boolean
   defaultValue: any
+  isAutoIncrement: boolean
 }
 
 // Prisma 모델 전체를 정의하는 인터페이스

@@ -7,6 +7,13 @@ const router = Router()
 const controller = controllers.device
 const schema = schemas.device
 const v_schema = schemas.v_device
+// Defined At Controller & Service -------------------------------------------
+router.post('/create', 
+  validateInput({ body: schema.createData.extend({
+    warehouse_id: v_schema.base.shape.warehouse_id
+  }) }), 
+  controller.createWithWarehouseId
+)
 
 // Override At Service ------------------------------------------------------
 router.get('/search', 
@@ -26,10 +33,10 @@ router.get('/search',
 )
 
 // Base CRUD ----------------------------------------------------------------
-router.post('/create', 
-  validateInput({ body: schema.createData }), 
-  controller.create
-)
+// router.post('/create', 
+//   validateInput({ body: schema.createData }), 
+//   controller.create
+// )
 
 router.patch('/update', 
   validateInput({ body: schema.updateByPrimaryKey }), 

@@ -11,6 +11,7 @@ import { DeviceModelController } from './device-model'
 import { ConsumableModelController } from './consumable-model'
 import { DeviceLocationLogController } from './device-location-log'
 import { OptionModelController } from './option-model'
+import { DeviceController } from './device'
 
 export const DefinedAtControllerAndService = {
   clientBranch: new ClientBranchController(prisma.client_branch, prisma.v_client_branch),
@@ -23,16 +24,18 @@ export const DefinedAtControllerAndService = {
   consumableModel: new ConsumableModelController(prisma.consumable_model, prisma.v_consumable_model),
   deviceLocationLog: new DeviceLocationLogController(prisma.device_location_log, prisma.v_device_location_log),
   optionModel: new OptionModelController(prisma.option_model, prisma.v_option_model),
+  device: new DeviceController(prisma.device, prisma.v_device),
 }
 
 export const OverrideAtService = {
   deviceDriver: new Controller<'device_driver', 'v_device_driver'>(prisma.device_driver, prisma.v_device_driver).setService(services.deviceDriver),
   warehouse: new Controller<'warehouse', 'v_warehouse'>(prisma.warehouse, prisma.v_warehouse).setService(services.warehouse),
   user: new Controller<'user', 'v_user'>(prisma.user, prisma.v_user).setService(services.user),
-  device: new Controller<'device', 'v_device'>(prisma.device, prisma.v_device).setService(services.device),
+  deviceOption: new Controller<'device_option', 'v_device_option'>(prisma.device_option, prisma.v_device_option).setService(services.deviceOption),
 }
 
 export const OnlyCRUD = {
+  deviceInstallInfo: new Controller(prisma.device_install_info),
 }
 
 export const controllers = {
