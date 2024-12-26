@@ -1,0 +1,2 @@
+﻿device_id,installer_id,mgmt_num,ip_address,subnet_mask,gateway,dns1,dns2
+3,6,MGMT-001,192.168.0.10,255.255.255.0,192.168.0.1,8.8.8.8,8.8.4.4
