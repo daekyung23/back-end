@@ -2,11 +2,52 @@ import { Router } from 'express'
 import { controllers } from '@controllers'
 import { validateInput } from '@middlewares/validators'
 import { schemas, searchSchema } from '@schemas'
+import { z } from '@lib/zod'
 
 const router = Router()
 const controller = controllers.deviceOption
 const schema = schemas.deviceOption
 const v_schema = schemas.v_device_option
+
+// Defined at Controller & Service ------------------------------------------
+router.get('/select/manufacturer', 
+  controller.getManufacturerOptions
+)
+
+router.get('/select/option-type', 
+  validateInput({ query: v_schema.base.pick({ manufacturer: true}) }),
+  controller.getOptionTypeOptions
+)
+
+router.get('/select/option-model', 
+  validateInput({ query: v_schema.base.pick({ manufacturer: true, option_type: true }) }),
+  controller.getOptionModelNameOptions
+)
+
+router.get('/by-option-model-id', 
+  validateInput({ query: v_schema.base.pick({ 
+    option_model_id: true 
+  }) }),
+  controller.getByOptionModelId
+)
+
+router.patch('/change-location', 
+  validateInput({ body: 
+    z.union([
+      schema.base.pick({ 
+        device_option_id: true,
+        location_type: true,
+        location_warehouse_id: true,
+      }),
+      schema.base.pick({ 
+        device_option_id: true,
+        location_type: true,
+        location_device_id: true,
+      }),
+    ])
+  }), 
+  controller.changeLocation
+)
 
 // Override At Service ------------------------------------------------------
 router.get('/search', 

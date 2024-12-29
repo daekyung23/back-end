@@ -643,6 +643,7 @@ view v_option_model {
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_device_option {
   device_option_id   Int                           @id @default(0)
+  option_model_id    Int?                          @default(0)
   option_model_name  String?                       @db.VarChar(100)
   manufacturer       String?                       @db.VarChar(100)
   option_type        String?                       @db.VarChar(45)

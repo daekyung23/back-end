@@ -1,5 +1,6 @@
 SELECT
   `do`.`device_option_id` AS `device_option_id`,
+  `om`.`option_model_id` AS `option_model_id`,
   `om`.`option_model_name` AS `option_model_name`,
   `om`.`manufacturer` AS `manufacturer`,
   `om`.`option_type` AS `option_type`,
@@ -29,6 +30,7 @@ FROM
   )
 GROUP BY
   `do`.`device_option_id`,
+  `om`.`option_model_id`,
   `om`.`option_model_name`,
   `om`.`manufacturer`,
   `om`.`option_type`,
