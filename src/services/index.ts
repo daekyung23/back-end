@@ -15,6 +15,7 @@ import { DeviceService } from './device'
 import { DeviceLocationLogService } from './device-location-log'
 import { OptionModelService } from './option-model'
 import { DeviceOptionService } from './device-option'
+import { DeviceInstallInfoService } from './device-install-info'
 
 export const services = {
   clientBranch: new ClientBranchService(prisma.client_branch, prisma.v_client_branch),
@@ -32,6 +33,7 @@ export const services = {
   deviceLocationLog: new DeviceLocationLogService(prisma.device_location_log, prisma.v_device_location_log),
   optionModel: new OptionModelService(prisma.option_model, prisma.v_option_model),
   deviceOption: new DeviceOptionService(prisma.device_option, prisma.v_device_option),
+  deviceInstallInfo: new DeviceInstallInfoService(prisma.device_install_info, prisma.v_device_install_info),
 } as const
 
 export type Services = typeof services

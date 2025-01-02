@@ -13,6 +13,7 @@ import { DeviceLocationLogController } from './device-location-log'
 import { OptionModelController } from './option-model'
 import { DeviceController } from './device'
 import { DeviceOptionController } from './device-option'
+import { DeviceInstallInfoController } from './device-install-info'
 
 export const DefinedAtControllerAndService = {
   clientBranch: new ClientBranchController(prisma.client_branch, prisma.v_client_branch),
@@ -27,6 +28,7 @@ export const DefinedAtControllerAndService = {
   optionModel: new OptionModelController(prisma.option_model, prisma.v_option_model),
   device: new DeviceController(prisma.device, prisma.v_device),
   deviceOption: new DeviceOptionController(prisma.device_option, prisma.v_device_option),
+  deviceInstallInfo: new DeviceInstallInfoController(prisma.device_install_info, prisma.v_device_install_info),
 }
 
 export const OverrideAtService = {
@@ -36,7 +38,6 @@ export const OverrideAtService = {
 }
 
 export const OnlyCRUD = {
-  deviceInstallInfo: new Controller(prisma.device_install_info),
 }
 
 export const controllers = {

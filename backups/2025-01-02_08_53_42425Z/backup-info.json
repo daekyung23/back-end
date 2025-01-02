@@ -1,0 +1,8 @@
+{
+  "timestamp": "2025-01-02T08:53:42.426Z",
+  "type": "MANUAL",
+  "message": "device install info",
+  "createdBy": "unknown",
+  "prismaVersion": "5.1.1",
+  "nodeVersion": "v20.13.1"
+}

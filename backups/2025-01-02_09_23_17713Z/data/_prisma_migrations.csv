@@ -1,0 +1,4 @@
+﻿id,checksum,finished_at,migration_name,logs,rolled_back_at,started_at,applied_steps_count
+0022020b-ed08-41c4-8f38-cc25b7233914,184d04c7d5d4cc8c42065f8bbf0096027d0965fe6fe46499cdc7daba36d3eb77,Fri Nov 29 2024 10:42:13 GMT+0000 (Coordinated Universal Time),20241129104213_location_date_to_datetime,\N,\N,Fri Nov 29 2024 10:42:13 GMT+0000 (Coordinated Universal Time),1
+0d56f4e4-d18d-45db-8e22-89cef943acb0,b824dc9f929dbcb6d76c609c1971dc39e2cf7a7f35e764eb6fa4e00725000e95,Wed Nov 20 2024 10:44:17 GMT+0000 (Coordinated Universal Time),20241120102736_add_auto_increment,\N,\N,Wed Nov 20 2024 10:44:16 GMT+0000 (Coordinated Universal Time),1
+10c95935-3248-431a-8b79-1f3533ba86d6,d1baf45451a53e8f9b1f73886f0e2044a4d27d5886f5d95ab494d1859c0edeac,Wed Nov 20 2024 10:46:18 GMT+0000 (Coordinated Universal Time),20241120104618_npm_run_restore,\N,\N,Wed Nov 20 2024 10:46:18 GMT+0000 (Coordinated Universal Time),1

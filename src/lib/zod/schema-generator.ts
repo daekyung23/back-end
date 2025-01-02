@@ -1,6 +1,18 @@
 import { z } from 'zod'
 import { PrismaModel, PrismaField } from './parser/types'
 
+export type Schema = {
+  base: z.ZodObject<any>
+  primaryKey: z.ZodObject<any>
+  updateByPrimaryKey: z.ZodObject<any>
+  updateData: z.ZodObject<any>
+  createData: z.ZodObject<any>
+  deleteByPrimaryKey: z.ZodObject<any>
+  unique: (key: string) => z.ZodObject<any>
+  updateBy: (key: string) => z.ZodObject<any>
+  deleteBy: (key: string) => z.ZodObject<any>
+}
+
 export class SchemaGenerator {
   private readonly model: PrismaModel
 
@@ -93,12 +105,12 @@ export class SchemaGenerator {
   }
 
   // 전체 스키마 생성
-  generate() {
+  generate(): Schema {
     const primaryKey = this.generatePrimaryKeySchema()
     const createData = this.generateCreateSchema()
     const updateData = this.generateUpdateSchema()
 
-    return {
+    return{
       base: primaryKey.merge(createData),
       primaryKey,
       updateByPrimaryKey: primaryKey.merge(updateData),

@@ -271,7 +271,7 @@ model device_inspection_log {
 }
 
 model device_install_info {
-  device_id    Int     @id
+  device_id    Int     @id @default(autoincrement())
   mgmt_num     String  @db.VarChar(50)
   ip_address   String? @db.VarChar(50)
   subnet_mask  String? @db.VarChar(50)
@@ -655,6 +655,7 @@ view v_device_option {
 /// The underlying view does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 view v_device_install_info {
   device_id          Int                                  @id @default(0)
+  installer_id       Int
   mgmt_num           String                               @db.VarChar(50)
   ip_address         String?                              @db.VarChar(50)
   subnet_mask        String?                              @db.VarChar(50)
