@@ -87,7 +87,7 @@ FROM
         LEFT JOIN `mydb`.`device_option` `do` ON((`d`.`device_id` = `do`.`location_device_id`))
       )
       LEFT JOIN `mydb`.`option_model` `om` ON(
-        (`do`.`device_option_id` = `om`.`option_model_id`)
+        (`do`.`option_model_id` = `om`.`option_model_id`)
       )
     )
     LEFT JOIN `mydb`.`v_client_hierarchy` `v_ch` ON((`cb`.`client_id` = `mydb`.`v_ch`.`client_id`))
