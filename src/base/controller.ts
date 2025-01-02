@@ -8,7 +8,8 @@ import {
   UncheckedUpdateInput, 
   UpdateInputUnique,
   DeleteInput,
-  CountInput
+  CountInput,
+  FindManyWhere
 } from '@lib/prisma'
 
 import type { Request, Response } from 'express'
@@ -56,6 +57,11 @@ export class Controller<
 
   findEachByUniqueArray = async<U extends keyof FindUniqueInput<V>>(req: Request, res: Response) => {
     const result = await this.service.findEachByUniqueArray(req.validated.query as Record<U, FindUniqueInput<V>[U][]>)
+    res.json(result)
+  }
+
+  findManyByAKey = async<K extends keyof FindManyWhere<V>>(req: Request, res: Response) => {
+    const result = await this.service.findManyByAKey(req.validated.query as Record<K, FindManyWhere<V>[K]>)
     res.json(result)
   }
 

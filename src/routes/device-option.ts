@@ -72,6 +72,11 @@ router.get('/by-id',
   controller.findOneByUnique<'device_option_id'>
 )
 
+router.get('/by-device-id', 
+  validateInput({ query: v_schema.base.pick({ device_id: true }) }),
+  controller.findManyByAKey<'device_id'>
+)
+
 router.post('/create', 
   validateInput({ body: schema.createData }), 
   controller.create

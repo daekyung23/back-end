@@ -19,6 +19,10 @@ router.get('/check-duplicate',
 )
 
 // CRUD ----------------------------------------------------------------------
+router.get('/all',
+  controller.getAll
+)
+
 router.post('/create', 
   validateInput({ body: schema.createData }), 
   controller.create

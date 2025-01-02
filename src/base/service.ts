@@ -8,6 +8,7 @@ import type {
   UpdateInputUnique,
   DeleteInput,
   CountInput,
+  FindManyWhere
 } from '@lib/prisma'
 import { Repository } from '@base/repository'
 import { NotImplementedError } from '@utils/errors'
@@ -49,6 +50,12 @@ export class Service<
     return this.repository.findMany({
       where: { [uniqueKey]: { in: where[uniqueKey] } }
     })
+  }
+
+  findManyByAKey<K extends keyof FindManyWhere<V>>(query: Record<K, FindManyWhere<V>[K]>) {
+    const key = Object.keys(query)[0] as K
+    const value = query[key]
+    return this.repository.findMany({ where: { [key]: value } })
   }
 
   update<U extends keyof UpdateInputUnique<M>>(body: UncheckedUpdateInput<M>) {
