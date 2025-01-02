@@ -1,0 +1,8 @@
+{
+  "timestamp": "2025-01-02T09:32:18.168Z",
+  "type": "MANUAL",
+  "message": "install info api 생성",
+  "createdBy": "unknown",
+  "prismaVersion": "5.1.1",
+  "nodeVersion": "v20.13.1"
+}
