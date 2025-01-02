@@ -78,18 +78,36 @@ router.get('/by-device-id',
 )
 
 router.post('/create', 
-  validateInput({ body: schema.createData }), 
+  validateInput({
+    body: z.union([
+      schema.base.pick({
+        option_model_id: true,
+        serial: true,
+        location_type: true,
+      }).extend({
+        location_warehouse_id: z.number().int().positive(),
+      }),
+      
+      schema.base.pick({
+        option_model_id: true,
+        serial: true,
+        location_type: true,
+      }).extend({
+        location_device_id: z.number().int().positive(),
+      })
+    ])
+  }), 
   controller.create
 )
 
 router.patch('/update', 
   validateInput({ body: schema.updateByPrimaryKey }), 
-  controller.update<'option_model_id'>
+  controller.update<'device_option_id'>
 )
 
 router.delete('/delete', 
   validateInput({ query: schema.primaryKey }), 
-  controller.delete<'option_model_id'>
+  controller.delete<'device_option_id'>
 ) 
 
 export const deviceOptionRouter = router
