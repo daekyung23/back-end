@@ -2,10 +2,11 @@ import { Router } from 'express'
 import { controllers } from '@controllers'
 import { validateInput } from '@middlewares/validators'
 import { schemas, searchSchema } from '@schemas'
+import { Schema } from '@lib/zod'
 
 const router = Router()
 const controller = controllers.warehouse
-const schema = schemas.warehouse
+const schema = schemas.warehouse as Schema
 
 // Override At Service ------------------------------------------------------
 router.get('/search', 

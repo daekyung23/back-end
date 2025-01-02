@@ -28,7 +28,7 @@ SELECT
   max(
     (
       CASE
-        WHEN (`om`.`option_type` = 'fax') THEN TRUE
+        WHEN (`om`.`option_type` = 'FAX') THEN TRUE
         ELSE false
       END
     )
@@ -36,7 +36,7 @@ SELECT
   max(
     (
       CASE
-        WHEN (`om`.`option_type` = 'desk') THEN TRUE
+        WHEN (`om`.`option_type` = '데스크') THEN TRUE
         ELSE false
       END
     )
@@ -44,7 +44,7 @@ SELECT
   max(
     (
       CASE
-        WHEN (`om`.`option_type` = 'shelf') THEN TRUE
+        WHEN (`om`.`option_type` = '3/4단') THEN TRUE
         ELSE false
       END
     )
