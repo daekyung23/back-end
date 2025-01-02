@@ -147,7 +147,7 @@ model device {
   owner_dept_id                                                              Int
   mgmt_dept_id                                                               Int
   serial                                                                     String                  @db.VarChar(50)
-  regi_date                                                                  DateTime                @default(dbgenerated("(curdate())")) @db.Date
+  regi_date                                                                  DateTime                @db.Date
   mac                                                                        String                  @db.VarChar(50)
   last_inspection_log_id                                                     Int?
   last_location_log_id                                                       Int?
@@ -525,7 +525,7 @@ view v_device {
   owner_dept_id          Int
   mgmt_dept_id           Int
   serial                 String   @db.VarChar(50)
-  regi_date              DateTime @db.Date @default(dbgenerated("CURRENT_DATE"))
+  regi_date              DateTime @db.Date
   mac                    String   @db.VarChar(50)
   last_inspection_log_id Int?
   last_location_log_id   Int?

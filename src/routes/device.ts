@@ -43,6 +43,7 @@ router.get('/by-id',
   controller.findOneByUnique<'device_id'>
 )
 
+//location 관련 업데이트는 하면 안됨. 입력 검증을 수정해야함.
 router.patch('/update', 
   validateInput({ body: schema.updateByPrimaryKey }), 
   controller.update<'device_id'>
