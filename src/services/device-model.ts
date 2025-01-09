@@ -42,5 +42,4 @@ export class DeviceModelService extends Service<typeof MODEL> {
       totalPages: Math.ceil(total / take) 
     }
   }
-
 }

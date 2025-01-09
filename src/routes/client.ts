@@ -3,6 +3,7 @@ import { controllers } from '@controllers'
 import { validateInput } from '@middlewares/validators'
 import { searchSchema, activationSchema } from '@schemas'
 import { schemas } from '@schemas'
+import { csv } from '@utils/csv'
 
 const router = Router()
 const controller = controllers.client

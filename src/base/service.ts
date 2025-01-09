@@ -82,4 +82,8 @@ export class Service<
   ): Promise<{ [K in M]: ModelDelegates[M] }> => {
     throw new NotImplementedError(undefined, 'changeActivation method is not implemented')
   }
+
+  getCsvData = async (): Promise<string[]> => {
+    throw new NotImplementedError(undefined, 'getCsvData method is not implemented')
+  }
 }

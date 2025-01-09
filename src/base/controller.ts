@@ -17,7 +17,8 @@ import { Service } from '@base/service'
 import type { Search } from '@base/types'
 import type { Activation } from '@schemas'
 import type { Fields } from '@lib/prisma'
-
+import { CSV, formatCsvRow } from '@utils/csv'
+import { getNowString } from '@utils/formatter/date'
 
 // Controller 역할: 응답 json 포맷팅, HTTP 상태 코드 반환, service 호출
 export class Controller<
@@ -91,5 +92,15 @@ export class Controller<
       req.validated.body as Record<U, UpdateInputUnique<M>[U]> & Activation
     )
     res.json(result)
+  }
+
+  downloadCsv = async (req: Request, res: Response) => {
+      const rows = await this.service.getCsvData()
+      const filename = `${this.model}_${getNowString()}.csv`
+      res.setHeader('Content-Type', CSV.MIME_TYPE)
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`)
+      res.write(CSV.BOM)
+      rows.forEach(row => res.write(row + '\n'))
+      res.end()
   }
 }

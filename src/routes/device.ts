@@ -32,6 +32,10 @@ router.get('/search',
   controller.search
 )
 
+router.get('/download-csv',
+  controller.downloadCsv
+)
+
 // Base CRUD ----------------------------------------------------------------
 // router.post('/create', 
 //   validateInput({ body: schema.createData }), 

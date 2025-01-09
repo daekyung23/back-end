@@ -6,6 +6,7 @@ import type { SearchQuery, SearchResult } from '@base/types'
 import type { Simplify } from 'type-fest'
 import type { Prisma } from '@prisma/client'
 import type { Activation } from '@schemas'
+import { CSV } from '@utils/csv'
 
 const MODEL = 'device_option' as const
 const VIEW = 'v_device_option' as const
@@ -94,5 +95,19 @@ export class DeviceOptionService extends Service<typeof MODEL, typeof VIEW> {
     const { [uniqueKey]: uniqueValue, is_active } = body
     const updated = await this.repository.update({ where: { [uniqueKey]: uniqueValue }, data: { is_active } })
     return { [MODEL]: updated }
+  }
+
+  override getCsvData = async () => {
+    const data = await this.repository.findMany({})
+    return data.map((record: any) => {
+      return Object.entries(record).map(([_, value]) => {
+        if (value === null) return CSV.NULL
+        if (value === '') return CSV.EMPTY
+        if (typeof value === 'string' && value.includes(',')) {
+          return `"${value.replace(/"/g, '""')}"`
+        }
+        return value
+      }).join(',')
+    })
   }
 }

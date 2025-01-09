@@ -20,6 +20,11 @@ router.get('/search-by-date-range',
   }), 
   controller.searchByDateRange
 )
+
+router.get('/download-csv',
+  controller.downloadCsv
+)
+
 // CRUD ----------------------------------------------------------------------
 router.post('/create', 
   validateInput({ body: schema.createData }), 

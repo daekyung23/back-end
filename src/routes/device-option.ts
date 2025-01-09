@@ -66,6 +66,10 @@ router.get('/check',
   controller.exists
 )
 
+router.get('/download-csv',
+  controller.downloadCsv
+)
+
 // Base CRUD ----------------------------------------------------------------
 router.get('/by-id', 
   validateInput({ query: schema.primaryKey }), 

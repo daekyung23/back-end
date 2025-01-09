@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { controllers } from '@controllers'
 import { validateInput } from '@middlewares/validators'
 import { schemas, searchSchema } from '@schemas'
+import { csv } from '@utils/csv'
 
 const router = Router()
 const controller = controllers.deviceModel
@@ -43,5 +44,6 @@ router.delete('/delete',
   validateInput({ query: schema.primaryKey }), 
   controller.delete<'device_model_id'>
 ) 
+
 
 export const deviceModelRouter = router

@@ -3,7 +3,7 @@ import { Repository } from '@base/repository'
 import { prisma } from '@lib/prisma'
 import type { device_location_log } from '@prisma/client'
 import type { Simplify } from 'type-fest'
-
+import { CSV } from '@utils/csv'
 const MODEL = 'device_location_log' as const
 const VIEW = 'v_device_location_log' as const
 
@@ -24,6 +24,21 @@ export class DeviceLocationLogService extends Service<typeof MODEL, typeof VIEW>
           lte: new Date(end_date) 
         } 
       }
+    })
+  }
+
+  // Override at Service ------------------------------------------------------
+  override getCsvData = async () => {
+    const data = await this.repository.findMany({})
+    return data.map((record: any) => {
+      return Object.entries(record).map(([_, value]) => {
+        if (value === null) return CSV.NULL
+        if (value === '') return CSV.EMPTY
+        if (typeof value === 'string' && value.includes(',')) {
+          return `"${value.replace(/"/g, '""')}"`
+        }
+        return value
+      }).join(',')
     })
   }
 }

@@ -3,6 +3,7 @@ import { Repository } from '@base/repository'
 import { prisma, CreateInputData } from '@lib/prisma'
 import type { SearchQuery, SearchResult } from '@base/types'
 import type { Simplify } from 'type-fest'
+import { CSV } from '@utils/csv'
 
 const MODEL = 'device' as const
 const VIEW = 'v_device' as const
@@ -60,5 +61,20 @@ export class DeviceService extends Service<typeof MODEL, typeof VIEW> {
       device: items, 
       totalPages: Math.ceil(total / take) 
     }
+  }
+
+  // Override at Service ------------------------------------------------------
+  override getCsvData = async () => {
+    const data = await this.repository.findMany({})
+    return data.map((record: any) => {
+      return Object.entries(record).map(([_, value]) => {
+        if (value === null) return CSV.NULL
+        if (value === '') return CSV.EMPTY
+        if (typeof value === 'string' && value.includes(',')) {
+          return `"${value.replace(/"/g, '""')}"`
+        }
+        return value
+      }).join(',')
+    })
   }
 }

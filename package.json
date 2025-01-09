@@ -18,25 +18,21 @@
     "status": "docker stats",
     "backup": "docker compose -f docker-compose.prod.yml exec app npm run raw:prod:backup",
     "restore": "docker compose -f docker-compose.prod.yml exec app npm run raw:prod:restore",
-
     "dev:start": "docker compose -f docker-compose.dev.yml up -d",
     "dev:stop": "docker compose -f docker-compose.dev.yml down",
     "dev:log": "docker compose -f docker-compose.dev.yml logs -f",
     "dev:backup": "docker compose -f docker-compose.dev.yml exec app npm run raw:dev:backup",
     "dev:restore": "docker compose -f docker-compose.dev.yml exec app npm run raw:dev:restore",
     "dev:test": "echo \"Error: no test specified\" && exit 1",
-
     "raw:dev:start": "dotenv -e .env.development -- npx tsx watch src/server.ts",
     "raw:dev:build": "npm run raw:prisma:generate:dev && rollup -c",
     "raw:start": "dotenv -e .env.production -- node dist/server.js",
     "raw:build": "npm run raw:prisma:generate:prod && rollup -c",
     "prebuild": "npx rimraf dist",
-
     "raw:dev:backup": "dotenv -e .env.development -- node scripts/backup/run-backup.js",
     "raw:dev:restore": "dotenv -e .env.development -- node scripts/backup/run-restore.js",
     "raw:prod:backup": "dotenv -e .env.production -- node scripts/backup/run-backup.js",
     "raw:prod:restore": "dotenv -e .env.production -- node scripts/backup/run-restore.js",
-    
     "prisma:migrate": "docker compose -f docker-compose.dev.yml exec app npm run raw:prisma:migrate",
     "prisma:pull:dev": "docker compose -f docker-compose.dev.yml exec app npm run raw:prisma:pull:dev ",
     "prisma:push:dev": "docker compose -f docker-compose.dev.yml exec app npm run raw:prisma:push:dev",
@@ -44,7 +40,6 @@
     "prisma:pull:prod": "docker compose -f docker-compose.prod.yml exec app npm run raw:prisma:pull:prod",
     "prisma:push:prod": "docker compose -f docker-compose.prod.yml exec app npm run raw:prisma:push:prod",
     "prisma:generate:prod": "docker compose -f docker-compose.prod.yml exec app npm run raw:prisma:generate:prod",
-
     "raw:prisma:migrate": "dotenv -e .env.development -- npx prisma migrate dev",
     "raw:prisma:pull:dev": "dotenv -e .env.development -- prisma db pull",
     "raw:prisma:pull:prod": "dotenv -e .env.production -- prisma db pull",
@@ -66,6 +61,7 @@
     "express": "^4.19.2",
     "express-async-errors": "^3.1.1",
     "jsonc-parser": "^3.3.1",
+    "multer": "^1.4.5-lts.1",
     "mysql2": "^3.11.4",
     "type-fest": "^4.27.0",
     "zod": "3.21.1"
@@ -78,6 +74,7 @@
     "@rollup/plugin-typescript": "^12.1.1",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
+    "@types/multer": "^1.4.12",
     "@types/node": "^22.9.0",
     "dotenv-cli": "^7.4.2",
     "minimist": "^1.2.8",
